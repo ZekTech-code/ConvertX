@@ -1,5 +1,4 @@
 const RECONNECT_DELAYS = [1000, 2000, 4000, 8000, 16000, 30000];
-const MAX_RECONNECT_DELAY = 60000;
 
 class WebSocketManager {
   constructor() {
@@ -60,7 +59,7 @@ class WebSocketManager {
   disconnect(id) {
     const ws = this.connections.get(id);
     if (ws) {
-      try { ws.close(); } catch {}
+      if (ws.readyState !== WebSocket.CLOSED) ws.close();
       this.connections.delete(id);
     }
     this.reconnectAttempts.delete(id);

@@ -378,7 +378,7 @@ function getFallbackPrices(coinIds, vsCurrency, cacheKey) {
  * Fetch exchange/market pairs for a coin using CoinGecko tickers endpoint.
  * Falls back to curated exchange list if API fails.
  */
-export const getMarketPairs = async (slug, limit = 15, fallbackPrice = 0) => {
+export const getMarketPairs = async (slug, limit = 15,) => {
   if (!slug || typeof slug !== "string") return [];
 
   const cacheKey = `cg_markets_v2_${slug}`;
