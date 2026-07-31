@@ -4,8 +4,7 @@ const admin = require("firebase-admin");
 
 admin.initializeApp();
 
-// CoinMarketCap API proxy — keeps the API key server-side only.
-// Deploy with: firebase deploy --only functions
+// CoinMarketCap API proxy
 const CMC_API_KEY = functions.config().coinmarketcap?.key || process.env.CMC_API_KEY;
 
 exports.cmcProxy = onRequest(

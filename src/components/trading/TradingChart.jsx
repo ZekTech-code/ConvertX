@@ -129,7 +129,7 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
   const macdSignalRef = useRef(null);
   const macdHistRef = useRef(null);
   const activeCandleRef = useRef(null);
-  const [timeframe, setTimeframe] = useState("1D");
+  const [timeframe, setTimeframe] = useState("1H");
   const [indicator, setIndicator] = useState("ema");
   const [dataSource, setDataSource] = useState("loading");
 
