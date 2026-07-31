@@ -36,7 +36,6 @@ export default function Trade() {
   const [priceHistory, setPriceHistory] = useState([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileNavTarget, setMobileNavTarget] = useState(null);
-  const [toastAlert, setToastAlert] = useState(null);
   const [marketSearch, setMarketSearch] = useState("");
   const [pageReady, setPageReady] = useState(false);
 
@@ -59,13 +58,7 @@ export default function Trade() {
   );
 
   const trading = useTrading(getPrice);
-
-  useEffect(() => {
-    if (trading.lastTriggeredAlerts && trading.lastTriggeredAlerts.length > 0) {
-      setToastAlert(trading.lastTriggeredAlerts[0]);
-      trading.clearTriggeredAlerts();
-    }
-  }, [trading.lastTriggeredAlerts, trading.clearTriggeredAlerts]);
+  const toastAlert = trading.lastTriggeredAlerts?.[0] || null;
 
   const allPrices = useMemo(() => marketData.getAllPrices(), [marketData]);
 
@@ -79,15 +72,12 @@ export default function Trade() {
     );
   }, [allPrices, marketSearch]);
 
-  const [selectedAsset, setSelectedAsset] = useState(() => {
-    return allPrices.length > 0 ? allPrices[0] : null;
-  });
+  const [selectedAssetId, setSelectedAssetId] = useState(null);
 
-  useEffect(() => {
-    if (!selectedAsset && allPrices.length > 0) {
-      setSelectedAsset(allPrices[0]);
-    }
-  }, [allPrices, selectedAsset]);
+  const selectedAsset = useMemo(() => {
+    if (!allPrices.length) return null;
+    return allPrices.find((a) => a.id === selectedAssetId) || allPrices[0];
+  }, [allPrices, selectedAssetId]);
 
   const currentPrice = useMemo(() => {
     if (!selectedAsset) return null;
@@ -99,7 +89,7 @@ export default function Trade() {
   }, [currentPrice, marketData.loading]);
 
   const handleSelectAsset = useCallback((asset) => {
-    setSelectedAsset(asset);
+    setSelectedAssetId(asset.id);
     setShowAssetPicker(false);
     setMarketSearch("");
   }, []);
@@ -148,7 +138,7 @@ export default function Trade() {
 
   return (
     <div className={`h-screen flex flex-col overflow-hidden transition-colors duration-300 ${darkMode ? "bg-[#000000]" : "bg-slate-50"}`}>
-      <div className="max-w-[1600px] mx-auto px-2 pt-3 w-full flex-shrink-0">
+      <div className="max-w-400 mx-auto px-2 pt-3 w-full shrink-0">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -218,7 +208,7 @@ export default function Trade() {
                 </button>
       {mobileMenuOpen && (
                   <div
-                    className="absolute top-full right-0 mt-2 rounded-xl py-2 min-w-[220px] z-50"
+                    className="absolute top-full right-0 mt-2 rounded-xl py-2 min-w-55 z-50"
                     style={{
                       background: darkMode ? "#0a0a0a" : "#fff",
                       border: darkMode ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(148,163,184,0.2)",
@@ -298,7 +288,7 @@ export default function Trade() {
         </motion.div>
       </div>
 
-      <div className="max-w-[1600px] mx-auto px-2 pb-24 md:pb-2 w-full flex-1 min-h-0 overflow-y-auto">
+      <div className="max-w-400 mx-auto px-2 pb-24 md:pb-2 w-full flex-1 min-h-0 overflow-y-auto">
         <div className="grid grid-cols-1 lg:grid-cols-[420px_1px_1fr_1px_420px] lg:h-full gap-2">
 
           <div className="hidden lg:block min-h-0 overflow-y-auto space-y-2">
@@ -349,7 +339,7 @@ export default function Trade() {
 
                 {showAssetPicker && (
                   <div
-                    className="absolute top-full left-0 right-0 mt-1 rounded-xl max-h-[400px] overflow-y-auto z-50"
+                    className="absolute top-full left-0 right-0 mt-1 rounded-xl max-h-100 overflow-y-auto z-50"
                     style={{
                       background: darkMode ? "#0a0a0a" : "#fff",
                       border: darkMode ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(148,163,184,0.2)",
@@ -392,7 +382,7 @@ export default function Trade() {
                       <button
                         key={item.id}
                         onClick={() => handleSelectAsset(item)}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 transition-all cursor-pointer text-left hover:bg-white/[0.03]"
+                        className="w-full flex items-center gap-3 px-3 py-2.5 transition-all cursor-pointer text-left hover:bg-white/3"
                         style={{
                           borderBottom: darkMode ? "1px solid rgba(255,255,255,0.03)" : "1px solid rgba(148,163,184,0.06)",
                         }}
@@ -447,7 +437,7 @@ export default function Trade() {
             </div>
           </div>
 
-          <div className={`${darkMode ? "bg-white/[0.06]" : "bg-slate-200"} hidden lg:block`} />
+          <div className={`${darkMode ? "bg-white/6" : "bg-slate-200"} hidden lg:block`} />
 
           <div style={{ touchAction: "pan-y" }}>
                 <TradingChart
@@ -459,7 +449,7 @@ export default function Trade() {
                 />
           </div>
 
-          <div className={`${darkMode ? "bg-white/[0.06]" : "bg-slate-200"} hidden lg:block`} />
+          <div className={`${darkMode ? "bg-white/6" : "bg-slate-200"} hidden lg:block`} />
 
           <div className="hidden lg:block min-h-0 overflow-y-auto space-y-2">
             <div className="rounded-2xl overflow-hidden" style={cardStyle}>
@@ -487,7 +477,7 @@ export default function Trade() {
           </div>
         </div>
 
-        <div className="h-[4vh] flex-shrink-0" />
+        <div className="h-[4vh] shrink-0" />
 
         <div className="mt-[2%]">
           {selectedAsset && (
@@ -655,7 +645,7 @@ export default function Trade() {
 
       <AlertToast
         alert={toastAlert}
-        onDismiss={() => setToastAlert(null)}
+        onDismiss={() => trading.clearTriggeredAlerts()}
         darkMode={darkMode}
       />
     </div>

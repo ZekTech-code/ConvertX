@@ -159,13 +159,13 @@ if (isConfigValid) {
     }
 
     isFirebaseEnabled = true;
-    console.log("✅ Firebase initialised.");
+    console.log("Firebase initialised.");
   } catch (error) {
-    console.error("🔴 Firebase initialisation failed:", error);
+    console.error("Firebase initialisation failed:", error);
   }
 } else {
   console.warn(
-    "⚠️  Firebase disabled — running in local-storage fallback mode."
+    "Firebase disabled — running in local-storage fallback mode."
   );
 }
 

@@ -374,10 +374,7 @@ function getFallbackPrices(coinIds, vsCurrency, cacheKey) {
   return result;
 }
 
-/**
- * Fetch exchange/market pairs for a coin using CoinGecko tickers endpoint.
- * Falls back to curated exchange list if API fails.
- */
+// Fetch exchange/market pairs for a coin using CoinGecko tickers endpoint.
 export const getMarketPairs = async (slug, limit = 15,) => {
   if (!slug || typeof slug !== "string") return [];
 
@@ -451,9 +448,9 @@ export const getMarketPairs = async (slug, limit = 15,) => {
 
 /**
  * Fetch live rates for multiple target currencies from a single base.
- * @param {string} base - Base currency code e.g. "USD"
- * @param {string[]} targets - Array of target currency codes
- * @returns {Object} Map of target currency code -> rate
+ * @param {string} base 
+ * @param {string[]} targets 
+ * @returns {Object}
  */
 export const getMultiRates = async (base = "USD", targets = []) => {
   const data = await getLatestRates(base);
@@ -466,10 +463,7 @@ export const getMultiRates = async (base = "USD", targets = []) => {
   return result;
 };
 
-/**
- * Fetch OHLC candle data from Binance public API (no key required).
- * Returns data in the same format as getOHLCData.
- */
+// Fetch OHLC candle data from Binance 
 export const getBinanceOHLC = async (coinId, timeframe = "1D", limit = 100) => {
   const symbol = COIN_ID_TO_BINANCE[coinId];
   if (!symbol) return [];
@@ -514,10 +508,6 @@ export const getBinanceOHLC = async (coinId, timeframe = "1D", limit = 100) => {
   }
 };
 
-/**
- * Fetch OHLC candle data from CoinGecko for chart rendering.
- * Returns cached data when available.
- */
 export const getOHLCData = async (coinId, days = 30) => {
   if (!coinId) return [];
 
