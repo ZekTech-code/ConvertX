@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { enqueueCgRequest } from "../services/ExchangeApi";
 
 const isDev = import.meta.env.DEV;
-const CMC_BASE = isDev ? "/api/cmc" : "https://us-central1-convertx-bc1b0.cloudfunctions.net/cmcProxy";
+const CMC_BASE = isDev ? "/api/cmc" : "https://us-central1-convertxapp.cloudfunctions.net/cmcProxy";
 const COINGECKO_BASE = isDev ? "/api/coingecko" : "https://api.coingecko.com/api/v3";
 const FOREX_BASE = isDev ? "/api/er-api" : "https://open.er-api.com/v6";
 const REFRESH_INTERVAL = 60000;

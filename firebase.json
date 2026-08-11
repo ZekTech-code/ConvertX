@@ -48,7 +48,7 @@
           },
           {
             "key": "Content-Security-Policy",
-            "value": "default-src 'self'; script-src 'self' 'sha256-yYz0t+b/9GtWmyYY6D57I6Wv+2FiRhj44+aDrKLUX24='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: coin-images.coingecko.com cdn.jsdelivr.net flagcdn.com; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://*.cloudfunctions.net wss://*.firebaseio.com https://open.er-api.com https://api.coingecko.com https://api.alternative.me; frame-src https://convertx-bc1b0.firebaseapp.com https://accounts.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;"
+            "value": "default-src 'self'; script-src 'self' 'sha256-yYz0t+b/9GtWmyYY6D57I6Wv+2FiRhj44+aDrKLUX24='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: coin-images.coingecko.com cdn.jsdelivr.net flagcdn.com; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://*.cloudfunctions.net wss://*.firebaseio.com https://open.er-api.com https://api.coingecko.com https://api.alternative.me; frame-src https://convertxapp.firebaseapp.com https://accounts.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;"
           },
           {
             "key": "Cross-Origin-Opener-Policy",

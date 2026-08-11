@@ -8,7 +8,7 @@ const CMC_API_KEY = functions.config().coinmarketcap?.key || process.env.CMC_API
 
 exports.cmcProxy = onRequest(
   {
-    cors: [/convertx-bc1b0\.firebaseapp\.com$/, /convertx-bc1b0\.web\.app$/],
+    cors: [/convertxapp\.firebaseapp\.com$/, /convertxapp\.web\.app$/],
     region: "us-central1",
     invoker: "public",
   },

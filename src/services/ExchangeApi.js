@@ -2,7 +2,7 @@ const HISTORY_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 
 const isDev = import.meta.env.DEV;
 
-const CMC_BASE = isDev ? "/api/cmc" : "https://us-central1-convertx-bc1b0.cloudfunctions.net/cmcProxy";
+const CMC_BASE = isDev ? "/api/cmc" : "https://us-central1-convertxapp.cloudfunctions.net/cmcProxy";
 const COINGECKO_BASE = isDev ? "/api/coingecko" : "https://api.coingecko.com/api/v3";
 const ER_API_BASE = isDev ? "/api/er-api" : "https://open.er-api.com/v6";
 const BINANCE_BASE = "https://api.binance.com";
