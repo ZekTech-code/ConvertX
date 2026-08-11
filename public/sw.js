@@ -34,7 +34,7 @@ if (isDev) {
   });
 } else {
   // Production Service Worker Caching Strategy
-  const CACHE_NAME = "convertx-cache-v3";
+  const CACHE_NAME = "convertx-cache-v4";
   const ASSETS_TO_CACHE = [
     "/",
     "/index.html",
@@ -75,6 +75,11 @@ if (isDev) {
     // Only intercept HTTP/S requests, skip chrome-extension:// or file:// requests
     if (!event.request.url.startsWith("http")) return;
 
+    // Only handle same-origin requests. Cross-origin resources (flag images,
+    // exchange logos, coin icons) must load directly from their CDN - the
+    // browser enforces CSP/CORS for them and our cache logic has no use there.
+    if (new URL(event.request.url).origin !== self.location.origin) return;
+
     // Use network-first strategy for HTML pages so updates are picked up immediately
     const isPageRequest =
       event.request.mode === "navigate" ||
@@ -99,25 +104,23 @@ if (isDev) {
       return;
     }
 
-    // Cache-first strategy for static assets (JS, CSS, images, fonts)
+    // Cache-first strategy for same-origin static assets (JS, CSS, images, fonts)
     event.respondWith(
       caches.match(event.request).then((cachedResponse) => {
         if (cachedResponse) {
           return cachedResponse;
         }
         return fetch(event.request).then((networkResponse) => {
-          if (
-            networkResponse.status === 200 &&
-            new URL(event.request.url).origin === self.location.origin
-          ) {
+          if (networkResponse.status === 200) {
             const responseToCache = networkResponse.clone();
             caches.open(CACHE_NAME).then((cache) => {
               cache.put(event.request, responseToCache);
             });
           }
           return networkResponse;
-        }).catch((err) => {
-          console.log("Fetch failed; returning offline fallback if available", err);
+        }).catch(() => {
+          // Offline fallback: serve from cache
+          return caches.match(event.request);
         });
       })
     );
