@@ -34,11 +34,15 @@ if (isDev) {
   });
 } else {
   // Production Service Worker Caching Strategy
-  const CACHE_NAME = "convertx-cache-v2";
+  const CACHE_NAME = "convertx-cache-v3";
   const ASSETS_TO_CACHE = [
     "/",
     "/index.html",
     "/favicon.svg",
+    "/favicon-16.png",
+    "/favicon-32.png",
+    "/icon-192.png",
+    "/icon-512.png",
     "/manifest.json"
   ];
 

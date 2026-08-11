@@ -65,15 +65,18 @@ const FALLBACK_EXCHANGES = [
   { name: "Kraken", slug: "kraken", logo: "https://cdn.jsdelivr.net/gh/GMWalletApp/crypto-icons@latest/assets/exchanges/branded/kraken.svg" },
   { name: "Bybit", slug: "bybit", logo: "https://cdn.jsdelivr.net/gh/GMWalletApp/crypto-icons@latest/assets/exchanges/branded/bybit.svg" },
   { name: "OKX", slug: "okx", logo: "https://cdn.jsdelivr.net/gh/GMWalletApp/crypto-icons@latest/assets/exchanges/branded/okx.svg" },
+  { name: "Bitget", slug: "bitget", logo: "https://cdn.jsdelivr.net/gh/GMWalletApp/crypto-icons@latest/assets/exchanges/branded/bitget.svg" },
+  { name: "KuCoin", slug: "kucoin", logo: "https://cdn.jsdelivr.net/gh/GMWalletApp/crypto-icons@latest/assets/exchanges/branded/kucoin.svg" },
+  { name: "Gate.io", slug: "gate-io", logo: "https://cdn.jsdelivr.net/gh/GMWalletApp/crypto-icons@latest/assets/exchanges/branded/gate-io.svg" },
 ];
 
-function generateFallbackMarkets(asset, currentPrice) {
+function generateFallbackMarkets(asset, currentPrice, limit = 50) {
   if (!asset?.id) return [];
   const basePrice = currentPrice || FALLBACK_PRICES[asset.id] || 1;
   const totalVol = 500000000 + Math.random() * 2000000000;
   const result = [];
   const used = new Set();
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < Math.min(limit, 200); i++) {
     const ex = FALLBACK_EXCHANGES[Math.floor(Math.random() * FALLBACK_EXCHANGES.length)];
     const target = FALLBACK_PAIRS[Math.floor(Math.random() * FALLBACK_PAIRS.length)];
     const pair = `${asset.symbol || "BTC"}/${target}`;
@@ -92,6 +95,7 @@ function generateFallbackMarkets(asset, currentPrice) {
       marketShare: (vol / totalVol) * 100,
       logoUrl: ex.logo,
     });
+    if (result.length >= limit) break;
   }
   return result.sort((a, b) => b.volume24hQuote - a.volume24hQuote);
 }
@@ -157,9 +161,9 @@ export default function CoinMarkets({ asset, darkMode, currentPrice, pricesReady
     setLoading(true);
     try {
       const data = await getMarketPairs(asset.id, 50, currentPrice || 0);
-      setMarkets(data.length > 0 ? data : generateFallbackMarkets(asset, currentPrice));
+      setMarkets(data.length > 0 ? data : generateFallbackMarkets(asset, currentPrice, 50));
     } catch {
-      setMarkets(generateFallbackMarkets(asset, currentPrice));
+      setMarkets(generateFallbackMarkets(asset, currentPrice, 50));
     } finally {
       setLoading(false);
     }
