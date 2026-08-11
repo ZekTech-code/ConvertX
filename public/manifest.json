@@ -1,0 +1,17 @@
+{
+  "name": "ConvertX Currency Exchange",
+  "short_name": "ConvertX",
+  "description": "Secure Live Currency Converter and Statement Manager",
+  "start_url": "/convert",
+  "display": "standalone",
+  "background_color": "#050816",
+  "theme_color": "#050816",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

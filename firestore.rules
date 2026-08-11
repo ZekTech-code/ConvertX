@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Checks that the caller is fully verified and owns this email path
+    function isOwnerByEmail(email) {
+      return request.auth != null
+        && request.auth.token.email != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.lower() == email.lower();
+    }
+
+    // Checks that the caller is authenticated and owns this email path
+    // (email_verified NOT required — used only for the initial profile creation at sign-up)
+    function isAuthenticatedOwner(email) {
+      return request.auth != null
+        && request.auth.token.email != null
+        && request.auth.token.email.lower() == email.lower();
+    }
+
+    match /users/{email} {
+      // Require full verification for read, update, delete
+      allow read:   if isOwnerByEmail(email);
+      allow update: if isOwnerByEmail(email);
+      allow delete: if isOwnerByEmail(email);
+
+      // Allow create for authenticated (but possibly unverified) users so the
+      // initial profile document can be written right after sign-up, before the
+      // verification email link is clicked.
+      // Extra guard: the document must not already exist, so this cannot be
+      // used to overwrite another user's document.
+      allow create: if isAuthenticatedOwner(email) && !exists(/databases/$(database)/documents/users/$(email));
+
+      match /history/{docId} {
+        allow read:   if isOwnerByEmail(email);
+        allow create: if isOwnerByEmail(email);
+        allow update: if false;
+        allow delete: if isOwnerByEmail(email);
+      }
+
+      match /favourites/{docId} {
+        allow read, write: if isOwnerByEmail(email);
+      }
+
+      // Security logs: only the owner can read/write. Created via server-side
+      // utility functions while the user is authenticated.
+      match /securityLogs/{docId} {
+        allow read:   if isOwnerByEmail(email);
+        allow create: if isOwnerByEmail(email);
+        allow update: if false;
+        allow delete: if isOwnerByEmail(email);
+      }
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
