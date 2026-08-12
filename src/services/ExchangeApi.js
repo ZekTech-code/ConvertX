@@ -439,6 +439,7 @@ export const getMarketPairs = async (slug, limit = 15,) => {
         exchangeSlug,
         pair,
         price: t.last || 0,
+        priceUsd: t.converted_last?.usd || t.last || 0,
         volume24h: t.converted_volume?.usd || t.volume || 0,
         volume24hQuote: t.converted_volume?.usd || t.volume || 0,
         marketShare: 0,

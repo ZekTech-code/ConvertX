@@ -223,28 +223,31 @@ export function aggregateSignal(signals) {
   const sellSignals = signals.filter((s) => s.type === 'SELL');
   const buyStrength = buySignals.reduce((sum, s) => sum + s.strength, 0);
   const sellStrength = sellSignals.reduce((sum, s) => sum + s.strength, 0);
+  const totalStrength = buyStrength + sellStrength;
+  const netStrength = Math.abs(buyStrength - sellStrength);
+  const agreement = totalStrength > 0 ? netStrength / totalStrength : 0;
 
   let type;
   let confidence;
 
-  if (buySignals.length > sellSignals.length && buyStrength > sellStrength) {
+  if (buySignals.length >= 2 && buySignals.length > sellSignals.length && buyStrength > sellStrength) {
     type = 'BUY';
-    confidence = Math.round(50 + (buyStrength / (buySignals.length || 1)) * 0.5);
-  } else if (sellSignals.length > buySignals.length && sellStrength > buyStrength) {
+    confidence = Math.round(40 + agreement * 35 + Math.min(20, buySignals.length * 5));
+  } else if (sellSignals.length >= 2 && sellSignals.length > buySignals.length && sellStrength > buyStrength) {
     type = 'SELL';
-    confidence = Math.round(50 + (sellStrength / (sellSignals.length || 1)) * 0.5);
-  } else if (buyStrength > sellStrength && buySignals.length >= 2) {
+    confidence = Math.round(40 + agreement * 35 + Math.min(20, sellSignals.length * 5));
+  } else if (buySignals.length >= 3 && buyStrength > sellStrength * 1.25) {
     type = 'BUY';
-    confidence = Math.round(45 + (buyStrength / (buySignals.length || 1)) * 0.3);
-  } else if (sellStrength > buyStrength && sellSignals.length >= 2) {
+    confidence = Math.round(35 + agreement * 35 + Math.min(20, buySignals.length * 5));
+  } else if (sellSignals.length >= 3 && sellStrength > buyStrength * 1.25) {
     type = 'SELL';
-    confidence = Math.round(45 + (sellStrength / (sellSignals.length || 1)) * 0.3);
+    confidence = Math.round(35 + agreement * 35 + Math.min(20, sellSignals.length * 5));
   } else {
     type = 'NEUTRAL';
-    confidence = 30;
+    confidence = Math.round(Math.min(40, agreement * 40));
   }
 
-  const maxConfidence = Math.min(98, Math.max(15, confidence));
+  const maxConfidence = type === 'NEUTRAL' ? Math.max(0, confidence) : Math.min(92, Math.max(45, confidence));
   const finalType = maxConfidence >= 75 ? (type === 'BUY' ? 'STRONG BUY' : type === 'SELL' ? 'STRONG SELL' : type) : type;
 
   return { type: finalType, strength: maxConfidence, confidence: maxConfidence, signals };

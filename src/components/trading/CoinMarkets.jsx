@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { getMarketPairs } from "../../services/ExchangeApi";
 import { getCoinIcon } from "../../utils/coinIcons";
 import { Loader2 } from "lucide-react";
@@ -19,18 +19,24 @@ function formatPrice(p) {
 }
 
 const STATUS_COLORS = {
-  up: { bg: "rgba(34,197,94,0.1)", text: "#22c55e", label: "Up" },
-  down: { bg: "rgba(239,68,68,0.1)", text: "#ef4444", label: "Down" },
-  neutral: { bg: "rgba(148,163,184,0.12)", text: "#94a3b8", label: "Neutral" },
+  high: { bg: "rgba(34,197,94,0.1)", text: "#22c55e", label: "High" },
+  low: { bg: "rgba(239,68,68,0.1)", text: "#ef4444", label: "Low" },
+  medium: { bg: "rgba(232,143,43,0.12)", text: "#E88F2B", label: "Medium" },
   na: { bg: "rgba(148,163,184,0.08)", text: "#64748b", label: "N/A" },
 };
 
-function getMarketStatus(change24h) {
-  if (change24h == null || Number.isNaN(Number(change24h))) return STATUS_COLORS.na;
-  const value = Number(change24h);
-  if (value > 0.05) return STATUS_COLORS.up;
-  if (value < -0.05) return STATUS_COLORS.down;
-  return STATUS_COLORS.neutral;
+function getComparablePrice(market, currentPrice) {
+  const value = market?.priceUsd ?? market?.price ?? currentPrice;
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? number : null;
+}
+
+function getMarketPriceBand(price, bands) {
+  if (price == null || !bands) return STATUS_COLORS.na;
+  if (bands.lowCut === bands.highCut) return STATUS_COLORS.medium;
+  if (price <= bands.lowCut) return STATUS_COLORS.low;
+  if (price >= bands.highCut) return STATUS_COLORS.high;
+  return STATUS_COLORS.medium;
 }
 
 const CDN = "https://cdn.jsdelivr.net/gh/GMWalletApp/crypto-icons@latest/assets/exchanges/branded";
@@ -90,6 +96,7 @@ function generateFallbackMarkets(asset, currentPrice, limit = 50) {
       exchangeSlug: ex.slug,
       pair,
       price: +price.toFixed(8),
+      priceUsd: +price.toFixed(8),
       volume24h: vol,
       volume24hQuote: vol,
       marketShare: (vol / totalVol) * 100,
@@ -140,7 +147,7 @@ function ExchangeIconWithFallback({ exchange, slug, logoUrl }) {
   );
 }
 
-export default function CoinMarkets({ asset, darkMode, currentPrice, pricesReady, assetChange24h }) {
+export default function CoinMarkets({ asset, darkMode, currentPrice, pricesReady }) {
   const [markets, setMarkets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
@@ -155,6 +162,23 @@ export default function CoinMarkets({ asset, darkMode, currentPrice, pricesReady
       m.pair?.toLowerCase().includes(q)
     );
   });
+
+  const priceBands = useMemo(() => {
+    const prices = markets
+      .map((m) => getComparablePrice(m, currentPrice))
+      .filter((price) => price != null)
+      .sort((a, b) => a - b);
+
+    if (prices.length === 0) return null;
+
+    const lowerIndex = Math.floor((prices.length - 1) / 3);
+    const upperIndex = Math.ceil(((prices.length - 1) * 2) / 3);
+
+    return {
+      lowCut: prices[lowerIndex],
+      highCut: prices[upperIndex],
+    };
+  }, [markets, currentPrice]);
 
   const fetchMarkets = useCallback(async () => {
     if (!asset?.id) return;
@@ -297,7 +321,8 @@ export default function CoinMarkets({ asset, darkMode, currentPrice, pricesReady
                 </div>
               )}
               {filteredMarkets.map((m, i) => {
-              const status = getMarketStatus(assetChange24h);
+              const comparablePrice = getComparablePrice(m, currentPrice);
+              const status = getMarketPriceBand(comparablePrice, priceBands);
               return (
                 <div
                   key={`${m.exchange}-${m.pair}-${i}`}

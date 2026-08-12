@@ -1,58 +1,94 @@
-﻿import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { TrendingUp, TrendingDown, Minus, Shield, AlertTriangle, Target, Clock } from 'lucide-react';
-import { generateSignals, aggregateSignal, calculateTakeProfits } from '../../services/technicalAnalysis';
+import { generateSignals, aggregateSignal, calculateATR } from '../../services/technicalAnalysis';
 
-export default function SignalPanel({ currentPrice, priceHistory, darkMode }) {
-  const [generatedAt] = useState(() => Date.now());
+function emptyAnalysis(summary, source = null) {
+  return {
+    signals: [],
+    overall: 'NEUTRAL',
+    strength: 0,
+    confidence: 0,
+    summary,
+    rsi: null,
+    source,
+    isActionable: false,
+  };
+}
 
+function calculateDisplayRsi(closes) {
+  if (closes.length < 15) return null;
+  let gains = 0;
+  let losses = 0;
+  for (let i = closes.length - 14; i < closes.length; i++) {
+    const diff = closes[i] - closes[i - 1];
+    if (diff > 0) gains += diff;
+    else losses -= diff;
+  }
+  return losses === 0 ? 100 : 100 - 100 / (1 + (gains / 14) / (losses / 14));
+}
+
+export default function SignalPanel({ currentPrice, priceHistory, priceHistoryMeta, darkMode }) {
   const analysis = useMemo(() => {
+    const source = priceHistoryMeta?.source || null;
+
+    if (priceHistoryMeta?.isSynthetic) {
+      return emptyAnalysis('Real market candles unavailable. Signal paused.', source);
+    }
+
     if (!priceHistory || priceHistory.length < 20 || !currentPrice) {
-      return { signals: [], overall: 'NEUTRAL', strength: 0, confidence: 0, summary: 'Waiting for sufficient data...', rsi: null };
+      return emptyAnalysis('Waiting for sufficient real market data...', source);
     }
 
     const closes = priceHistory.map((c) => c.close || c.value || 0).filter((v) => v > 0);
-    if (closes.length < 20) {
-      return { signals: [], overall: 'NEUTRAL', strength: 0, confidence: 0, summary: 'Not enough data points', rsi: null };
+    if (closes.length < 30) {
+      return emptyAnalysis('Not enough real data points for a confirmed signal', source);
     }
 
-    const candles = priceHistory.filter((c) => c.high && c.low && c.close).slice(0, 100);
+    const candles = priceHistory.filter((c) => c.high && c.low && c.close).slice(-100);
+    const atr = calculateATR(candles);
+    if (candles.length < 30 || !atr) {
+      return emptyAnalysis('Waiting for complete OHLC candle data...', source);
+    }
 
     const sigs = generateSignals(closes, candles);
     const agg = aggregateSignal(sigs);
-
-    const tps = calculateTakeProfits(currentPrice, agg.type === 'SELL' || agg.type === 'STRONG SELL' ? 'short' : 'long');
-    const stopLoss = agg.type === 'SELL' || agg.type === 'STRONG SELL'
-      ? currentPrice * 1.02
-      : currentPrice * 0.98;
-
-    const trend = agg.type === 'BUY' || agg.type === 'STRONG BUY' ? 'BULLISH'
-      : agg.type === 'SELL' || agg.type === 'STRONG SELL' ? 'BEARISH'
-      : 'NEUTRAL';
+    const isShort = agg.type === 'SELL' || agg.type === 'STRONG SELL';
+    const isLong = agg.type === 'BUY' || agg.type === 'STRONG BUY';
+    const confirmedType = isShort ? 'SELL' : isLong ? 'BUY' : null;
+    const confirmingSignals = confirmedType ? sigs.filter((s) => s.type === confirmedType) : [];
+    const riskDistance = atr * 1.5;
+    const stopLoss = isShort ? currentPrice + riskDistance : currentPrice - riskDistance;
+    const takeProfits = confirmedType
+      ? [2, 3, 5].map((rrr, index) => ({
+          level: index + 1,
+          rrr,
+          price: isShort ? currentPrice - riskDistance * rrr : currentPrice + riskDistance * rrr,
+        }))
+      : [];
+    const trend = isLong ? 'BULLISH' : isShort ? 'BEARISH' : 'NEUTRAL';
+    const generatedAt = priceHistory[priceHistory.length - 1]?.time
+      ? priceHistory[priceHistory.length - 1].time * 1000
+      : null;
 
     return {
       signals: sigs,
       overall: agg.type,
       strength: agg.strength,
       confidence: agg.confidence,
-      summary: `${agg.type} — ${sigs.length} indicators`,
-      rsi: (() => {
-        if (closes.length < 15) return 50;
-        let gains = 0, losses = 0;
-        for (let i = closes.length - 14; i < closes.length; i++) {
-          const diff = closes[i] - closes[i - 1];
-          if (diff > 0) gains += diff; else losses -= diff;
-        }
-        return losses === 0 ? 100 : 100 - 100 / (1 + (gains / 14) / (losses / 14));
-      })(),
+      summary: confirmedType
+        ? `${agg.type} confirmed by ${confirmingSignals.length} indicators`
+        : `${sigs.length} indicators checked. No confirmed trade signal.`,
+      rsi: calculateDisplayRsi(closes),
       entryPrice: currentPrice,
       stopLoss,
-      takeProfits: tps,
+      takeProfits,
       trend,
       generatedAt,
-      expiresAt: generatedAt + 3600000,
-      riskReward: tps.length > 0 ? (tps[0].price - currentPrice) / (currentPrice - stopLoss) : 0,
+      source,
+      isActionable: Boolean(confirmedType),
+      riskReward: takeProfits.length > 0 ? Math.abs((takeProfits[0].price - currentPrice) / (currentPrice - stopLoss)) : 0,
     };
-  }, [currentPrice, priceHistory, generatedAt]);
+  }, [currentPrice, priceHistory, priceHistoryMeta]);
 
   const tc = (dark, light) => ({ color: darkMode ? dark : light });
 
@@ -84,11 +120,6 @@ export default function SignalPanel({ currentPrice, priceHistory, darkMode }) {
         <OverallIcon size={28} className="mx-auto mb-1" style={{ color: overallStyle.text }} />
         <div className="text-xl font-black" style={{ color: overallStyle.text }}>
           {analysis.overall}
-          {analysis.strength >= 75 && (analysis.overall === 'BUY' || analysis.overall === 'SELL') && (
-            <span className="ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded"
-              style={{ background: overallStyle.bg, color: overallStyle.text, border: `1px solid ${overallStyle.border}` }}
-            >{(analysis.overall === 'BUY' ? 'STRONG ' : 'STRONG ') + analysis.overall}</span>
-          )}
         </div>
         {analysis.summary && (
           <p className="text-[11px] mt-1" style={tc('#94a3b8', '#475569')}>{analysis.summary}</p>
@@ -99,7 +130,7 @@ export default function SignalPanel({ currentPrice, priceHistory, darkMode }) {
         <p className="text-[11px] mt-1 font-bold" style={tc('#64748b', '#475569')}>Confidence: {analysis.confidence}%</p>
       </div>
 
-      {analysis.overall !== 'NEUTRAL' && (
+      {analysis.isActionable && (
         <div className="rounded-xl p-3 space-y-1.5"
           style={{
             background: darkMode ? 'rgba(255,255,255,0.02)' : 'rgba(15,23,42,0.02)',
@@ -114,8 +145,8 @@ export default function SignalPanel({ currentPrice, priceHistory, darkMode }) {
             <span style={tc('#64748b', '#475569')}>Stop Loss</span>
             <span className="font-mono font-bold" style={{ color: '#ef4444' }}>${analysis.stopLoss?.toFixed(4)}</span>
           </div>
-          {analysis.takeProfits.map((tp, i) => (
-            <div key={i} className="flex justify-between text-[11px]">
+          {analysis.takeProfits.map((tp) => (
+            <div key={tp.level} className="flex justify-between text-[11px]">
               <span style={tc('#64748b', '#475569')}>TP {tp.level} (RR {tp.rrr}:1)</span>
               <span className="font-mono font-bold" style={{ color: '#22c55e' }}>${tp.price.toFixed(4)}</span>
             </div>
@@ -136,8 +167,7 @@ export default function SignalPanel({ currentPrice, priceHistory, darkMode }) {
           </div>
           <div className="flex items-center gap-1.5 text-[9px]" style={tc('#64748b', '#475569')}>
             <Clock size={9} />
-            <span>Generated: {new Date(analysis.generatedAt).toLocaleTimeString()}</span>
-            <span>Expires: {new Date(analysis.expiresAt).toLocaleTimeString()}</span>
+            {analysis.generatedAt && <span>Generated: {new Date(analysis.generatedAt).toLocaleTimeString()}</span>}
           </div>
         </div>
       )}
@@ -159,7 +189,7 @@ export default function SignalPanel({ currentPrice, priceHistory, darkMode }) {
       <div className="space-y-1 max-h-[200px] overflow-y-auto">
         {analysis.signals.length === 0 && (
           <div className="text-center py-3">
-            <p className="text-[11px]" style={tc('#64748b', '#475569')}>No signals generated yet</p>
+            <p className="text-[11px]" style={tc('#64748b', '#475569')}>No confirmed signal generated yet</p>
           </div>
         )}
         {analysis.signals.map((sig, i) => {
@@ -182,7 +212,7 @@ export default function SignalPanel({ currentPrice, priceHistory, darkMode }) {
 
       <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-[#E88F2B]/5 border border-[#E88F2B]/10">
         <AlertTriangle size={9} className="text-[#E88F2B] shrink-0" />
-        <span className="text-[10px]" style={tc('#64748b', '#475569')}>Not financial advice. Always DYOR.</span>
+        <span className="text-[10px]" style={tc('#64748b', '#475569')}>Signals use market data only and are not financial advice.</span>
       </div>
     </div>
   );

@@ -34,6 +34,7 @@ export default function Trade() {
   const marketData = useMarketData();
   const [showAssetPicker, setShowAssetPicker] = useState(false);
   const [priceHistory, setPriceHistory] = useState([]);
+  const [priceHistoryMeta, setPriceHistoryMeta] = useState({ source: null, isSynthetic: false });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileNavTarget, setMobileNavTarget] = useState(null);
   const [marketSearch, setMarketSearch] = useState("");
@@ -59,6 +60,14 @@ export default function Trade() {
 
   const trading = useTrading(getPrice);
   const toastAlert = trading.lastTriggeredAlerts?.[0] || null;
+
+  const handleChartDataReady = useCallback((history, meta = {}) => {
+    setPriceHistory(history);
+    setPriceHistoryMeta({
+      source: meta.source || null,
+      isSynthetic: Boolean(meta.isSynthetic),
+    });
+  }, []);
 
   const allPrices = useMemo(() => marketData.getAllPrices(), [marketData]);
 
@@ -144,8 +153,8 @@ export default function Trade() {
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col gap-2 mb-2"
         >
-          <div className="flex items-center justify-between">
-            <div className="flex-1 hidden lg:flex">
+          <div className="relative flex items-center justify-center min-h-14">
+            <div className="absolute left-0 hidden lg:flex">
               <button
                 onClick={() => navigate("/")}
                 className="flex items-center gap-1.5 text-[13px] font-bold transition-all cursor-pointer"
@@ -155,7 +164,7 @@ export default function Trade() {
                 Back
               </button>
             </div>
-            <div className="flex-1 min-w-0 text-center">
+            <div className="min-w-0 text-center px-12 sm:px-16">
               <h1 className={`text-lg sm:text-3xl lg:text-4xl font-black tracking-tight whitespace-nowrap ${darkMode ? "text-white" : "text-slate-900"}`}>
                 Trading Dashboard
               </h1>
@@ -168,7 +177,7 @@ export default function Trade() {
                 )}
               </p>
             </div>
-            <div className="flex-1 hidden lg:flex items-center justify-end gap-2">
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center justify-end gap-2">
               <button
                 onClick={marketData.refresh}
                 disabled={marketData.loading}
@@ -453,7 +462,7 @@ export default function Trade() {
                   darkMode={darkMode}
                   currentPrice={currentPrice}
                   pricesReady={pricesReady}
-                  onDataReady={setPriceHistory}
+                  onDataReady={handleChartDataReady}
                 />
           </div>
 
@@ -478,6 +487,7 @@ export default function Trade() {
                   asset={selectedAsset}
                   currentPrice={currentPrice}
                   priceHistory={priceHistory}
+                  priceHistoryMeta={priceHistoryMeta}
                   darkMode={darkMode}
                 />
               </div>
@@ -494,7 +504,6 @@ export default function Trade() {
               darkMode={darkMode}
               currentPrice={currentPrice}
               pricesReady={pricesReady}
-              assetChange24h={selectedAsset ? marketData.getCryptoChange(selectedAsset.id) : null}
             />
           )}
         </div>
@@ -590,6 +599,7 @@ export default function Trade() {
                     asset={selectedAsset}
                     currentPrice={currentPrice}
                     priceHistory={priceHistory}
+                    priceHistoryMeta={priceHistoryMeta}
                     darkMode={darkMode}
                   />
                 </div>

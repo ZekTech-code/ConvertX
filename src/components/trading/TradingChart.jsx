@@ -317,7 +317,7 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
     const days = TIMEFRAME_DAYS[timeframe] || 30;
     let cancelled = false;
 
-    const applyCandleData = (candles) => {
+    const applyCandleData = (candles, source) => {
       if (cancelled || !candleSeriesRef.current || candles.length === 0) return false;
 
       const formatted = candles.map((c) => ({
@@ -326,7 +326,7 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
         high: +c.high.toFixed(digits),
         low: +c.low.toFixed(digits),
         close: +c.close.toFixed(digits),
-        volume: c.volume || Math.floor(Math.random() * 500000) + 50000,
+        volume: c.volume || 0,
       })).filter((c) => c.time > 0);
 
       const seen = new Set();
@@ -357,7 +357,7 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
       chartRef.current?.timeScale().fitContent();
       activeCandleRef.current = null;
       candleDataRef.current = deduped;
-      onDataReady?.(deduped);
+      onDataReady?.(deduped, { source, isSynthetic: source === "Synthetic" });
       return true;
     };
 
@@ -371,7 +371,7 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
 
       if (candles && candles.length >= 20) {
         setDataSource("Binance");
-        applyCandleData(candles);
+        applyCandleData(candles, "Binance");
         return;
       }
 
@@ -382,13 +382,13 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
 
       if (candles && candles.length >= 20) {
         setDataSource("CoinGecko");
-        applyCandleData(candles);
+        applyCandleData(candles, "CoinGecko");
         return;
       }
 
       candles = generateSyntheticCandles(currentPriceRef.current || 1, timeframe);
       setDataSource("Synthetic");
-      applyCandleData(candles);
+      applyCandleData(candles, "Synthetic");
     };
 
     loadRealData();
@@ -416,7 +416,7 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
         activeCandleRef.current = {
           time: candleTime, open: prevClose,
           high: Math.max(prevClose, newClose), low: Math.min(prevClose, newClose),
-          close: newClose, volume: Math.floor(Math.random() * 100000) + 10000,
+          close: newClose, volume: 0,
         };
       } else {
         activeCandleRef.current.close = newClose;
@@ -444,12 +444,12 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
         if (volumeSeriesRef.current) volumeSeriesRef.current.update({ time: candleTime, value: activeCandleRef.current.volume, color: newClose >= prevClose ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)" });
       } catch {}
 
-      onDataReady?.(liveBase);
+      onDataReady?.(liveBase, { source: dataSource, isSynthetic: dataSource === "Synthetic" });
 
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [currentPrice, digits, timeframe, onDataReady]);
+  }, [currentPrice, dataSource, digits, timeframe, onDataReady]);
 
   return (
     <div
