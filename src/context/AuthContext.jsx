@@ -231,33 +231,6 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
-  const applyOrCreateCloudProfile = useCallback(async (emailKey, fallback = {}) => {
-    if (!isFirebaseEnabled || !firebaseDb) return null;
-
-    try {
-      const docRef = doc(firebaseDb, "users", emailKey);
-      const docSnap = await getDocFromServer(docRef);
-
-      if (!docSnap.exists()) {
-        const profile = buildDefaultCloudProfile(emailKey, fallback);
-        await setDoc(docRef, profile);
-        applyCloudAccountData(emailKey, profile, fallback);
-        return profile;
-      }
-
-      const data = docSnap.data();
-      applyCloudAccountData(emailKey, data, fallback);
-      return data;
-    } catch (err) {
-      if (isFirestoreNetworkError(err)) {
-        scheduleFirestoreReconnect();
-      } else {
-        console.error("Cloud account load failed:", err);
-      }
-      return null;
-    }
-  }, [applyCloudAccountData, buildDefaultCloudProfile, scheduleFirestoreReconnect]);
-
   const clearFirestoreReconnectTimer = useCallback(() => {
     if (firestoreReconnectTimerRef.current) {
       window.clearTimeout(firestoreReconnectTimerRef.current);
@@ -286,6 +259,33 @@ export function AuthProvider({ children }) {
       });
     }, 1500);
   }, []);
+
+  const applyOrCreateCloudProfile = useCallback(async (emailKey, fallback = {}) => {
+    if (!isFirebaseEnabled || !firebaseDb) return null;
+
+    try {
+      const docRef = doc(firebaseDb, "users", emailKey);
+      const docSnap = await getDocFromServer(docRef);
+
+      if (!docSnap.exists()) {
+        const profile = buildDefaultCloudProfile(emailKey, fallback);
+        await setDoc(docRef, profile);
+        applyCloudAccountData(emailKey, profile, fallback);
+        return profile;
+      }
+
+      const data = docSnap.data();
+      applyCloudAccountData(emailKey, data, fallback);
+      return data;
+    } catch (err) {
+      if (isFirestoreNetworkError(err)) {
+        scheduleFirestoreReconnect();
+      } else {
+        console.error("Cloud account load failed:", err);
+      }
+      return null;
+    }
+  }, [applyCloudAccountData, buildDefaultCloudProfile, scheduleFirestoreReconnect]);
 
   const activateVerifiedFirebaseUser = useCallback(async (emailKey) => {
     const profile = await applyOrCreateCloudProfile(emailKey, {});
