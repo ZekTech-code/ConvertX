@@ -498,7 +498,7 @@ export const getBinanceOHLC = async (coinId, timeframe = "1D", limit = 100) => {
 
   try {
     const url = `${BINANCE_BASE}/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
-    const res = await fetchWithTimeout(url, { timeout: 10000 });
+    const res = await fetchWithTimeout(url, { timeout: 5000 });
     if (!res.ok) return [];
 
     const data = await res.json();
@@ -518,7 +518,8 @@ export const getBinanceOHLC = async (coinId, timeframe = "1D", limit = 100) => {
       localStorage.setItem(cacheTimeKey, String(Date.now()));
     }
     return candles;
-  } catch {
+  } catch (err) {
+    console.warn(`[Binance OHLC] ${symbol} failed (${err?.message || err}), falling back to CoinGecko`);
     return [];
   }
 };
