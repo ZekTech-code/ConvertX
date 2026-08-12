@@ -76,35 +76,12 @@ export default defineConfig(({ mode }) => {
 
       chunkSizeWarningLimit: 600,
 
-      rollupOptions: {
-        input: {
-          app: fileURLToPath(new URL('index.html', import.meta.url)),
-        },
+      rolldownOptions: {
         output: isProduction
           ? {
               chunkFileNames:  'assets/[hash].js',
               entryFileNames:  'assets/[hash].js',
               assetFileNames:  'assets/[hash][extname]',
-
-              manualChunks(id) {
-                if (!id.includes('node_modules')) return undefined
-                if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
-                  return 'vendor-react'
-                }
-                if (id.includes('firebase') || id.includes('@firebase')) {
-                  return 'vendor-firebase'
-                }
-                if (id.includes('framer-motion')) {
-                  return 'vendor-motion'
-                }
-                if (id.includes('recharts') || id.includes('d3-') || id.includes('victory-vendor')) {
-                  return 'vendor-charts'
-                }
-                if (id.includes('lucide-react')) {
-                  return 'vendor-icons'
-                }
-                return 'vendor'
-              },
             }
           : {
               chunkFileNames:  'assets/[name]-[hash].js',

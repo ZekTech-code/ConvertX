@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+﻿import { useState, useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeContext";
 import { useTheme } from "./context/useTheme";
@@ -7,12 +7,12 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { WifiOff } from "lucide-react";
 import useSecurity from "./hooks/useSecurity";
 
-import CurrencyConverter from "./components/CurrencyConverter";
-import Trade from "./Pages/Trade";
-import CurrencyConverterHomePage from "./Pages/Home";
-import ExchangeRate from "./Pages/ExchangeRate";
-import GetStarted from "./Pages/GetStarted";
-import Profile from "./Pages/Profile";
+const CurrencyConverter = lazy(() => import("./components/CurrencyConverter"));
+const Trade = lazy(() => import("./Pages/Trade"));
+const CurrencyConverterHomePage = lazy(() => import("./Pages/Home"));
+const ExchangeRate = lazy(() => import("./Pages/ExchangeRate"));
+const GetStarted = lazy(() => import("./Pages/GetStarted"));
+const Profile = lazy(() => import("./Pages/Profile"));
 
 const MainApp = () => {
   const { darkMode } = useTheme();
@@ -84,6 +84,18 @@ const MainApp = () => {
 
   return (
     <BrowserRouter>
+      <Suspense
+        fallback={
+          <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-linear-to-r from-[#E88F2B] to-[#d97706] flex items-center justify-center animate-pulse">
+                <span className="text-black font-bold">CX</span>
+              </div>
+              <p className="text-sm text-slate-500 dark:text-slate-400 animate-pulse">Loading…</p>
+            </div>
+          </div>
+        }
+      >
       <Routes>
         <Route path="/" element={<CurrencyConverterHomePage />} />
         <Route
@@ -102,7 +114,14 @@ const MainApp = () => {
             </ProtectedRoute>
           }
         />
-        <Route path="/rates" element={<ExchangeRate />} />
+        <Route
+          path="/rates"
+          element={
+            <ProtectedRoute>
+              <ExchangeRate />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/trade"
           element={
@@ -113,6 +132,7 @@ const MainApp = () => {
         />
         <Route path="/get-started" element={<GetStarted />} />
       </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 };

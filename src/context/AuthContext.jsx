@@ -24,6 +24,7 @@ import {
   applyActionCode,
   signOut,
   updatePassword as firebaseUpdatePassword,
+  updateProfile as firebaseUpdateProfile,
   deleteUser as firebaseDeleteUser,
   onAuthStateChanged,
   reload as reloadFirebaseUser,
@@ -35,6 +36,7 @@ import {
   getDocFromServer,
   setDoc,
   deleteDoc,
+  onSnapshot,
   disableNetwork,
   enableNetwork
 } from "firebase/firestore";
@@ -43,7 +45,6 @@ import { AuthContext } from "./AuthContextValue";
 
 const DEFAULT_BALANCES = {};
 const DEFAULT_TRADING = { balance: 10000, startingBalance: 10000, positions: [], trades: [] };
-const FIRESTORE_RECONNECT_DELAY_MS = 15000;
 const DEFAULT_PREFERENCES = {
   defaultFrom: "USD",
   defaultTo: "NGN",
@@ -158,23 +159,27 @@ export function AuthProvider({ children }) {
     });
   }, [applyAccountState]);
 
-  const buildCloudUserSession = useCallback((emailKey, data, fallback = {}) => ({
-    name: data.name || fallback.name || "",
-    firstName: data.firstName || fallback.firstName || "",
-    surname: data.surname || fallback.surname || "",
-    otherName: data.otherName || fallback.otherName || "",
-    signupName: data.signupName || data.name || fallback.signupName || fallback.name || "",
-    email: emailKey,
-    phone: data.phone || fallback.phone || "",
-    country: data.country || fallback.country || "",
-    bio: data.bio || fallback.bio || "",
-    avatar: data.avatar || fallback.avatar || "avatar1",
-    preferences: {
-      ...DEFAULT_PREFERENCES,
-      ...(fallback.preferences || {}),
-      ...(data.preferences || {}),
-    },
-  }), []);
+  const buildCloudUserSession = useCallback((emailKey, data, fallback = {}) => {
+    const fullName = data.name || fallback.name || data.signupName || fallback.signupName || "";
+    const nameParts = fullName.trim().split(/\s+/).filter(Boolean);
+    return {
+      name: fullName,
+      firstName: data.firstName || fallback.firstName || nameParts[0] || "",
+      surname: data.surname || fallback.surname || (nameParts.length > 1 ? nameParts.slice(1).join(" ") : ""),
+      otherName: data.otherName || fallback.otherName || "",
+      signupName: data.signupName || data.name || fallback.signupName || fallback.name || "",
+      email: emailKey,
+      phone: data.phone || fallback.phone || "",
+      country: data.country || fallback.country || "",
+      bio: data.bio || fallback.bio || "",
+      avatar: data.avatar || fallback.avatar || "avatar1",
+      preferences: {
+        ...DEFAULT_PREFERENCES,
+        ...(fallback.preferences || {}),
+        ...(data.preferences || {}),
+      },
+    };
+  }, []);
 
   const getCloudAccountState = useCallback((data) => ({
     balances: data.balances || DEFAULT_BALANCES,
@@ -195,6 +200,64 @@ export function AuthProvider({ children }) {
     return { userSession, accountState };
   }, [applyAccountState, buildCloudUserSession, getCloudAccountState]);
 
+  const buildDefaultCloudProfile = useCallback((emailKey, fallback = {}) => {
+    const fullName = fallback.name || fallback.signupName || emailKey;
+    const nameParts = String(fullName).trim().split(/\s+/).filter(Boolean);
+    const firstName = fallback.firstName || nameParts[0] || "";
+    const surname = fallback.surname || (nameParts.length > 1 ? nameParts.slice(1).join(" ") : "");
+
+    return {
+      name: fullName,
+      firstName,
+      surname,
+      otherName: fallback.otherName || "",
+      signupName: fallback.signupName || fullName,
+      email: emailKey,
+      phone: fallback.phone || "",
+      country: fallback.country || "",
+      bio: fallback.bio || "",
+      avatar: fallback.avatar || "avatar1",
+      preferences: {
+        ...DEFAULT_PREFERENCES,
+        ...(fallback.preferences || {}),
+      },
+      balances: DEFAULT_BALANCES,
+      conversions: conversionsRef.current || [],
+      apiKeys: [],
+      is2FAEnabled: false,
+      trading: tradingRef.current || DEFAULT_TRADING,
+      emailVerified: true,
+      createdAt: new Date().toISOString(),
+    };
+  }, []);
+
+  const applyOrCreateCloudProfile = useCallback(async (emailKey, fallback = {}) => {
+    if (!isFirebaseEnabled || !firebaseDb) return null;
+
+    try {
+      const docRef = doc(firebaseDb, "users", emailKey);
+      const docSnap = await getDocFromServer(docRef);
+
+      if (!docSnap.exists()) {
+        const profile = buildDefaultCloudProfile(emailKey, fallback);
+        await setDoc(docRef, profile);
+        applyCloudAccountData(emailKey, profile, fallback);
+        return profile;
+      }
+
+      const data = docSnap.data();
+      applyCloudAccountData(emailKey, data, fallback);
+      return data;
+    } catch (err) {
+      if (isFirestoreNetworkError(err)) {
+        scheduleFirestoreReconnect();
+      } else {
+        console.error("Cloud account load failed:", err);
+      }
+      return null;
+    }
+  }, [applyCloudAccountData, buildDefaultCloudProfile, scheduleFirestoreReconnect]);
+
   const clearFirestoreReconnectTimer = useCallback(() => {
     if (firestoreReconnectTimerRef.current) {
       window.clearTimeout(firestoreReconnectTimerRef.current);
@@ -207,40 +270,32 @@ export function AuthProvider({ children }) {
       return;
     }
 
-    disableNetwork(firebaseDb).catch(() => {});
-
     firestoreReconnectTimerRef.current = window.setTimeout(() => {
       firestoreReconnectTimerRef.current = null;
 
-      if (navigator.onLine) {
-        enableNetwork(firebaseDb)
-          .then(() => {})
-          .catch((err) => {
-            console.warn("Firestore fast reconnect failed, scheduling fallback:", err);
-            if (navigator.onLine && !firestoreReconnectTimerRef.current) {
-              disableNetwork(firebaseDb).catch(() => {});
-              firestoreReconnectTimerRef.current = window.setTimeout(() => {
-                firestoreReconnectTimerRef.current = null;
-                if (navigator.onLine) {
-                  enableNetwork(firebaseDb).catch(() => {});
-                }
-              }, FIRESTORE_RECONNECT_DELAY_MS);
+      if (!navigator.onLine) return;
+
+      enableNetwork(firebaseDb).catch(() => {
+        disableNetwork(firebaseDb)
+          .catch(() => {})
+          .finally(() => {
+            if (navigator.onLine) {
+              enableNetwork(firebaseDb).catch(() => {});
             }
           });
-      }
+      });
     }, 1500);
   }, []);
 
   const activateVerifiedFirebaseUser = useCallback(async (emailKey) => {
-    const docSnap = await getDocFromServer(doc(firebaseDb, "users", emailKey));
-    if (!docSnap.exists()) {
+    const profile = await applyOrCreateCloudProfile(emailKey, {});
+    if (!profile) {
       throw new Error("User record not found in Cloud Database.");
     }
-
-    const { userSession } = applyCloudAccountData(emailKey, docSnap.data());
+    const { userSession } = applyCloudAccountData(emailKey, profile);
     localStorage.removeItem("pending_verification_email");
     return userSession;
-  }, [applyCloudAccountData]);
+  }, [applyCloudAccountData, applyOrCreateCloudProfile]);
 
   useEffect(() => {
     if (!isFirebaseEnabled || !firebaseDb) return;
@@ -254,13 +309,17 @@ export function AuthProvider({ children }) {
       enableNetwork(firebaseDb).catch(() => {});
     };
     const handleConnectionChange = () => {
-      if (navigator.onLine) {
-        clearFirestoreReconnectTimer();
-        console.log("Network interface changed, forcing Firestore reconnection...");
+      if (!navigator.onLine) return;
+      clearFirestoreReconnectTimer();
+      enableNetwork(firebaseDb).catch(() => {
         disableNetwork(firebaseDb)
-          .then(() => enableNetwork(firebaseDb))
-          .catch(() => {});
-      }
+          .catch(() => {})
+          .finally(() => {
+            if (navigator.onLine) {
+              enableNetwork(firebaseDb).catch(() => {});
+            }
+          });
+      });
     };
 
     window.addEventListener("offline", handleOffline);
@@ -340,11 +399,7 @@ export function AuthProvider({ children }) {
             if (navigator.onLine) {
               await firebaseUser.getIdToken(true);
             }
-            const docSnap = await getDocFromServer(doc(firebaseDb, "users", emailKey));
-            if (docSnap.exists()) {
-              const data = docSnap.data();
-              applyCloudAccountData(emailKey, data);
-            }
+            await applyOrCreateCloudProfile(emailKey, userRef.current || {});
           } catch {
           }
         } else {
@@ -357,7 +412,7 @@ export function AuthProvider({ children }) {
       });
       return () => unsubscribe();
     }
-  }, [user, isAuthenticated, activateVerifiedFirebaseUser, applyCloudAccountData, resetAccountState]);
+  }, [user, isAuthenticated, activateVerifiedFirebaseUser, applyCloudAccountData, applyOrCreateCloudProfile, resetAccountState]);
 
   useEffect(() => {
     if (!isFirebaseEnabled || !isAuthenticated || !user?.email) return;
@@ -367,22 +422,8 @@ export function AuthProvider({ children }) {
     const docRef = doc(firebaseDb, "users", emailKey);
 
     const syncFromCloud = async () => {
-      if (!navigator.onLine) return;
-
-      try {
-        const docSnap = await getDocFromServer(docRef);
-        if (cancelled || !docSnap.exists()) return;
-
-        const data = docSnap.data();
-        applyCloudAccountData(emailKey, data, userRef.current || {});
-      } catch (error) {
-        if (isFirestoreNetworkError(error)) {
-          scheduleFirestoreReconnect();
-          return;
-        }
-
-        console.error("Cloud account sync failed:", error);
-      }
+      if (!navigator.onLine || cancelled) return;
+      await applyOrCreateCloudProfile(emailKey, userRef.current || {});
     };
 
     const syncWhenVisible = () => {
@@ -391,16 +432,60 @@ export function AuthProvider({ children }) {
       }
     };
 
+    const buildSignature = (data) =>
+      JSON.stringify([
+        data.balances || null,
+        data.conversions || null,
+        data.apiKeys || null,
+        Boolean(data.is2FAEnabled),
+        data.trading || null,
+        data.name || null,
+        data.firstName || null,
+        data.surname || null,
+        data.phone || null,
+        data.country || null,
+        data.avatar || null,
+        data.preferences || null,
+      ]);
+
+    let lastSignature = "";
+    const unsub = onSnapshot(
+      docRef,
+      (snap) => {
+        if (cancelled) return;
+
+        if (!snap.exists()) {
+          syncFromCloud();
+          return;
+        }
+
+        const data = snap.data();
+        const signature = buildSignature(data);
+        if (signature === lastSignature) return;
+
+        lastSignature = signature;
+        applyCloudAccountData(emailKey, data, userRef.current || {});
+      },
+      (error) => {
+        if (isFirestoreNetworkError(error)) {
+          scheduleFirestoreReconnect();
+        } else {
+          console.error("Cloud account listener error:", error);
+        }
+      }
+    );
+
     syncFromCloud();
     window.addEventListener("online", syncFromCloud);
     document.addEventListener("visibilitychange", syncWhenVisible);
 
     return () => {
       cancelled = true;
+      unsub();
       window.removeEventListener("online", syncFromCloud);
       document.removeEventListener("visibilitychange", syncWhenVisible);
     };
-  }, [applyCloudAccountData, isAuthenticated, scheduleFirestoreReconnect, user?.email]);
+  }, [applyCloudAccountData, applyOrCreateCloudProfile, isAuthenticated, scheduleFirestoreReconnect, user?.email]);
 
   const syncUserData = async (updates) => {
     if (!user) return;
@@ -543,8 +628,6 @@ export function AuthProvider({ children }) {
   }, [activateVerifiedFirebaseUser]);
 
   const signUp = async (firstName, surname, otherName, email, password, phone = "", country = "") => {
-    await new Promise((resolve) => setTimeout(resolve, 800));
-
     const sanitizedFirst = sanitizeInput(firstName);
     const sanitizedSurname = sanitizeInput(surname);
     const sanitizedOther = sanitizeInput(otherName);
@@ -557,6 +640,7 @@ export function AuthProvider({ children }) {
       isSigningUpRef.current = true;
       try {
         const userCredential = await createUserWithEmailAndPassword(firebaseAuth, sanitizedEmail, password);
+        firebaseUpdateProfile(userCredential.user, { displayName: fullName }).catch(() => {});
         
         const defaultProfile = {
           name: fullName,
@@ -590,8 +674,12 @@ export function AuthProvider({ children }) {
           verificationSentAt: new Date().toISOString()
         };
 
-        await setDoc(doc(firebaseDb, "users", sanitizedEmail), defaultProfile);
-        await sendEmailVerification(userCredential.user, buildEmailVerificationSettings());
+        setDoc(doc(firebaseDb, "users", sanitizedEmail), defaultProfile).catch((err) => {
+          console.error("[signUp] Failed to save profile to Cloud Database:", err);
+        });
+        sendEmailVerification(userCredential.user, buildEmailVerificationSettings()).catch((err) => {
+          console.error("[signUp] Failed to send verification email:", err);
+        });
         localStorage.setItem("pending_verification_email", sanitizedEmail);
       } catch (err) {
         console.error(
@@ -672,8 +760,6 @@ export function AuthProvider({ children }) {
   };
 
   const signIn = async (email, password) => {
-    await new Promise((resolve) => setTimeout(resolve, 800));
-
     const sanitizedEmail = email.trim().toLowerCase();
 
     let attemptsData = { count: 0, lockUntil: 0 };
@@ -700,17 +786,16 @@ export function AuthProvider({ children }) {
           };
         }
 
-        await userCredential.user.getIdToken(true);
+        userCredential.user.getIdToken(true).catch(() => {});
 
-        const docSnap = await getDocFromServer(doc(firebaseDb, "users", sanitizedEmail));
-        if (!docSnap.exists()) {
-          throw new Error("User record not found in Cloud Database.");
-        }
-        const data = docSnap.data();
-        applyCloudAccountData(sanitizedEmail, data);
+        setUser(buildCloudUserSession(sanitizedEmail, {}, { name: userCredential.user.displayName || "" }));
+        setIsAuthenticated(true);
+
+        applyOrCreateCloudProfile(sanitizedEmail, { name: userCredential.user.displayName || "" });
+
         setDoc(doc(firebaseDb, "users", sanitizedEmail), { emailVerified: true }, { merge: true }).catch(() => {});
 
-        await clearLoginAttempts(sanitizedEmail);
+        clearLoginAttempts(sanitizedEmail).catch(() => {});
         addSecurityLog(sanitizedEmail, "Login Successful", "User logged in securely via Cloud Database.", "SUCCESS");
         return { success: true };
       } catch (err) {
@@ -802,8 +887,6 @@ export function AuthProvider({ children }) {
   };
 
   const updateProfile = async (updatedData) => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
     if (!user) throw new Error("No authenticated user session.");
 
     const sanitizedData = { ...updatedData };
@@ -838,8 +921,6 @@ export function AuthProvider({ children }) {
   };
 
   const changePassword = async (oldPassword, newPassword) => {
-    await new Promise((resolve) => setTimeout(resolve, 600));
-
     if (!user) throw new Error("No authenticated user session.");
     const emailKey = user.email.toLowerCase();
 
@@ -930,62 +1011,12 @@ export function AuthProvider({ children }) {
       const firebaseUser = result.user;
       const emailKey = firebaseUser.email.toLowerCase();
 
-      await firebaseUser.getIdToken(true);
+      firebaseUser.getIdToken(true).catch(() => {});
 
-      const docRef = doc(firebaseDb, "users", emailKey);
-      const docSnap = await getDocFromServer(docRef);
+      setUser(buildCloudUserSession(emailKey, {}, { name: firebaseUser.displayName || "" }));
+      setIsAuthenticated(true);
 
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-
-        applyCloudAccountData(emailKey, data, {
-          name: firebaseUser.displayName || "",
-          firstName: firebaseUser.displayName?.split(" ")[0] ?? "",
-          surname: firebaseUser.displayName?.split(" ").slice(1).join(" ") ?? "",
-        });
-      } else {
-        const displayParts = (firebaseUser.displayName || "").split(" ");
-        const firstName = displayParts[0] || "";
-        const surname = displayParts.slice(1).join(" ") || "";
-        const fullName = firebaseUser.displayName || emailKey;
-
-        const defaultProfile = {
-          name: fullName,
-          firstName,
-          surname,
-          otherName: "",
-          signupName: fullName,
-          email: emailKey,
-          phone: "",
-          country: "",
-          bio: "",
-          avatar: "avatar1",
-          preferences: {
-            defaultFrom: "USD",
-            defaultTo: "NGN",
-            defaultAmount: 100,
-            displayStyle: "code",
-            decimalPlaces: 2,
-            refreshRate: "manual",
-            volatilityAlert: 1.0,
-            chartRange: 30,
-            pushNotifications: true,
-            emailReports: false,
-          },
-          balances: DEFAULT_BALANCES,
-          conversions: [],
-          apiKeys: [],
-          is2FAEnabled: false,
-          trading: DEFAULT_TRADING,
-          emailVerified: true,
-          provider: "google",
-          createdAt: new Date().toISOString()
-        };
-
-        await setDoc(docRef, defaultProfile);
-
-        applyCloudAccountData(emailKey, defaultProfile);
-      }
+      applyOrCreateCloudProfile(emailKey, { name: firebaseUser.displayName || "" });
 
       addSecurityLog(emailKey, "Google Sign-In", "User authenticated via Google OAuth.", "SUCCESS");
       return { success: true };

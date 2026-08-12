@@ -3,18 +3,24 @@ import { COUNTRIES } from "./currencyData";
 export function getUserDisplayName(user) {
   if (!user) return "Trader";
 
-  if (user.firstName && user.firstName.trim()) {
-    return user.firstName.trim();
+  const firstName = (user.firstName || "").trim();
+  const surname = (user.surname || "").trim();
+
+  if (firstName && surname) {
+    return `${firstName} ${surname}`.trim();
   }
-  
-  const name = user.name || "";
-  const cleanName = name.trim();
-  const lowerName = cleanName.toLowerCase();
-  
-  if (cleanName && lowerName !== "anonymous" && lowerName !== "anonymous user" && lowerName !== "anonymoususer") {
-    return cleanName.split(" ")[0] || cleanName;
+
+  if (firstName) {
+    return firstName;
   }
-  
+
+  const name = (user.name || "").trim();
+  const lowerName = name.toLowerCase();
+
+  if (name && lowerName !== "anonymous" && lowerName !== "anonymous user" && lowerName !== "anonymoususer") {
+    return name;
+  }
+
   if (user.email) {
     const emailPrefix = user.email.split("@")[0];
     if (emailPrefix) {
@@ -22,7 +28,7 @@ export function getUserDisplayName(user) {
       return words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
     }
   }
-  
+
   return "Trader";
 }
 

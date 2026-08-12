@@ -145,7 +145,7 @@ export default function Trade() {
           className="flex flex-col gap-2 mb-2"
         >
           <div className="flex items-center justify-between">
-            <div className="flex-1 hidden lg:block">
+            <div className="flex-1 hidden lg:flex">
               <button
                 onClick={() => navigate("/")}
                 className="flex items-center gap-1.5 text-[13px] font-bold transition-all cursor-pointer"
@@ -155,8 +155,8 @@ export default function Trade() {
                 Back
               </button>
             </div>
-            <div className="flex-1 text-center">
-              <h1 className={`text-xl sm:text-3xl lg:text-4xl font-black tracking-tight whitespace-nowrap ${darkMode ? "text-white" : "text-slate-900"}`}>
+            <div className="flex-1 min-w-0 text-center">
+              <h1 className={`text-lg sm:text-3xl lg:text-4xl font-black tracking-tight whitespace-nowrap ${darkMode ? "text-white" : "text-slate-900"}`}>
                 Trading Dashboard
               </h1>
               <p className={`text-xs sm:text-sm mt-1 ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
@@ -168,7 +168,7 @@ export default function Trade() {
                 )}
               </p>
             </div>
-            <div className="flex-1 flex items-center justify-end gap-2">
+            <div className="flex-1 hidden lg:flex items-center justify-end gap-2">
               <button
                 onClick={marketData.refresh}
                 disabled={marketData.loading}

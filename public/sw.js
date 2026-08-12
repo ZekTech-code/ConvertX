@@ -34,7 +34,7 @@ if (isDev) {
   });
 } else {
   // Production Service Worker Caching Strategy
-  const CACHE_NAME = "convertx-cache-v4";
+  const CACHE_NAME = "convertx-cache-v6";
   const ASSETS_TO_CACHE = [
     "/",
     "/index.html",

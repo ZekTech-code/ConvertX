@@ -266,8 +266,14 @@ export default function CurrencyConverter() {
   const [pageReady, setPageReady] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setPageReady(true), 1800);
-    return () => clearTimeout(timer);
+    let cancelled = false;
+    const timer = setTimeout(() => {
+      if (!cancelled) setPageReady(true);
+    }, 350);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
   }, []);
 
   const [saving, setSaving] = useState(false);
@@ -520,7 +526,7 @@ export default function CurrencyConverter() {
       rate: currentRateVal,
     };
     setSaving(true);
-    await addConversion(logItem);
+    addConversion(logItem);
     setSaving(false);
 
 
@@ -607,7 +613,7 @@ export default function CurrencyConverter() {
             Verified Security Protocols Active
           </span>
           <h2 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight font-sans">
-            Welcome, {user?.firstName || getUserDisplayName(user)}!
+            Welcome, {getUserDisplayName(user)}!
           </h2>
           <p className="text-slate-500 dark:text-slate-400 text-xs sm:text-sm mt-0.5 font-sans leading-relaxed">
             Calculator outputs sync live with market rates. View live fluctuations on the monthly trend tracker.

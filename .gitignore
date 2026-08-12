@@ -10,9 +10,13 @@ lerna-debug.log*
 # Build output
 dist
 dist-ssr
+.firebase/
 
 #Dependencies
 node_modules
+
+#Build analysis
+analyze.cjs
 
 #Editor / IDE
 .vscode/*
