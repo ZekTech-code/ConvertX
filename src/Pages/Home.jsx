@@ -551,7 +551,7 @@ export default function CurrencyConverterHomePage() {
       >
         <div className="text-center mb-10">
           <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white">
-            Contact ConvertX
+            Contact Us
           </h2>
           <p className="text-slate-600 dark:text-gray-400 text-sm sm:text-base mt-3 max-w-2xl mx-auto">
             Reach our support team for account, rate, and platform assistance.
