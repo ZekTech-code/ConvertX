@@ -96,7 +96,7 @@ export default function MarketExchange({ allPrices, darkMode, onSelectAsset, sel
           <button key={key} onClick={() => setCategory(key)}
             className="px-3 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all cursor-pointer"
             style={{
-              background: category === key ? 'linear-gradient(135deg, #E88F2B, #d97706)' : darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(15,23,42,0.03)',
+              background: category === key ? '#E88F2B' : darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(15,23,42,0.03)',
               color: category === key ? '#000' : tc('#64748b', '#475569').color,
             }}
           >{label}</button>

@@ -57,7 +57,7 @@ export default function RateMonitor({ allPrices, darkMode, onSelectAsset, select
             onClick={() => setFilter(tab)}
             className="px-3 py-1.5 rounded-md text-[13px] font-bold uppercase tracking-wider transition-all cursor-pointer"
             style={{
-              background: filter === tab ? "linear-gradient(135deg, #E88F2B, #d97706)" : "transparent",
+              background: filter === tab ? "#E88F2B" : "transparent",
               color: filter === tab ? "#000" : darkMode ? "#64748b" : "#475569",
             }}
           >
@@ -76,7 +76,7 @@ export default function RateMonitor({ allPrices, darkMode, onSelectAsset, select
               className="w-full flex items-center justify-between px-3 py-3 rounded-xl transition-all cursor-pointer text-left"
               style={{
                 background: isSelected
-                  ? "linear-gradient(135deg, rgba(232,143,43,0.12), rgba(217,119,6,0.08))"
+                  ? "rgba(232,143,43,0.12)"
                   : darkMode ? "rgba(255,255,255,0.01)" : "rgba(15,23,42,0.01)",
                 border: isSelected
                   ? "1px solid rgba(232,143,43,0.3)"

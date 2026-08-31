@@ -121,7 +121,7 @@ export default function FearGreedIndex({ darkMode }) {
                 className="h-full rounded-full transition-all duration-700"
                 style={{
                   width: `${data.current}%`,
-                  background: `linear-gradient(90deg, #ef4444, #f59e0b 50%, #22c55e)`,
+                  background: "#f59e0b",
                 }}
               />
             </div>

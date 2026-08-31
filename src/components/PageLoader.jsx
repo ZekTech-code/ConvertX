@@ -31,7 +31,7 @@ export default function PageLoader({ title = "Loading", subtitle = "Preparing yo
           <motion.div
             animate={{ scale: [1, 1.08, 1] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="w-16 h-16 rounded-2xl bg-linear-to-r from-[#E88F2B] to-[#d97706] flex items-center justify-center shadow-lg shadow-[#E88F2B]/30"
+            className="w-16 h-16 rounded-2xl bg-[#E88F2B] flex items-center justify-center shadow-lg shadow-[#E88F2B]/30"
           >
             <ConvertXIcon size={32} stroke="#000" />
           </motion.div>
@@ -55,7 +55,7 @@ export default function PageLoader({ title = "Loading", subtitle = "Preparing yo
               initial="initial"
               animate="animate"
               className="w-2.5 h-2.5 rounded-full"
-              style={{ background: "linear-gradient(135deg, #E88F2B, #d97706)" }}
+              style={{ background: "#E88F2B" }}
             />
           ))}
         </div>

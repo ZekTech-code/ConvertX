@@ -100,7 +100,7 @@ export default function MobileBottomNav({ hideProfile = false }) {
                     width: 28,
                     height: 3,
                     borderRadius: "0 0 4px 4px",
-                    background: "linear-gradient(90deg, #E88F2B, #d97706)",
+                    background: "#E88F2B",
                     boxShadow: "0 0 10px rgba(232,143,43,0.6)",
                   }}
                 />
@@ -115,7 +115,7 @@ export default function MobileBottomNav({ hideProfile = false }) {
                   height: 36,
                   borderRadius: 12,
                   background: active
-                    ? "linear-gradient(135deg, rgba(232,143,43,0.18), rgba(217,119,6,0.18))"
+                    ? "rgba(232,143,43,0.18)"
                     : "transparent",
                   border: active
                     ? "1px solid rgba(232,143,43,0.25)"

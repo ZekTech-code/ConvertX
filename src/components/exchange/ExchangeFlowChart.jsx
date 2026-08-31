@@ -110,12 +110,7 @@ function DonutPanel({ data, centerLabel, title, valueKey = "value", themeColors 
       <div style={{ position: "relative", alignSelf: "center" }}>
         <PieChart width={168} height={168}>
           <defs>
-            {data.map((entry, idx) => (
-              <linearGradient key={entry.name} id={`dg-${idx}`} x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%"   stopColor={PALETTE[idx % PALETTE.length]} stopOpacity={1} />
-                <stop offset="100%" stopColor={PALETTE[idx % PALETTE.length]} stopOpacity={0.7} />
-              </linearGradient>
-            ))}
+            {/* Gradient defs removed - using solid colors */}
           </defs>
           <Pie
             data={data}
@@ -129,7 +124,7 @@ function DonutPanel({ data, centerLabel, title, valueKey = "value", themeColors 
             {data.map((entry, idx) => (
               <Cell
                 key={entry.name}
-                fill={`url(#dg-${idx})`}
+                fill={PALETTE[idx % PALETTE.length]}
                 stroke={themeColors.bgSecondary}
                 strokeWidth={2}
               />
@@ -695,9 +690,6 @@ useEffect(() => {
                 {allPairs.slice(0, 20).map((pair, idx) => {
                   const color = PALETTE[idx % 6];
                   const colorShift = PALETTE[(idx + 1) % 6];
-                  const strokeId   = `fvS-${idx}`;
-                  const fillId     = `fvF-${idx}`;
-                  const glowId     = `fvGlow-${idx}`;
                   const pairData   = flowVolumeData.filter(d => (d[pair] || 0) > 0);
                   const pairTotal  = flowVolumeData.reduce((s, d) => s + (d[pair] || 0), 0);
                   const pairPeak   = flowVolumeData.reduce((best, d) => Math.max(best, d[pair] || 0), 0);
@@ -719,20 +711,20 @@ useEffect(() => {
                       <div style={{
                         position: "absolute", top: -60, left: -60,
                         width: 220, height: 220,
-                        background: `radial-gradient(circle, ${color}14 0%, transparent 65%)`,
+                        background: `transparent`,
                         pointerEvents: "none",
                       }} />
                       <div style={{
                         position: "absolute", bottom: -40, right: -40,
                         width: 160, height: 160,
-                        background: `radial-gradient(circle, ${colorShift}0e 0%, transparent 65%)`,
+                        background: `transparent`,
                         pointerEvents: "none",
                       }} />
 
                       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 18, position: "relative" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                           <div style={{
-                            background: `linear-gradient(135deg, ${color}22, ${colorShift}14)`,
+                            background: `${color}22`,
                             border: `1px solid ${color}40`,
                             borderRadius: 10,
                             padding: "6px 12px",
@@ -776,34 +768,18 @@ useEffect(() => {
                         overflow: "hidden",
                         background: darkMode
                           ? "#000000"
-                          : "linear-gradient(180deg, #f8fafc 0%, #eef6ff 100%)",
+                          : "#ffffff",
                         border: `1px solid ${darkMode ? "rgba(232,143,43,0.12)" : "rgba(232,143,43,0.16)"}`,
                         boxShadow: darkMode
                           ? "inset 0 1px 0 rgba(255,255,255,0.04), 0 18px 40px rgba(2,6,23,0.18)"
                           : "inset 0 1px 0 rgba(255,255,255,0.75), 0 18px 36px rgba(0,0,0,0.08)",
                       }}>
-                        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `linear-gradient(90deg, transparent, ${color}20, transparent)` }} />
+                        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `${color}20` }} />
 
                         <ResponsiveContainer width="100%" height={320}>
                           <BarChart data={visibleFlowVolumeData} margin={{ top: 16, right: 18, left: -8, bottom: 4 }} barCategoryGap="28%" barSize={52}>
                             <defs>
-                              <linearGradient id={strokeId} x1="0" y1="0" x2="1" y2="0">
-                                <stop offset="0%"   stopColor={colorShift} />
-                                <stop offset="50%"  stopColor={color} />
-                                <stop offset="100%" stopColor={colorShift} />
-                              </linearGradient>
-                              <linearGradient id={fillId} x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%"   stopColor={color} stopOpacity={1} />
-                                <stop offset="55%"  stopColor={color} stopOpacity={0.9} />
-                                <stop offset="100%" stopColor={color} stopOpacity={0.78} />
-                              </linearGradient>
-                              <filter id={glowId} x="-20%" y="-20%" width="140%" height="140%">
-                                <feGaussianBlur stdDeviation="3" result="blur" />
-                                <feMerge>
-                                  <feMergeNode in="blur" />
-                                  <feMergeNode in="SourceGraphic" />
-                                </feMerge>
-                              </filter>
+                              {/* Gradient defs removed - using solid colors */}
                             </defs>
                             <Customized
                               component={({ width, height }) => (
@@ -864,8 +840,7 @@ useEffect(() => {
                             />
                             <Bar
                               dataKey={pair}
-                              fill={`url(#${fillId})`}
-                              filter={`url(#${glowId})`}
+                              fill={color}
                               radius={[3, 3, 0, 0]}
                               minPointSize={3}
                               isAnimationActive
@@ -930,14 +905,7 @@ useEffect(() => {
                         barSize={22}
                       >
                         <defs>
-                          <linearGradient id="posG" x1="0" y1="0" x2="1" y2="0">
-                            <stop offset="0%" stopColor="#E88F2B" stopOpacity={0.8} />
-                            <stop offset="100%" stopColor="#10b981" stopOpacity={1} />
-                          </linearGradient>
-                          <linearGradient id="negG" x1="1" y1="0" x2="0" y2="0">
-                            <stop offset="0%" stopColor="#f97316" stopOpacity={0.8} />
-                            <stop offset="100%" stopColor="#f43f5e" stopOpacity={1} />
-                          </linearGradient>
+                          {/* Gradient defs removed - using solid colors */}
                         </defs>
                         <CartesianGrid horizontal={false} strokeDasharray="4 4" stroke={gridStroke} />
                         <XAxis type="number" tickLine={false} axisLine={false} tick={axisStyle} tickFormatter={yFmt} />
@@ -1001,7 +969,7 @@ useEffect(() => {
                           }}
                         >
                           {netPositionData.map(({ currency, net }) => (
-                            <Cell key={currency} fill={net >= 0 ? "url(#posG)" : "url(#negG)"} />
+                            <Cell key={currency} fill={net >= 0 ? "#E88F2B" : "#f43f5e"} />
                           ))}
                         </Bar>
                       </BarChart>
@@ -1009,11 +977,11 @@ useEffect(() => {
 
                     <div style={{ display: "flex", gap: 20, marginTop: 10 }}>
                       {[
-                        { label: "Net Inflow",  color: "#10b981", grad: "linear-gradient(90deg,#E88F2B,#10b981)" },
-                        { label: "Net Outflow", color: "#f43f5e", grad: "linear-gradient(90deg,#f97316,#f43f5e)" },
-                      ].map(({ label, grad }) => (
+                        { label: "Net Inflow",  color: "#E88F2B" },
+                        { label: "Net Outflow", color: "#f43f5e" },
+                      ].map(({ label, color }) => (
                         <div key={label} style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                          <span style={{ display: "inline-block", width: 22, height: 5, borderRadius: 99, background: grad }} />
+                          <span style={{ display: "inline-block", width: 22, height: 5, borderRadius: 99, background: color }} />
                           <span style={{ fontSize: 10, fontWeight: 700, color: darkMode ? "#475569" : "#64748b" }}>{label}</span>
                         </div>
                       ))}
@@ -1063,18 +1031,7 @@ useEffect(() => {
                     margin={{ top: 20, right: 20, left: -10, bottom: 0 }}
                   >
                     <defs>
-                      <linearGradient id="paCount"   x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%"   stopColor="#E88F2B" stopOpacity={1} />
-                        <stop offset="100%" stopColor="#E88F2B" stopOpacity={0.45} />
-                      </linearGradient>
-                      <linearGradient id="paVolume"  x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%"   stopColor="#8b5cf6" stopOpacity={1} />
-                        <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0.45} />
-                      </linearGradient>
-                      <linearGradient id="paAvgRate" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%"   stopColor="#10b981" stopOpacity={1} />
-                        <stop offset="100%" stopColor="#10b981" stopOpacity={0.45} />
-                      </linearGradient>
+                      {/* Gradient defs removed - using solid colors */}
                     </defs>
                     <CartesianGrid strokeDasharray="4 4" vertical={false} stroke={gridStroke} />
                     <XAxis dataKey="name" tickLine={false} axisLine={false} tick={axisStyle} />
@@ -1109,13 +1066,13 @@ useEffect(() => {
                         );
                       }}
                     />
-                    <Area dataKey="count" name="Conversions" type="monotone" stroke="#E88F2B" strokeWidth={2.5} fill="url(#paCount)" isAnimationActive animationDuration={600}
+                    <Area dataKey="count" name="Conversions" type="monotone" stroke="#E88F2B" strokeWidth={2.5} fill="#E88F2B" isAnimationActive animationDuration={600}
                       dot={{ r: 3, fill: "#E88F2B", strokeWidth: 0 }}
                     />
-                    <Area dataKey="volume" name="Volume" type="monotone" stroke="#8b5cf6" strokeWidth={2.5} fill="url(#paVolume)" fillOpacity={0.25} isAnimationActive animationDuration={700}
+                    <Area dataKey="volume" name="Volume" type="monotone" stroke="#8b5cf6" strokeWidth={2.5} fill="#8b5cf6" fillOpacity={0.25} isAnimationActive animationDuration={700}
                       dot={{ r: 3, fill: "#8b5cf6", strokeWidth: 0 }}
                     />
-                    <Area dataKey="avgRate" name="Avg Rate" type="monotone" stroke="#10b981" strokeWidth={2.5} fill="url(#paAvgRate)" fillOpacity={0.18} isAnimationActive animationDuration={800}
+                    <Area dataKey="avgRate" name="Avg Rate" type="monotone" stroke="#10b981" strokeWidth={2.5} fill="#10b981" fillOpacity={0.18} isAnimationActive animationDuration={800}
                       dot={{ r: 3, fill: "#10b981", strokeWidth: 0 }}
                     />
                   </AreaChart>
@@ -1141,14 +1098,7 @@ useEffect(() => {
                     <ResponsiveContainer width="100%" height={300}>
                       <AreaChart data={cumulativeGraphData} margin={{ top: 10, right: 14, left: -10, bottom: 0 }}>
                         <defs>
-                          <linearGradient id="cumulativeSent" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="#E88F2B" stopOpacity={0.35} />
-                            <stop offset="100%" stopColor="#E88F2B" stopOpacity={0} />
-                          </linearGradient>
-                          <linearGradient id="cumulativeReceived" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="#10b981" stopOpacity={0.28} />
-                            <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
-                          </linearGradient>
+                          {/* Gradient defs removed - using solid colors */}
                         </defs>
                         <CartesianGrid strokeDasharray="4 4" vertical={false} stroke={gridStroke} />
                         <XAxis dataKey="date" tickLine={false} axisLine={false} tick={axisStyle} tickFormatter={d => d.slice(5)} />
@@ -1177,8 +1127,8 @@ useEffect(() => {
                           iconSize={9}
                           wrapperStyle={{ fontSize: 10, color: darkMode ? "#64748b" : "#94a3b8", paddingTop: 12 }}
                         />
-                        <Area dataKey="sent" name="Cumulative Sent" type="monotone" stroke="#E88F2B" strokeWidth={2.5} fill="url(#cumulativeSent)" dot={{ r: 3 }} />
-                        <Area dataKey="received" name="Cumulative Received" type="monotone" stroke="#10b981" strokeWidth={2.5} fill="url(#cumulativeReceived)" dot={{ r: 3 }} />
+                        <Area dataKey="sent" name="Cumulative Sent" type="monotone" stroke="#E88F2B" strokeWidth={2.5} fill="#E88F2B" fillOpacity={0.2} dot={{ r: 3 }} />
+                        <Area dataKey="received" name="Cumulative Received" type="monotone" stroke="#10b981" strokeWidth={2.5} fill="#10b981" fillOpacity={0.15} dot={{ r: 3 }} />
                         <Line dataKey="trades" name="Trades" type="monotone" stroke="#f59e0b" strokeWidth={2} dot={{ r: 3 }} />
                       </AreaChart>
                     </ResponsiveContainer>
@@ -1229,14 +1179,7 @@ useEffect(() => {
                   <ResponsiveContainer width="100%" height={280}>
                     <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                       <defs>
-                        <linearGradient id="rtGradient" x1="0" y1="0" x2="1" y2="0">
-                          <stop offset="0%" stopColor="#E88F2B" />
-                          <stop offset="100%" stopColor="#818cf8" />
-                        </linearGradient>
-                        <linearGradient id="rtFill" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#E88F2B" stopOpacity={0.22} />
-                          <stop offset="100%" stopColor="#E88F2B" stopOpacity={0} />
-                        </linearGradient>
+                        {/* Gradient defs removed - using solid colors */}
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={darkMode ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.06)"} />
                       <XAxis
@@ -1278,9 +1221,10 @@ useEffect(() => {
                       <Area
                         type="monotone"
                         dataKey="rate"
-                        stroke="url(#rtGradient)"
+                        stroke="#E88F2B"
                         strokeWidth={2.5}
-                        fill="url(#rtFill)"
+                        fill="#E88F2B"
+                        fillOpacity={0.15}
                         isAnimationActive={false}
                       />
                     </AreaChart>

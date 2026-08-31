@@ -72,7 +72,7 @@ const MainApp = () => {
               }
             }}
             className={`w-full font-bold py-3.5 px-6 rounded-xl hover:scale-[1.02] active:scale-98 transition duration-200 cursor-pointer font-sans shadow-md ${
-              darkMode ? "bg-linear-to-r from-[#E88F2B] to-[#d97706] hover:shadow-[#E88F2B]/20 text-black" : "bg-slate-900 hover:bg-slate-800 text-white"
+              darkMode ? "bg-[#E88F2B] hover:shadow-[#E88F2B]/20 text-black" : "bg-slate-900 hover:bg-slate-800 text-white"
             }`}
           >
             Try Again
@@ -88,7 +88,7 @@ const MainApp = () => {
         fallback={
           <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
             <div className="flex flex-col items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-linear-to-r from-[#E88F2B] to-[#d97706] flex items-center justify-center animate-pulse">
+              <div className="w-12 h-12 rounded-2xl bg-[#E88F2B] flex items-center justify-center animate-pulse">
                 <span className="text-black font-bold">CX</span>
               </div>
               <p className="text-sm text-slate-500 dark:text-slate-400 animate-pulse">Loading…</p>

@@ -115,7 +115,7 @@ export default function PerformanceAnalytics({ trades, initialBalance, darkMode 
           <button key={v} onClick={() => setChartView(v)}
             className="px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase transition-all cursor-pointer"
             style={{
-              background: chartView === v ? 'linear-gradient(135deg, #E88F2B, #d97706)' : 'transparent',
+              background: chartView === v ? '#E88F2B' : 'transparent',
               color: chartView === v ? '#000' : tc('#64748b', '#475569').color,
             }}
           >{v}</button>
@@ -126,17 +126,11 @@ export default function PerformanceAnalytics({ trades, initialBalance, darkMode 
         {chartView === 'equity' && stats.equityCurve.length > 1 ? (
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={stats.equityCurve}>
-              <defs>
-                <linearGradient id="equityGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#E88F2B" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#E88F2B" stopOpacity={0} />
-                </linearGradient>
-              </defs>
               <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'} />
               <XAxis dataKey="date" tick={{ fontSize: 8, fill: darkMode ? '#64748b' : '#94a3b8' }} />
               <YAxis tick={{ fontSize: 8, fill: darkMode ? '#64748b' : '#94a3b8' }} domain={['auto', 'auto']} />
               <Tooltip contentStyle={{ background: darkMode ? '#1a1a1a' : '#fff', border: 'none', borderRadius: 8, fontSize: 11 }} />
-              <Area type="monotone" dataKey="value" stroke="#E88F2B" fill="url(#equityGrad)" strokeWidth={1.5} />
+              <Area type="monotone" dataKey="value" stroke="#E88F2B" fill="#E88F2B" fillOpacity={0.3} strokeWidth={1.5} />
             </AreaChart>
           </ResponsiveContainer>
         ) : chartView === 'monthly' && stats.monthlyReturns.length > 0 ? (

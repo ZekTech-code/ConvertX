@@ -111,7 +111,7 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
         <button onClick={() => setSide('buy')}
           className="flex-1 py-3 rounded-xl text-[13px] font-black transition-all cursor-pointer"
           style={{
-            background: side === 'buy' ? 'linear-gradient(135deg, rgba(34,197,94,0.2), rgba(34,197,94,0.08))' : 'transparent',
+            background: side === 'buy' ? 'rgba(34,197,94,0.2)' : 'transparent',
             border: side === 'buy' ? '1px solid rgba(34,197,94,0.4)' : darkMode ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(148,163,184,0.12)',
             color: side === 'buy' ? '#22c55e' : tc('#64748b', '#475569').color,
           }}
@@ -119,7 +119,7 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
         <button onClick={() => setSide('sell')}
           className="flex-1 py-3 rounded-xl text-[13px] font-black transition-all cursor-pointer"
           style={{
-            background: side === 'sell' ? 'linear-gradient(135deg, rgba(239,68,68,0.2), rgba(239,68,68,0.08))' : 'transparent',
+            background: side === 'sell' ? 'rgba(239,68,68,0.2)' : 'transparent',
             border: side === 'sell' ? '1px solid rgba(239,68,68,0.4)' : darkMode ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(148,163,184,0.12)',
             color: side === 'sell' ? '#ef4444' : tc('#64748b', '#475569').color,
           }}
@@ -300,7 +300,7 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
       <button onClick={handleSubmit} disabled={loading || !asset}
         className="w-full py-3 rounded-xl text-[12px] font-black uppercase tracking-wider transition-all cursor-pointer disabled:opacity-40 hover:scale-[1.01] active:scale-[0.99]"
         style={{
-          background: side === 'buy' ? 'linear-gradient(135deg, #22c55e, #16a34a)' : 'linear-gradient(135deg, #ef4444, #dc2626)',
+          background: side === 'buy' ? '#22c55e' : '#ef4444',
           color: '#fff',
         }}
       >

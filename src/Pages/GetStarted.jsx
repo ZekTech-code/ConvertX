@@ -335,7 +335,7 @@ export default function GetStarted() {
 
   if (isOffline) {
     return (
-      <div style={{ background: "linear-gradient(135deg,#060b18,#0a1628)", minHeight: "100vh" }}
+      <div style={{ background: "#000000", minHeight: "100vh" }}
         className="flex items-center justify-center p-6">
         <div className="text-center max-w-xs p-8 rounded-3xl border border-white/10 bg-white/4 backdrop-blur-xl">
           <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center mx-auto mb-5">
@@ -347,7 +347,7 @@ export default function GetStarted() {
           </p>
           <button onClick={() => { if (navigator.onLine) setIsOffline(false); }}
             className="w-full py-3 rounded-xl font-bold text-sm text-black"
-            style={{ background: "linear-gradient(135deg,#E88F2B,#d97706)" }}>
+            style={{ background: "#E88F2B" }}>
             Try Again
           </button>
         </div>
@@ -371,7 +371,7 @@ export default function GetStarted() {
         .gs2-bg { min-height: 100vh; background: var(--gs2-page-bg); transition: background 0.3s; }
 
         .gs2-dots {
-          background-image: radial-gradient(circle, var(--gs2-dot-color) 1px, transparent 1px);
+          background-image: none;
           background-size: 30px 30px;
         }
 
@@ -560,7 +560,7 @@ export default function GetStarted() {
           align-items: center;
           justify-content: center;
           gap: 7px;
-          background: linear-gradient(135deg, #E88F2B 0%, #d97706 100%);
+          background: #E88F2B;
           box-shadow: 0 6px 20px rgba(232,143,43,0.28);
           transition: transform 0.14s, box-shadow 0.14s;
           letter-spacing: 0.01em;
@@ -658,7 +658,7 @@ export default function GetStarted() {
         .gs2-orb-c { animation: gs2-float-a 14s ease-in-out infinite reverse; }
 
         .gs2-verify {
-          background: linear-gradient(145deg,rgba(232,143,43,0.07),rgba(217,119,6,0.05));
+          background: transparent;
           border: 1px solid rgba(232,143,43,0.15);
           border-radius: 16px;
           padding: 22px;
@@ -672,7 +672,7 @@ export default function GetStarted() {
         }
       `}</style>
       <div className="gs2-page gs2-bg relative overflow-x-hidden" style={darkMode ? {
-          "--gs2-page-bg":           "linear-gradient(160deg,#000000 0%,#000000 60%,#000000 100%)",
+          "--gs2-page-bg":           "#000000",
           "--gs2-dot-color":         "rgba(255,255,255,0.055)",
           "--gs2-header-border":     "rgba(255,255,255,0.05)",
           "--gs2-back-color":        "rgba(255,255,255,0.45)",
@@ -710,7 +710,7 @@ export default function GetStarted() {
           "--gs2-feat-icon-bg":      "rgba(255,255,255,0.055)",
           "--gs2-feat-icon-border":  "rgba(255,255,255,0.08)",
         } : {
-          "--gs2-page-bg":           "linear-gradient(160deg,#ffffff 0%,#f8f9fa 50%,#ffffff 100%)",
+          "--gs2-page-bg":           "#ffffff",
           "--gs2-dot-color":         "rgba(232,143,43,0.06)",
           "--gs2-header-border":     "rgba(0,0,0,0.07)",
           "--gs2-back-color":        "#475569",
@@ -751,25 +751,19 @@ export default function GetStarted() {
 
         <div className="absolute inset-0 gs2-dots opacity-40 pointer-events-none" />
         <div className="gs2-orb-a absolute w-125 h-125 rounded-full pointer-events-none"
-          style={{ background: darkMode
-            ? "radial-gradient(circle,rgba(232,143,43,0.08),transparent 70%)"
-            : "radial-gradient(circle,rgba(99,102,241,0.12),transparent 70%)",
+          style={{ background: "transparent",
             top: "-15%", right: "-10%" }} />
         <div className="gs2-orb-b absolute w-100 h-100 rounded-full pointer-events-none"
-          style={{ background: darkMode
-            ? "radial-gradient(circle,rgba(99,102,241,0.07),transparent 70%)"
-            : "radial-gradient(circle,rgba(232,143,43,0.1),transparent 70%)",
+          style={{ background: "transparent",
             bottom: "5%", left: "-8%" }} />
         <div className="gs2-orb-c absolute w-75 h-75 rounded-full pointer-events-none"
-          style={{ background: darkMode
-            ? "radial-gradient(circle,rgba(217,119,6,0.06),transparent 70%)"
-            : "radial-gradient(circle,rgba(217,119,6,0.08),transparent 70%)",
+          style={{ background: "transparent",
             top: "30%", left: "20%" }} />
 
         <header className="gs2-header relative z-20">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-lg"
-              style={{ background: "linear-gradient(135deg,#E88F2B,#d97706)", boxShadow: "0 4px 14px rgba(232,143,43,0.28)" }}>
+              style={{ background: "#E88F2B", boxShadow: "0 4px 14px rgba(232,143,43,0.28)" }}>
               <ConvertXIcon size={18} stroke="#000" />
             </div>
             <div>
@@ -806,7 +800,7 @@ export default function GetStarted() {
               <div className="flex items-center gap-3 mb-5 pb-4"
                 style={{ borderBottom: `1px solid ${darkMode ? "rgba(255,255,255,0.07)" : "rgba(203,213,225,0.6)"}` }}>
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-                  style={{ background:"linear-gradient(135deg,#E88F2B,#d97706)", boxShadow:"0 4px 12px rgba(232,143,43,0.25)" }}>
+                  style={{ background:"#E88F2B", boxShadow:"0 4px 12px rgba(232,143,43,0.25)" }}>
                   {isSignUp
                     ? <User style={{ width:16, height:16, color:"#000" }} />
                     : <Lock style={{ width:14, height:14, color:"#000" }} />
@@ -1181,8 +1175,7 @@ export default function GetStarted() {
               <h1 className="gs2-heading text-3xl sm:text-4xl font-black leading-tight tracking-tight"
                 style={{ color: darkMode ? "#f1f5f9" : "#0f172a" }}>
                 A smarter way to manage{" "}
-                <span style={{ WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent",
-                  backgroundImage:"linear-gradient(135deg,#E88F2B,#818cf8)" }}>
+                <span style={{ color: "#E88F2B" }}>
                   global conversions.
                 </span>
               </h1>

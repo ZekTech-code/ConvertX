@@ -132,7 +132,7 @@ export default function PriceAlerts({ alerts, selectedAsset, currentPrice, darkM
             disabled={!targetPrice}
             className="w-full py-2 rounded-xl text-[13px] font-black uppercase tracking-wider transition-all cursor-pointer disabled:opacity-40"
             style={{
-              background: "linear-gradient(135deg, #E88F2B, #d97706)",
+              background: "#E88F2B",
               color: "#000",
             }}
           >

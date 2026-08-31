@@ -247,7 +247,7 @@ export default function CurrencyConverterHomePage() {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate("/convert")}
-              className="bg-linear-to-r from-[#E88F2B] to-[#d97706] text-black font-semibold px-7 py-4 rounded-2xl cursor-pointer hover:shadow-lg hover:shadow-[#E88F2B]/20 transition-all duration-300"
+              className="bg-[#E88F2B] text-black font-semibold px-7 py-4 rounded-2xl cursor-pointer hover:shadow-lg hover:shadow-[#E88F2B]/20 transition-all duration-300"
             >
               Start Converting
             </motion.button>
@@ -297,7 +297,7 @@ export default function CurrencyConverterHomePage() {
 
               <button
                 onClick={() => navigate("/convert")}
-                className="w-11 h-11 rounded-xl bg-linear-to-r from-[#E88F2B] to-[#d97706] flex items-center justify-center text-black font-bold text-xl cursor-pointer hover:scale-105 active:scale-95 transition duration-150"
+                className="w-11 h-11 rounded-xl bg-[#E88F2B] flex items-center justify-center text-black font-bold text-xl cursor-pointer hover:scale-105 active:scale-95 transition duration-150"
               >
                 <ArrowRightLeft className="w-5 h-5" />
               </button>
@@ -358,7 +358,7 @@ export default function CurrencyConverterHomePage() {
 
               <button 
                 onClick={() => navigate("/convert")}
-                className="w-full bg-linear-to-r from-[#E88F2B] to-[#d97706] text-white font-bold py-3 rounded-xl hover:scale-[1.02] transition duration-300 shadow-xl shadow-[#E88F2B]/20 cursor-pointer text-sm"
+                className="w-full bg-[#E88F2B] text-white font-bold py-3 rounded-xl hover:scale-[1.02] transition duration-300 shadow-xl shadow-[#E88F2B]/20 cursor-pointer text-sm"
               >
                 Convert Now
               </button>
@@ -768,7 +768,7 @@ export default function CurrencyConverterHomePage() {
                 <button
                   type="submit"
                   disabled={contactSubmitting}
-                  className="w-full bg-linear-to-r from-[#E88F2B] to-[#d97706] text-white font-bold py-3.5 rounded-xl hover:scale-[1.01] active:scale-[0.99] transition duration-200 shadow-lg shadow-[#E88F2B]/15 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-xs sm:text-sm flex items-center justify-center gap-2"
+                  className="w-full bg-[#E88F2B] text-white font-bold py-3.5 rounded-xl hover:scale-[1.01] active:scale-[0.99] transition duration-200 shadow-lg shadow-[#E88F2B]/15 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-xs sm:text-sm flex items-center justify-center gap-2"
                 >
                   {contactSubmitting ? (
                     <span>Sending...</span>
@@ -791,7 +791,7 @@ export default function CurrencyConverterHomePage() {
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10 flex flex-col items-center justify-center text-center gap-2">
           <div>
-            <h3 className="text-2xl font-black bg-linear-to-r dark:from-[#E88F2B] dark:to-[#d97706] from-[#E88F2B] to-[#d97706] bg-clip-text text-transparent">
+            <h3 className="text-2xl font-black text-[#E88F2B]">
               ConvertX
             </h3>
             <p className="text-slate-650 dark:text-gray-400 text-sm mt-2">

@@ -62,7 +62,7 @@ export default function Toast({
             {showConfirm && (
               <button
                 onClick={onConfirm || onClose}
-                className="w-full mt-6 bg-linear-to-r from-[#E88F2B] to-[#d97706] hover:shadow-lg hover:shadow-[#E88F2B]/20 text-black font-extrabold py-3.5 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition duration-200 cursor-pointer text-sm shadow-md"
+                className="w-full mt-6 bg-[#E88F2B] hover:shadow-lg hover:shadow-[#E88F2B]/20 text-black font-extrabold py-3.5 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition duration-200 cursor-pointer text-sm shadow-md"
               >
                 {confirmText}
               </button>

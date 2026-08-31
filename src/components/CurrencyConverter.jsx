@@ -739,7 +739,7 @@ export default function CurrencyConverter() {
                 </div>
               </div>
 
-              <div className="bg-linear-to-b from-slate-50 to-slate-100/50 dark:from-black/40 dark:to-black/20 border border-slate-200/80 dark:border-white/10 p-5 rounded-2xl shadow-inner relative overflow-hidden flex flex-col gap-3">
+              <div className="bg-slate-50 dark:bg-black/40 border border-slate-200/80 dark:border-white/10 p-5 rounded-2xl shadow-inner relative overflow-hidden flex flex-col gap-3">
                 <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-[#E88F2B]/10 rounded-full blur-xl pointer-events-none" />
                 
                 <div>
@@ -782,7 +782,7 @@ export default function CurrencyConverter() {
               <button
                 onClick={handleExecuteExchange}
                 disabled={loading || saving}
-                className="w-full bg-linear-to-r from-[#E88F2B] to-[#d97706] hover:scale-[1.01] active:scale-99 text-black font-bold py-3 rounded-xl shadow-lg shadow-[#E88F2B]/10 hover:shadow-[#E88F2B]/25 transition duration-200 cursor-pointer disabled:opacity-50 font-sans text-xs flex items-center justify-center gap-2"
+                className="w-full bg-[#E88F2B] hover:scale-[1.01] active:scale-99 text-black font-bold py-3 rounded-xl shadow-lg shadow-[#E88F2B]/10 hover:shadow-[#E88F2B]/25 transition duration-200 cursor-pointer disabled:opacity-50 font-sans text-xs flex items-center justify-center gap-2"
               >
                 <ShieldCheck size={16} />
                 <span>{saving ? "Saving..." : loading ? "Checking Live Rate..." : "Confirm Conversion & Save"}</span>
@@ -882,22 +882,7 @@ export default function CurrencyConverter() {
                   <ResponsiveContainer width="100%" height={144}>
                     <AreaChart data={waveChartData} margin={{ top: 6, right: 4, left: 10, bottom: 0 }}>
                       <defs>
-                        <linearGradient id="rateGradient" x1="0" y1="0" x2="1" y2="0">
-                          <stop offset="0%" stopColor="#06b6d4" />
-                          <stop offset="50%" stopColor="#E88F2B" />
-                          <stop offset="100%" stopColor="#38bdf8" />
-                        </linearGradient>
-                        <linearGradient id="rateFill" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#E88F2B" stopOpacity={0.28} />
-                          <stop offset="100%" stopColor="#E88F2B" stopOpacity={0} />
-                        </linearGradient>
-                        <filter id="waveGlow" x="-20%" y="-30%" width="140%" height="160%">
-                          <feGaussianBlur stdDeviation="2.5" result="blur" />
-                          <feMerge>
-                            <feMergeNode in="blur" />
-                            <feMergeNode in="SourceGraphic" />
-                          </feMerge>
-                        </filter>
+                        {/* Gradient defs removed - using solid colors */}
                       </defs>
                       <CartesianGrid strokeDasharray="3 8" vertical={false} stroke="rgba(148,163,184,0.10)" />
                       <XAxis
@@ -928,12 +913,12 @@ export default function CurrencyConverter() {
                       <Area
                         type="natural"
                         dataKey="rate"
-                        stroke="url(#rateGradient)"
+                        stroke="#E88F2B"
                         strokeWidth={2.5}
-                        fill="url(#rateFill)"
+                        fill="#E88F2B"
+                        fillOpacity={0.2}
                         dot={false}
                         activeDot={{ r: 4, strokeWidth: 2, stroke: "#fff", fill: "#E88F2B" }}
-                        filter="url(#waveGlow)"
                         isAnimationActive={false}
                       />
                     </AreaChart>

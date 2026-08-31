@@ -49,7 +49,7 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
         <button onClick={() => go("/")} className="flex items-center gap-3 bg-transparent border-none cursor-pointer p-0">
-          <div className="w-11 h-11 rounded-2xl bg-linear-to-r from-[#E88F2B] to-[#d97706] flex items-center justify-center text-black font-bold text-lg shadow-lg shadow-[#E88F2B]/30">
+          <div className="w-11 h-11 rounded-2xl bg-[#E88F2B] flex items-center justify-center text-black font-bold text-lg shadow-lg shadow-[#E88F2B]/30">
             <ConvertXIcon size={24} stroke="#000" />
           </div>
           <div className="text-left">
@@ -101,7 +101,7 @@ export default function Navbar() {
 
           <button
             onClick={() => go(isAuthenticated ? "/convert" : "/get-started")}
-            className="hidden md:block bg-linear-to-r from-[#E88F2B] to-[#d97706] text-black font-semibold px-5 py-2.5 rounded-xl hover:scale-105 transition duration-300 shadow-lg shadow-[#E88F2B]/20 cursor-pointer"
+            className="hidden md:block bg-[#E88F2B] text-black font-semibold px-5 py-2.5 rounded-xl hover:scale-105 transition duration-300 shadow-lg shadow-[#E88F2B]/20 cursor-pointer"
           >
             {isAuthenticated ? "Dashboard" : "Get Started"}
           </button>
@@ -136,7 +136,7 @@ export default function Navbar() {
 
           <button
             onClick={() => go(isAuthenticated ? "/convert" : "/get-started")}
-            className="w-full bg-linear-to-r from-[#E88F2B] to-[#d97706] text-black font-semibold py-3 rounded-xl cursor-pointer"
+            className="w-full bg-[#E88F2B] text-black font-semibold py-3 rounded-xl cursor-pointer"
           >
             {isAuthenticated ? "Dashboard" : "Get Started"}
           </button>

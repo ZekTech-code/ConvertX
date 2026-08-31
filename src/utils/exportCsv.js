@@ -87,7 +87,7 @@ export function exportConversionHistoryAsCsv(rows, user = "Valued Customer") {
     })
     .join("");
 
-  const logoSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none"><defs><linearGradient id="cx-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22d3ee" /><stop offset="100%" stop-color="#3b82f6" /></linearGradient></defs><path d="M 436,416 L 236,96 A 160,160 0 0,0 236,416 L 436,96" stroke="url(#cx-grad)" stroke-width="72" stroke-linecap="round" stroke-linejoin="round" /></svg>`;
+  const logoSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none"><path d="M 436,416 L 236,96 A 160,160 0 0,0 236,416 L 436,96" stroke="#22d3ee" stroke-width="72" stroke-linecap="round" stroke-linejoin="round" /></svg>`;
   const base64Logo = typeof window !== "undefined" ? window.btoa(logoSvg) : "";
   const faviconUri = `data:image/svg+xml;base64,${base64Logo}`;
 
@@ -132,7 +132,7 @@ export function exportConversionHistoryAsCsv(rows, user = "Valued Customer") {
     }
 
     .header {
-      background: linear-gradient(135deg, #0f172a 0%, #0e2340 55%, #0f3460 100%);
+      background: #0f172a;
       color: #fff;
       padding: 28px 36px 24px;
       display: flex;
@@ -150,7 +150,7 @@ export function exportConversionHistoryAsCsv(rows, user = "Valued Customer") {
     .brand-logo {
       width: 48px;
       height: 48px;
-      background: linear-gradient(135deg, #22d3ee, #3b82f6);
+      background: #22d3ee;
       border-radius: 12px;
       display: flex;
       align-items: center;
@@ -362,7 +362,7 @@ export function exportConversionHistoryAsCsv(rows, user = "Valued Customer") {
     .footer strong { color: #64748b; }
 
     .footer .seal {
-      background: linear-gradient(135deg, #22d3ee, #3b82f6);
+      background: #22d3ee;
       color: #fff;
       font-size: 8px;
       font-weight: 800;
@@ -388,7 +388,7 @@ export function exportConversionHistoryAsCsv(rows, user = "Valued Customer") {
     }
 
     .btn-print {
-      background: linear-gradient(135deg, #22d3ee, #3b82f6);
+      background: #22d3ee;
       color: #000;
       font-weight: 800;
       font-size: 11px;

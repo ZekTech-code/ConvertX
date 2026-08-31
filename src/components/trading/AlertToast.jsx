@@ -55,9 +55,7 @@ export default function AlertToast({ alert, onDismiss, darkMode }) {
       <div
         className="rounded-2xl overflow-hidden pointer-events-auto"
         style={{
-          background: darkMode
-            ? "linear-gradient(135deg, rgba(20,20,20,0.98), rgba(10,10,10,0.98))"
-            : "linear-gradient(135deg, rgba(255,255,255,0.98), rgba(248,250,252,0.98))",
+          background: darkMode ? "#000000" : "#ffffff",
           border: "1px solid rgba(34,197,94,0.25)",
           boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(34,197,94,0.1)",
           backdropFilter: "blur(20px)",
@@ -122,7 +120,7 @@ export default function AlertToast({ alert, onDismiss, darkMode }) {
             className="h-full rounded-full transition-all duration-100"
             style={{
               width: `${progress}%`,
-              background: "linear-gradient(90deg, #22c55e, #16a34a)",
+              background: "#22c55e",
             }}
           />
         </div>

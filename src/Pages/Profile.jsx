@@ -426,7 +426,7 @@ export default function Profile() {
               onClick={() => { setActiveTab("personal"); clearNotifications(); }}
               className={`w-full text-left px-4 py-3 rounded-2xl flex items-center gap-3 text-sm font-semibold transition cursor-pointer ${
                 activeTab === "personal"
-                  ? "bg-linear-to-r from-[#E88F2B] to-[#d97706] text-black shadow-lg shadow-[#E88F2B]/10"
+                  ? "bg-[#E88F2B] text-black shadow-lg shadow-[#E88F2B]/10"
                   : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
               }`}
             >
@@ -438,7 +438,7 @@ export default function Profile() {
               onClick={() => { setActiveTab("preferences"); clearNotifications(); }}
               className={`w-full text-left px-4 py-3 rounded-2xl flex items-center gap-3 text-sm font-semibold transition cursor-pointer ${
                 activeTab === "preferences"
-                  ? "bg-linear-to-r from-[#E88F2B] to-[#d97706] text-black shadow-lg shadow-[#E88F2B]/10"
+                  ? "bg-[#E88F2B] text-black shadow-lg shadow-[#E88F2B]/10"
                   : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
               }`}
             >
@@ -450,7 +450,7 @@ export default function Profile() {
               onClick={() => { setActiveTab("security"); clearNotifications(); }}
               className={`w-full text-left px-4 py-3 rounded-2xl flex items-center gap-3 text-sm font-semibold transition cursor-pointer ${
                 activeTab === "security"
-                  ? "bg-linear-to-r from-[#E88F2B] to-[#d97706] text-black shadow-lg shadow-[#E88F2B]/10"
+                  ? "bg-[#E88F2B] text-black shadow-lg shadow-[#E88F2B]/10"
                   : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
               }`}
             >
@@ -682,7 +682,7 @@ export default function Profile() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="bg-linear-to-r from-[#E88F2B] to-[#d97706] text-black font-bold px-6 py-3 rounded-xl flex items-center gap-2 hover:scale-105 active:scale-95 transition cursor-pointer disabled:opacity-50 font-sans"
+                    className="bg-[#E88F2B] text-black font-bold px-6 py-3 rounded-xl flex items-center gap-2 hover:scale-105 active:scale-95 transition cursor-pointer disabled:opacity-50 font-sans"
                   >
                     {loading ? (
                       <div className="w-4 h-4 border-2 border-black border-t-transparent animate-spin rounded-full" />
@@ -896,7 +896,7 @@ export default function Profile() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="bg-linear-to-r from-[#E88F2B] to-[#d97706] text-black font-bold px-6 py-3 rounded-xl flex items-center gap-2 hover:scale-105 active:scale-95 transition cursor-pointer disabled:opacity-50 font-sans"
+                    className="bg-[#E88F2B] text-black font-bold px-6 py-3 rounded-xl flex items-center gap-2 hover:scale-105 active:scale-95 transition cursor-pointer disabled:opacity-50 font-sans"
                   >
                     {loading ? (
                       <div className="w-4 h-4 border-2 border-black border-t-transparent animate-spin rounded-full" />
@@ -1032,7 +1032,7 @@ export default function Profile() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="bg-linear-to-r from-[#E88F2B] to-[#d97706] text-black font-bold px-6 py-3 rounded-xl flex items-center gap-2 hover:scale-105 active:scale-95 transition cursor-pointer disabled:opacity-50 font-sans"
+                      className="bg-[#E88F2B] text-black font-bold px-6 py-3 rounded-xl flex items-center gap-2 hover:scale-105 active:scale-95 transition cursor-pointer disabled:opacity-50 font-sans"
                     >
                       {loading ? (
                         <div className="w-4 h-4 border-2 border-black border-t-transparent animate-spin rounded-full" />
@@ -1212,7 +1212,7 @@ export default function Profile() {
                         <button
                           type="button"
                           onClick={handleGenerateApiKey}
-                          className="w-full py-2.5 rounded-xl bg-linear-to-r from-[#E88F2B] to-[#d97706] text-black text-xs font-black hover:scale-[1.02] active:scale-98 transition flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-[#E88F2B]/5 font-sans"
+                          className="w-full py-2.5 rounded-xl bg-[#E88F2B] text-black text-xs font-black hover:scale-[1.02] active:scale-98 transition flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-[#E88F2B]/5 font-sans"
                         >
                           <Plus className="w-4.5 h-4.5" /> Generate Active API Token
                         </button>

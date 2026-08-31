@@ -45,7 +45,7 @@ select,
 
 /* Subtle dot-grid backdrop for the dark left panel */
 .gs-dot-grid {
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-image: none;
   background-size: 28px 28px;
 }
 
@@ -70,12 +70,7 @@ select,
   position: absolute;
   inset: 0;
   width: 45%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.16) 50%,
-    transparent 100%
-  );
+  background: rgba(255, 255, 255, 0.16);
   animation: gs-shimmer 3s ease-in-out infinite;
   pointer-events: none;
 }

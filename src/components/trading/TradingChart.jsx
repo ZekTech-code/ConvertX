@@ -489,7 +489,7 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
                 onClick={() => setTimeframe(tf)}
                 className="px-2.5 py-1 rounded-md text-[10px] font-bold transition-all cursor-pointer"
                 style={{
-                  background: timeframe === tf ? "linear-gradient(135deg, #E88F2B, #d97706)" : "transparent",
+                  background: timeframe === tf ? "#E88F2B" : "transparent",
                   color: timeframe === tf ? "#000" : darkMode ? "#94a3b8" : "#475569",
                 }}
               >
@@ -504,7 +504,7 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
                 onClick={() => setIndicator(ind)}
                 className="px-2.5 py-1 rounded-md text-[10px] font-bold transition-all cursor-pointer uppercase"
                 style={{
-                  background: indicator === ind ? "linear-gradient(135deg, #E88F2B, #d97706)" : "transparent",
+                  background: indicator === ind ? "#E88F2B" : "transparent",
                   color: indicator === ind ? "#000" : darkMode ? "#94a3b8" : "#475569",
                 }}
               >

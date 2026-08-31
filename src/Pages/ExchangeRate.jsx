@@ -310,8 +310,7 @@ function PairSelector({ activePair, setActivePair, rates, darkMode }) {
                   className="w-full flex items-center justify-between px-4 py-3 text-xs font-semibold transition-all duration-150 cursor-pointer"
                   style={{
                     background:
-                      isActive ?
-                        "linear-gradient(135deg, rgba(232,143,43,0.12), rgba(217,119,6,0.08))"
+                      isActive ? "rgba(232,143,43,0.12)"
                       : "transparent",
                     color:
                       isActive ? "#E88F2B"
@@ -389,10 +388,7 @@ function RateChart({
       custom={2}
       className="rounded-3xl p-6"
       style={{
-        background:
-          darkMode ?
-            "linear-gradient(135deg, rgba(0,0,0,0.95), rgba(0,0,0,0.98))"
-          : "linear-gradient(135deg, rgba(248,250,252,0.97), rgba(241,245,249,0.99))",
+        background: darkMode ? "#000000" : "#ffffff",
         border:
           darkMode ?
             "1px solid rgba(255,255,255,0.07)"
@@ -446,8 +442,7 @@ function RateChart({
               className="px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer"
               style={{
                 background:
-                  activeWindow === w ?
-                    "linear-gradient(135deg, #E88F2B, #d97706)"
+                  activeWindow === w ? "#E88F2B"
                   : "transparent",
                 color:
                   activeWindow === w ? "#000"
@@ -490,11 +485,7 @@ function RateChart({
               border: "none",
             }}>
             <defs>
-              <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={lineColor} stopOpacity={0.35} />
-                <stop offset="60%" stopColor={lineColor} stopOpacity={0.08} />
-                <stop offset="100%" stopColor={lineColor} stopOpacity={0} />
-              </linearGradient>
+              <solidColor id={gradId} solidColor={lineColor} solidOpacity={0.35} />
             </defs>
             <CartesianGrid
               strokeDasharray="3 3"
@@ -839,8 +830,7 @@ export default function ExchangeRate() {
             left: "-4%",
             width: 700,
             height: 700,
-            background:
-              "radial-gradient(circle, rgba(232,143,43,0.05) 0%, transparent 65%)",
+            background: "transparent",
             borderRadius: "50%",
           }}
         />
@@ -851,8 +841,7 @@ export default function ExchangeRate() {
             right: "-6%",
             width: 800,
             height: 800,
-            background:
-              "radial-gradient(circle, rgba(217,119,6,0.05) 0%, transparent 65%)",
+            background: "transparent",
             borderRadius: "50%",
           }}
         />
@@ -863,8 +852,7 @@ export default function ExchangeRate() {
             left: "45%",
             width: 500,
             height: 500,
-            background:
-              "radial-gradient(circle, rgba(168,85,247,0.03) 0%, transparent 65%)",
+            background: "transparent",
             borderRadius: "50%",
           }}
         />
@@ -911,10 +899,7 @@ export default function ExchangeRate() {
             custom={1}
             className="rounded-3xl p-6 md:p-8 relative"
             style={{
-              background:
-                darkMode ?
-                  "linear-gradient(135deg, rgba(0,0,0,0.97), rgba(0,0,0,0.99))"
-                : "linear-gradient(135deg, rgba(255,255,255,0.97), rgba(248,250,252,0.99))",
+              background: darkMode ? "#000000" : "#ffffff",
               border:
                 darkMode ?
                   "1px solid rgba(232,143,43,0.15)"
@@ -969,10 +954,7 @@ export default function ExchangeRate() {
                       : <p
                           className="text-4xl md:text-5xl font-black font-mono"
                           style={{
-                            background:
-                              "linear-gradient(135deg, #E88F2B, #d97706)",
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent",
+                            color: "#E88F2B",
                           }}>
                           {currentRate ? fmt(currentRate) : "—"}
                         </p>
@@ -1056,7 +1038,7 @@ export default function ExchangeRate() {
                       key="sep"
                       className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
                       style={{
-                        background: "linear-gradient(135deg, #E88F2B, #d97706)",
+                        background: "#E88F2B",
                         boxShadow: "0 0 15px rgba(232,143,43,0.25)",
                       }}>
                       <Minus size={12} color="#000" />
@@ -1164,9 +1146,7 @@ export default function ExchangeRate() {
             <span
               className="font-bold"
               style={{
-                background: "linear-gradient(90deg, #E88F2B, #d97706)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
+                color: "#E88F2B",
               }}>
               ConvertX
             </span>{" "}
