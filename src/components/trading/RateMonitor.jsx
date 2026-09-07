@@ -1,16 +1,25 @@
 ﻿import { useMemo, useState } from "react";
-import { BarChart2, TrendingUp, TrendingDown } from "lucide-react";
+import { BarChart2, TrendingUp, TrendingDown, Search } from "lucide-react";
 import { getCoinIcon } from "../../utils/coinIcons";
 
 export default function RateMonitor({ allPrices, darkMode, onSelectAsset, selectedAssetId }) {
   const [filter, setFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const sortedPrices = useMemo(() => {
     let items = [...allPrices];
     if (filter === "crypto") items = items.filter((p) => p.type === "crypto");
     if (filter === "forex") items = items.filter((p) => p.type === "forex");
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      items = items.filter(
+        (p) =>
+          p.symbol?.toLowerCase().includes(q) ||
+          p.name?.toLowerCase().includes(q)
+      );
+    }
     return items.sort((a, b) => Math.abs(b.change) - Math.abs(a.change));
-  }, [allPrices, filter]);
+  }, [allPrices, filter, searchQuery]);
 
   const formatPrice = (p, type) => {
     if (!p) return "---";
@@ -66,7 +75,29 @@ export default function RateMonitor({ allPrices, darkMode, onSelectAsset, select
         ))}
       </div>
 
+      <div className="relative">
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={tc("#475569", "#94a3b8")} />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search by asset name or symbol..."
+          className="w-full pl-9 pr-3 py-2 rounded-lg text-[13px] font-medium outline-none transition-all"
+          style={{
+            background: darkMode ? "rgba(255,255,255,0.03)" : "rgba(15,23,42,0.03)",
+            border: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(148,163,184,0.12)",
+            color: darkMode ? "#e2e8f0" : "#1e293b",
+          }}
+        />
+      </div>
+
       <div className="space-y-1.5 max-h-[400px] overflow-y-auto">
+        {sortedPrices.length === 0 && (
+          <div className="text-center py-6">
+            <p className="text-[15px]" style={tc("#64748b", "#475569")}>No assets found</p>
+            <p className="text-[14px]" style={tc("#475569", "#64748b")}>Try a different search term</p>
+          </div>
+        )}
         {sortedPrices.map((item) => {
           const isSelected = item.id === selectedAssetId;
           return (
