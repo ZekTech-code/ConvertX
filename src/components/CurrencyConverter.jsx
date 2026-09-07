@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import {
   ArrowRightLeft,
-  RefreshCw,
+  Loader2,
   AlertCircle,
   CheckCircle,
   ShieldCheck,
@@ -772,7 +772,7 @@ export default function CurrencyConverter() {
               >
                 {saving ? (
                   <>
-                    <RefreshCw size={14} className="animate-spin" />
+                    <Loader2 size={14} className="animate-spin" />
                     <span>Processing...</span>
                   </>
                 ) : (
