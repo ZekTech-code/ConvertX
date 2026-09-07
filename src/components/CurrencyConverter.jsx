@@ -869,7 +869,7 @@ export default function CurrencyConverter() {
               <div className="h-36 w-full relative">
                 {(loading || waveChartData.length === 0) && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-slate-400 font-sans text-xs">
-                    <RefreshCw className="w-4 h-4 animate-spin text-[#E88F2B]" />
+                    <Loader2 className="w-4 h-4 animate-spin text-[#E88F2B]" />
                     <span>Loading trend data...</span>
                   </div>
                 )}
