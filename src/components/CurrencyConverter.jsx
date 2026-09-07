@@ -518,7 +518,7 @@ export default function CurrencyConverter() {
       rate: currentRateVal,
     };
     setSaving(true);
-    addConversion(logItem);
+    await addConversion(logItem);
     setSaving(false);
 
 
