@@ -1,18 +1,28 @@
 ﻿import { useMemo, useState } from "react";
-import { History, ArrowUpRight, ArrowDownRight, Download } from "lucide-react";
+import { History, ArrowUpRight, ArrowDownRight, Download, Search } from "lucide-react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { getCoinIcon } from "../../utils/coinIcons";
 
 export default function TradeHistory({ trades, darkMode }) {
   const [filter, setFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const tc = (dark, light) => ({ color: darkMode ? dark : light });
 
   const filteredTrades = useMemo(() => {
-    if (filter === "all") return trades.slice(0, 50);
-    return trades.filter((t) => t.side === filter).slice(0, 50);
-  }, [trades, filter]);
+    let result = trades;
+    if (filter !== "all") result = result.filter((t) => t.side === filter);
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(
+        (t) =>
+          t.assetSymbol?.toLowerCase().includes(q) ||
+          t.assetName?.toLowerCase().includes(q)
+      );
+    }
+    return result.slice(0, 50);
+  }, [trades, filter, searchQuery]);
 
   const stats = useMemo(() => {
     const sells = trades.filter((t) => t.side === "sell" && t.status === "filled");
@@ -268,11 +278,31 @@ export default function TradeHistory({ trades, darkMode }) {
         ))}
       </div>
 
+      <div className="relative">
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={tc("#475569", "#94a3b8")} />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search by asset name or symbol..."
+          className="w-full pl-9 pr-3 py-2 rounded-lg text-[13px] font-medium outline-none transition-all"
+          style={{
+            background: darkMode ? "rgba(255,255,255,0.03)" : "rgba(15,23,42,0.03)",
+            border: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(148,163,184,0.12)",
+            color: darkMode ? "#e2e8f0" : "#1e293b",
+          }}
+        />
+      </div>
+
       <div className="space-y-1.5 max-h-[300px] overflow-y-auto">
         {filteredTrades.length === 0 && (
           <div className="text-center py-6">
-            <p className="text-[15px]" style={tc("#64748b", "#475569")}>No trades yet</p>
-            <p className="text-[14px]" style={tc("#475569", "#64748b")}>Your trade history will appear here</p>
+            <p className="text-[15px]" style={tc("#64748b", "#475569")}>
+              {searchQuery.trim() ? "No matching trades found" : "No trades yet"}
+            </p>
+            <p className="text-[14px]" style={tc("#475569", "#64748b")}>
+              {searchQuery.trim() ? "Try a different search term" : "Your trade history will appear here"}
+            </p>
           </div>
         )}
 

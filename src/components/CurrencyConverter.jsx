@@ -12,6 +12,7 @@ import {
 import MobileBottomNav from "./MobileBottomNav";
 import Navbar from "./Navbar";
 import PageLoader from "./PageLoader";
+import Toast from "./Toast";
 import {
   ResponsiveContainer,
   AreaChart,
@@ -285,16 +286,7 @@ export default function CurrencyConverter() {
   const [dashError, setDashError] = useState("");
   const [dashSuccess, setDashSuccess] = useState("");
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
-
-  useEffect(() => {
-    if (!dashSuccess) return;
-
-    const timer = window.setTimeout(() => {
-      setDashSuccess("");
-    }, 3000);
-
-    return () => window.clearTimeout(timer);
-  }, [dashSuccess]);
+  const [conversionToast, setConversionToast] = useState({ show: false, message: "" });
 
   const rateLimitTimestampsRef = useRef([]);
   const [chartData, setChartData] = useState([]);
@@ -538,6 +530,7 @@ export default function CurrencyConverter() {
     );
 
     setDashSuccess("Conversion saved successfully.");
+    setConversionToast({ show: true, message: `Converted ${amt} ${from} to ${result.toFixed(decimalPlaces)} ${to}` });
   };
 
   const handlePopularPairClick = (pairStr) => {
@@ -642,13 +635,6 @@ export default function CurrencyConverter() {
                 <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 text-[11px] font-semibold flex items-start gap-1.5">
                   <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
                   <span>{dashError || "Offline mode. Cached rates may apply."}</span>
-                </div>
-              )}
-
-              {dashSuccess && (
-                <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[11px] font-bold flex items-center gap-1.5">
-                  <CheckCircle className="w-3.5 h-3.5 shrink-0" />
-                  <span>{dashSuccess}</span>
                 </div>
               )}
 
@@ -784,8 +770,17 @@ export default function CurrencyConverter() {
                 disabled={loading || saving}
                 className="w-full bg-[#E88F2B] hover:scale-[1.01] active:scale-99 text-black font-bold py-3 rounded-xl shadow-lg shadow-[#E88F2B]/10 hover:shadow-[#E88F2B]/25 transition duration-200 cursor-pointer disabled:opacity-50 font-sans text-xs flex items-center justify-center gap-2"
               >
-                <ShieldCheck size={16} />
-                <span>{saving ? "Saving..." : loading ? "Checking Live Rate..." : "Confirm Conversion & Save"}</span>
+                {saving ? (
+                  <>
+                    <RefreshCw size={14} className="animate-spin" />
+                    <span>Processing...</span>
+                  </>
+                ) : (
+                  <>
+                    <ShieldCheck size={16} />
+                    <span>{loading ? "Checking Live Rate..." : "Confirm Conversion & Save"}</span>
+                  </>
+                )}
               </button>
             </motion.div>
           </div>
@@ -1031,6 +1026,16 @@ export default function CurrencyConverter() {
       </footer>
 
       <MobileBottomNav />
+
+      <Toast
+        show={conversionToast.show}
+        type="success"
+        variant="toast"
+        title="Conversion Successful"
+        message={conversionToast.message}
+        duration={3000}
+        onClose={() => setConversionToast({ show: false, message: "" })}
+      />
     </div>
   );
 }
