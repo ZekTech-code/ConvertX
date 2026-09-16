@@ -6,6 +6,7 @@ import { useMarketData } from "../hooks/useMarketData";
 import { useTrading } from "../hooks/useTrading";
 import TradingChart from "../components/trading/TradingChart";
 import CoinMarkets from "../components/trading/CoinMarkets";
+import MarketExchange from "../components/trading/MarketExchange";
 import OrderPanel from "../components/trading/OrderPanel";
 import SignalPanel from "../components/trading/SignalPanel";
 import FearGreedIndex from "../components/trading/FearGreedIndex";
@@ -497,7 +498,17 @@ export default function Trade() {
 
         <div className="h-[4vh] shrink-0" />
 
-        <div className="mt-[2%]">
+        <section className="mt-14 lg:mt-16">
+          <MarketExchange
+            allPrices={allPrices}
+            darkMode={darkMode}
+            onSelectAsset={handleSelectAsset}
+            selectedAssetId={selectedAsset?.id}
+            marketData={marketData}
+          />
+        </section>
+
+        <div className="mt-2">
           {selectedAsset && (
             <CoinMarkets
               asset={selectedAsset}
