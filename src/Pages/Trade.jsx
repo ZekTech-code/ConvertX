@@ -519,9 +519,9 @@ export default function Trade() {
           )}
         </div>
 
-        <div className="hidden lg:grid grid-cols-2 gap-2 mt-2">
-          <div className="rounded-2xl overflow-hidden" style={cardStyle}>
-            <div className="p-4 pb-0">
+        <div className="hidden lg:grid grid-cols-2 gap-2 mt-2 items-stretch">
+          <div className="rounded-2xl overflow-hidden h-full" style={cardStyle}>
+            <div className="p-4 h-full flex items-center justify-center">
               <PortfolioPanel
                 balance={trading.balance}
                 positions={trading.positions}
@@ -535,8 +535,8 @@ export default function Trade() {
             </div>
           </div>
 
-          <div className="rounded-2xl overflow-hidden" style={cardStyle}>
-            <div className="p-4 pb-0">
+          <div className="rounded-2xl overflow-hidden h-full" style={cardStyle}>
+            <div className="p-4 h-full flex items-center justify-center">
               <TradeHistory trades={trading.trades} darkMode={darkMode} />
             </div>
           </div>

@@ -205,7 +205,7 @@ export default function TradeHistory({ trades, darkMode }) {
 
   return (
     <div
-      className="rounded-2xl p-4 flex flex-col gap-3"
+      className="rounded-2xl p-4 flex h-full w-full flex-col gap-3"
       style={{
         background: darkMode ? "rgba(255,255,255,0.02)" : "rgba(15,23,42,0.02)",
         border: darkMode ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(148,163,184,0.12)",
