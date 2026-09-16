@@ -3,9 +3,11 @@ const HISTORY_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 const isDev = import.meta.env.DEV;
 
 const CMC_BASE = isDev ? "/api/cmc" : "https://us-central1-convertxapp.cloudfunctions.net/cmcProxy";
-const COINGECKO_BASE = isDev ? "/api/coingecko" : "https://api.coingecko.com/api/v3";
+const COINGECKO_BASE = isDev ? "/api/coingecko" : "https://us-central1-convertxapp.cloudfunctions.net/coingeckoProxy";
 const ER_API_BASE = isDev ? "/api/er-api" : "https://open.er-api.com/v6";
 const BINANCE_BASE = "https://api.binance.com";
+const COINGECKO_RATE_LIMIT_KEY = "cg_rate_limit_until";
+const COINGECKO_DEFAULT_COOLDOWN_MS = 120000;
 
 const COIN_ID_TO_BINANCE = {
   "bitcoin": "BTCUSDT",
@@ -46,6 +48,8 @@ const TIMEFRAME_TO_BINANCE_INTERVAL = {
   "1W": "1w",
 };
 
+export const hasBinanceOHLC = (coinId) => Boolean(COIN_ID_TO_BINANCE[coinId]);
+
 function sanitiseCurrencyCode(code) {
   if (typeof code !== "string" || !/^[A-Z]{2,5}$/.test(code.trim())) {
     throw new Error(`Invalid currency code: "${code}"`);
@@ -83,6 +87,56 @@ let CG_MIN_GAP_MS = 2000;
 let cgLastRequestAt = 0;
 let cgConsecutive429s = 0;
 
+function getCoinGeckoCooldownUntil() {
+  if (typeof localStorage === "undefined") return 0;
+  const raw = Number(localStorage.getItem(COINGECKO_RATE_LIMIT_KEY) || 0);
+  return Number.isFinite(raw) ? raw : 0;
+}
+
+export function isCoinGeckoRateLimited() {
+  return Date.now() < getCoinGeckoCooldownUntil();
+}
+
+export function markCoinGeckoRateLimited(retryAfterSeconds = 0) {
+  const retryMs = Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0
+    ? retryAfterSeconds * 1000
+    : COINGECKO_DEFAULT_COOLDOWN_MS;
+  const cooldownUntil = Date.now() + Math.max(retryMs, COINGECKO_DEFAULT_COOLDOWN_MS);
+
+  if (typeof localStorage !== "undefined") {
+    try {
+      localStorage.setItem(COINGECKO_RATE_LIMIT_KEY, String(cooldownUntil));
+    } catch {}
+  }
+
+  return cooldownUntil;
+}
+
+function getCachedJson(cacheKey, timeKey, ttlMs = Infinity, allowExpired = false) {
+  if (typeof localStorage === "undefined") return null;
+  try {
+    const cached = localStorage.getItem(cacheKey);
+    if (!cached) return null;
+
+    const cachedTime = Number(localStorage.getItem(timeKey) || 0);
+    if (!allowExpired && Number.isFinite(ttlMs) && cachedTime && (Date.now() - cachedTime) > ttlMs) {
+      return null;
+    }
+
+    return JSON.parse(cached);
+  } catch {
+    return null;
+  }
+}
+
+function setCachedJson(cacheKey, timeKey, data) {
+  if (typeof localStorage === "undefined") return;
+  try {
+    localStorage.setItem(cacheKey, JSON.stringify(data));
+    localStorage.setItem(timeKey, String(Date.now()));
+  } catch {}
+}
+
 function enqueueCgRequest(fn) {
   return new Promise((resolve, reject) => {
     cgQueue.push({ fn, resolve, reject });
@@ -95,6 +149,10 @@ async function processCgQueue() {
   cgProcessing = true;
   while (cgQueue.length > 0) {
     const { fn, resolve, reject } = cgQueue.shift();
+    if (isCoinGeckoRateLimited()) {
+      reject(new Error("CoinGecko rate limited"));
+      continue;
+    }
     const elapsed = Date.now() - cgLastRequestAt;
     if (elapsed < CG_MIN_GAP_MS) {
       await new Promise((r) => setTimeout(r, CG_MIN_GAP_MS - elapsed));
@@ -108,7 +166,7 @@ async function processCgQueue() {
     } catch (err) {
       if (err?.message?.includes("429")) {
         cgConsecutive429s++;
-        CG_MIN_GAP_MS = Math.min(2000 + cgConsecutive429s * 3000, 20000);
+        CG_MIN_GAP_MS = Math.min(10000 + cgConsecutive429s * 5000, 60000);
       }
       reject(err);
     }
@@ -121,13 +179,10 @@ export { enqueueCgRequest };
 async function fetchWithRetry(url, options = {}, maxRetries = 2) {
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     const res = await fetchWithTimeout(url, options);
-    if (res.status === 429 && attempt < maxRetries) {
+    if (res.status === 429) {
       const retryAfter = parseInt(res.headers?.get("Retry-After") || "0", 10);
-      const delay = retryAfter > 0
-        ? Math.max(retryAfter * 1000, 10000)
-        : Math.pow(2, attempt) * 5000;
-      await new Promise((r) => setTimeout(r, delay));
-      continue;
+      markCoinGeckoRateLimited(retryAfter);
+      throw new Error("CoinGecko 429");
     }
     return res;
   }
@@ -320,28 +375,6 @@ export const getCryptoPrices = async (
   const vcUpper = vsCurrency.toUpperCase();
 
   try {
-    const cgUrl = `${COINGECKO_BASE}/simple/price?ids=${safeCoinIds.join(",")}&vs_currencies=${vsCurrency}&include_24hr_change=true`;
-    const cgRes = await fetchWithTimeout(cgUrl, { timeout: 8000 });
-    if (cgRes.ok) {
-      const data = await cgRes.json();
-      const result = {};
-      for (const coinId of safeCoinIds) {
-        const coinData = data[coinId];
-        if (coinData && coinData[vsCurrency] != null) {
-          result[coinId] = {
-            [vsCurrency]: coinData[vsCurrency] || 0,
-            [`${vsCurrency}_24h_change`]: coinData[`${vsCurrency}_24h_change`] || 0,
-          };
-        }
-      }
-      if (Object.keys(result).length > 0) {
-        localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), prices: result }));
-        return result;
-      }
-    }
-  } catch {}
-
-  try {
     const headers = { "Accept": "application/json" };
 
     const res = await fetchWithTimeout(
@@ -371,10 +404,34 @@ export const getCryptoPrices = async (
 
     localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), prices: result }));
     return result;
-  } catch (error) {
-    console.warn("CoinMarketCap API request failed. Attempting cache fallback...", error);
-    return getFallbackPrices(safeCoinIds, vsCurrency, cacheKey);
+  } catch {}
+
+  if (!isCoinGeckoRateLimited()) {
+    try {
+      const cgUrl = `${COINGECKO_BASE}/simple/price?ids=${safeCoinIds.join(",")}&vs_currencies=${vsCurrency}&include_24hr_change=true`;
+      const cgRes = await enqueueCgRequest(() => fetchWithRetry(cgUrl, { timeout: 8000 }));
+      if (cgRes.ok) {
+        const data = await cgRes.json();
+        const result = {};
+        for (const coinId of safeCoinIds) {
+          const coinData = data[coinId];
+          if (coinData && coinData[vsCurrency] != null) {
+            result[coinId] = {
+              [vsCurrency]: coinData[vsCurrency] || 0,
+              [`${vsCurrency}_24h_change`]: coinData[`${vsCurrency}_24h_change`] || 0,
+            };
+          }
+        }
+        if (Object.keys(result).length > 0) {
+          localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), prices: result }));
+          return result;
+        }
+      }
+    } catch {}
   }
+
+  console.warn("Crypto price APIs unavailable. Attempting cache fallback...");
+  return getFallbackPrices(safeCoinIds, vsCurrency, cacheKey);
 };
 
 function getFallbackPrices(coinIds, vsCurrency, cacheKey) {
@@ -489,21 +546,22 @@ export const getBinanceOHLC = async (coinId, timeframe = "1D", limit = 100) => {
   const cacheTimeKey = `binance_ohlc_time_${coinId}_${interval}`;
   const ttlMs = timeframe === "1H" ? 3600000 : timeframe === "4H" ? 14400000 : timeframe === "1D" ? 86400000 : 604800000;
 
-  try {
-    const cached = localStorage.getItem(cacheKey);
-    const cachedTime = localStorage.getItem(cacheTimeKey);
-    if (cached && cachedTime && (Date.now() - parseInt(cachedTime, 10)) < ttlMs) {
-      return JSON.parse(cached);
-    }
-  } catch {}
+  const freshCache = getCachedJson(cacheKey, cacheTimeKey, ttlMs);
+  if (Array.isArray(freshCache) && freshCache.length > 0) return freshCache;
 
   try {
     const url = `${BINANCE_BASE}/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
-    const res = await fetchWithTimeout(url, { timeout: 5000 });
-    if (!res.ok) return [];
+    const res = await fetchWithTimeout(url, { timeout: 10000 });
+    if (!res.ok) {
+      const staleCache = getCachedJson(cacheKey, cacheTimeKey, ttlMs, true);
+      return Array.isArray(staleCache) ? staleCache : [];
+    }
 
     const data = await res.json();
-    if (!Array.isArray(data) || data.length === 0) return [];
+    if (!Array.isArray(data) || data.length === 0) {
+      const staleCache = getCachedJson(cacheKey, cacheTimeKey, ttlMs, true);
+      return Array.isArray(staleCache) ? staleCache : [];
+    }
 
     const candles = data.map((k) => ({
       time: Math.floor(k[0] / 1000),
@@ -515,12 +573,15 @@ export const getBinanceOHLC = async (coinId, timeframe = "1D", limit = 100) => {
     })).filter((c) => c.time > 0 && c.close > 0);
 
     if (candles.length > 0) {
-      localStorage.setItem(cacheKey, JSON.stringify(candles));
-      localStorage.setItem(cacheTimeKey, String(Date.now()));
+      setCachedJson(cacheKey, cacheTimeKey, candles);
     }
     return candles;
   } catch (err) {
-    console.warn(`[Binance OHLC] ${symbol} failed (${err?.message || err}), falling back to CoinGecko`);
+    const staleCache = getCachedJson(cacheKey, cacheTimeKey, ttlMs, true);
+    if (Array.isArray(staleCache) && staleCache.length > 0) return staleCache;
+
+    const reason = err?.name === "AbortError" ? "request timed out" : (err?.message || err);
+    console.warn(`[Binance OHLC] ${symbol} unavailable (${reason}); using local fallback`);
     return [];
   }
 };
@@ -531,13 +592,13 @@ export const getOHLCData = async (coinId, days = 30) => {
   const cacheKey = `cg_ohlc_cache_${coinId}_${days}`;
   const cacheTimeKey = `cg_ohlc_time_${coinId}_${days}`;
 
-  try {
-    const cached = localStorage.getItem(cacheKey);
-    const cachedTime = localStorage.getItem(cacheTimeKey);
-    if (cached && cachedTime && (Date.now() - parseInt(cachedTime, 10)) < 86400000) {
-      return JSON.parse(cached);
-    }
-  } catch {}
+  const freshCache = getCachedJson(cacheKey, cacheTimeKey, 86400000);
+  if (Array.isArray(freshCache) && freshCache.length > 0) return freshCache;
+
+  if (isCoinGeckoRateLimited()) {
+    const staleCache = getCachedJson(cacheKey, cacheTimeKey, 86400000, true);
+    return Array.isArray(staleCache) ? staleCache : [];
+  }
 
   try {
     const url = `${COINGECKO_BASE}/coins/${coinId}/ohlc?vs_currency=usd&days=${days}`;
@@ -556,11 +617,11 @@ export const getOHLCData = async (coinId, days = 30) => {
     }));
 
     if (candles.length > 0) {
-      localStorage.setItem(cacheKey, JSON.stringify(candles));
-      localStorage.setItem(cacheTimeKey, String(Date.now()));
+      setCachedJson(cacheKey, cacheTimeKey, candles);
     }
     return candles;
   } catch {
-    return [];
+    const staleCache = getCachedJson(cacheKey, cacheTimeKey, 86400000, true);
+    return Array.isArray(staleCache) ? staleCache : [];
   }
 };

@@ -1,7 +1,7 @@
 ﻿import { useState, useEffect, useRef, useMemo } from "react";
 import { createChart } from "lightweight-charts";
 import { Activity } from "lucide-react";
-import { getOHLCData, getBinanceOHLC } from "../../services/ExchangeApi";
+import { getOHLCData, getBinanceOHLC, hasBinanceOHLC } from "../../services/ExchangeApi";
 
 function calculateEMA(data, period) {
   const k = 2 / (period + 1);
@@ -375,7 +375,7 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
         return;
       }
 
-      if (pricesReady) {
+      if (pricesReady && !hasBinanceOHLC(asset.id)) {
         candles = await getOHLCData(asset.id, days);
       }
       if (cancelled) return;

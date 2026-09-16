@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { enqueueCgRequest } from "../services/ExchangeApi";
+import { enqueueCgRequest, isCoinGeckoRateLimited, markCoinGeckoRateLimited } from "../services/ExchangeApi";
 
 const isDev = import.meta.env.DEV;
 const CMC_BASE = isDev ? "/api/cmc" : "https://us-central1-convertxapp.cloudfunctions.net/cmcProxy";
-const COINGECKO_BASE = isDev ? "/api/coingecko" : "https://api.coingecko.com/api/v3";
+const COINGECKO_BASE = isDev ? "/api/coingecko" : "https://us-central1-convertxapp.cloudfunctions.net/coingeckoProxy";
 const FOREX_BASE = isDev ? "/api/er-api" : "https://open.er-api.com/v6";
 const REFRESH_INTERVAL = 60000;
 const CACHE_TTL = 300000;
@@ -145,16 +145,17 @@ async function fetchWithTimeout(url, options = {}, timeout = 10000) {
 }
 
 async function fetchWithRetry(url, options = {}, timeout = 15000, maxRetries = 2) {
+  if (url.includes(COINGECKO_BASE) && isCoinGeckoRateLimited()) {
+    throw new Error("CoinGecko rate limited");
+  }
+
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       const res = await fetchWithTimeout(url, options, timeout);
-      if (res.status === 429 && attempt < maxRetries) {
+      if (res.status === 429) {
         const retryAfter = parseInt(res.headers?.get("Retry-After") || "0", 10);
-        const delay = retryAfter > 0
-          ? Math.max(retryAfter * 1000, 15000)
-          : Math.pow(2, attempt) * 10000;
-        await new Promise((r) => setTimeout(r, delay));
-        continue;
+        markCoinGeckoRateLimited(retryAfter);
+        throw new Error("CoinGecko 429");
       }
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return res.json();
@@ -188,12 +189,12 @@ function setCache(key, data) {
   }
 }
 
-function getLocalStorage(key) {
+function getLocalStorage(key, maxAge = 86400000) {
   try {
     const raw = localStorage.getItem(key);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
-    if (Date.now() - parsed.ts > 86400000) return null;
+    if (Number.isFinite(maxAge) && Date.now() - parsed.ts > maxAge) return null;
     return parsed.data;
   } catch {
     return null;
@@ -216,6 +217,8 @@ function buildEmptyResult() {
 }
 
 async function fetchCoinGeckoPrices() {
+  if (isCoinGeckoRateLimited()) throw new Error("CoinGecko rate limited");
+
   const url = `${COINGECKO_BASE}/simple/price?ids=${COINGECKO_IDS}&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true&include_market_cap=true`;
   const data = await enqueueCgRequest(() => fetchWithRetry(url, {}, 15000));
   if (data?.error_code) throw new Error(data.error_message || "CoinGecko rate limited");
@@ -273,9 +276,9 @@ export function useMarketData() {
 
   const fetchCryptoPricesBackground = useCallback(async (existing) => {
     try {
-      const cgPrices = await fetchCoinGeckoPrices();
-      if (cgPrices && Object.keys(cgPrices).length > 0 && Object.values(cgPrices).some((v) => v.usd > 0)) {
-        const merged = { ...existing, ...cgPrices };
+      const cmcPrices = await fetchCMCPrices();
+      if (cmcPrices && Object.keys(cmcPrices).length > 0 && Object.values(cmcPrices).some((v) => v.usd > 0)) {
+        const merged = { ...existing, ...cmcPrices };
         setCache(buildCacheKey("crypto_prices"), merged);
         setLocalStorage("cg_prices", merged);
         return merged;
@@ -284,9 +287,9 @@ export function useMarketData() {
     }
 
     try {
-      const cmcPrices = await fetchCMCPrices();
-      if (cmcPrices && Object.keys(cmcPrices).length > 0 && Object.values(cmcPrices).some((v) => v.usd > 0)) {
-        const merged = { ...existing, ...cmcPrices };
+      const cgPrices = await fetchCoinGeckoPrices();
+      if (cgPrices && Object.keys(cgPrices).length > 0 && Object.values(cgPrices).some((v) => v.usd > 0)) {
+        const merged = { ...existing, ...cgPrices };
         setCache(buildCacheKey("crypto_prices"), merged);
         setLocalStorage("cg_prices", merged);
         return merged;
@@ -324,6 +327,7 @@ export function useMarketData() {
     if (persistent && persistent.length > 0) return persistent;
 
     if (!coinId) return [];
+    if (isCoinGeckoRateLimited()) return getLocalStorage(persistentKey, Infinity) || [];
 
     try {
       const url = `${COINGECKO_BASE}/coins/${coinId}/market_chart?vs_currency=usd&days=${days}`;
@@ -339,7 +343,7 @@ export function useMarketData() {
       }
       return prices;
     } catch {
-      return [];
+      return getLocalStorage(persistentKey, Infinity) || [];
     }
   }, []);
 
@@ -353,6 +357,7 @@ export function useMarketData() {
     if (persistent && persistent.length > 0) return persistent;
 
     if (!coinId) return [];
+    if (isCoinGeckoRateLimited()) return getLocalStorage(persistentKey, Infinity) || [];
 
     try {
       const url = `${COINGECKO_BASE}/coins/${coinId}/ohlc?vs_currency=usd&days=${days}`;
@@ -371,7 +376,7 @@ export function useMarketData() {
       }
       return candles;
     } catch {
-      return [];
+      return getLocalStorage(persistentKey, Infinity) || [];
     }
   }, []);
 
@@ -413,16 +418,8 @@ export function useMarketData() {
       if (mountedRef.current) setLoading(false);
     }
 
-    Promise.all(
-      CRYPTO_ASSETS.slice(0, 4).map((a) =>
-        fetchCryptoHistory(a.id, 30).then((d) => [a.id, d]).catch(() => [a.id, []])
-      )
-    )
-      .then((entries) => {
-        if (mountedRef.current) setCryptoHistory(Object.fromEntries(entries));
-      })
-      .catch(() => {});
-  }, [fetchCryptoPrices, fetchForexRates, fetchCryptoHistory]);
+    if (mountedRef.current) setCryptoHistory({});
+  }, [fetchCryptoPrices, fetchForexRates]);
 
   useEffect(() => {
     mountedRef.current = true;
