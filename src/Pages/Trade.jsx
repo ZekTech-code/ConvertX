@@ -498,7 +498,7 @@ export default function Trade() {
 
         <div className="h-[4vh] shrink-0" />
 
-        <section className="mt-14 lg:mt-16">
+        <section className="mt-20 lg:mt-24">
           <MarketExchange
             allPrices={allPrices}
             darkMode={darkMode}
