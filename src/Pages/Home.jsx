@@ -20,7 +20,6 @@ import MobileBottomNav from "../components/MobileBottomNav";
 import Toast from "../components/Toast";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
-import CampaignDashboardVisual from "../components/CampaignDashboardVisual";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -80,6 +79,17 @@ export default function CurrencyConverterHomePage() {
         'Track exchange listings, volume, and rate history with interactive charts and community sentiment insights.',
       icon: <Globe className="w-9 h-9" />,
     },
+  ];
+
+  const currencies = [
+    'USD',
+    'EUR',
+    'GBP',
+    'NGN',
+    'JPY',
+    'CAD',
+    'AUD',
+    'CHF',
   ];
 
   const navigate = useNavigate();
@@ -276,7 +286,100 @@ export default function CurrencyConverterHomePage() {
           transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
           className="relative"
         >
-          <CampaignDashboardVisual />
+          <div className="relative w-full max-w-md mx-auto lg:max-w-full bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-3xl p-4 sm:p-5 md:p-6 shadow-2xl overflow-hidden">
+            <div className="flex items-center justify-between mb-5">
+              <div>
+                <h3 className="text-xl font-bold text-slate-800 dark:text-white">Currency Converter</h3>
+                <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5">
+                  Fast and protected transactions
+                </p>
+              </div>
+
+              <button
+                onClick={() => navigate("/convert")}
+                className="w-11 h-11 rounded-xl bg-[#E88F2B] flex items-center justify-center text-black font-bold text-xl cursor-pointer hover:scale-105 active:scale-95 transition duration-150"
+              >
+                <ArrowRightLeft className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="hero-amount" className="block text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                  Amount
+                </label>
+                <input
+                  id="hero-amount"
+                  name="hero-amount"
+                  type="number"
+                  defaultValue="1000"
+                  className="w-full min-w-0 bg-slate-100 dark:bg-black/35 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white rounded-xl px-4 py-2.5 text-sm sm:text-base font-bold font-mono outline-none focus:border-[#E88F2B] transition"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
+                <div>
+                  <label htmlFor="hero-from" className="block text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                    From
+                  </label>
+                  <select id="hero-from" name="hero-from" className="w-full min-w-0 bg-slate-100 dark:bg-black/35 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white rounded-xl px-4 py-2.5 outline-none focus:border-[#E88F2B] transition text-xs sm:text-sm font-bold cursor-pointer">
+                    {currencies.map((currency) => (
+                      <option key={currency} className="bg-white dark:bg-[#000000] text-slate-900 dark:text-white">{currency}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="hero-to" className="block text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                    To
+                  </label>
+                  <select id="hero-to" name="hero-to" className="w-full min-w-0 bg-slate-100 dark:bg-black/35 border border-slate-300 dark:border-white/10 text-slate-900 dark:text-white rounded-xl px-4 py-2.5 outline-none focus:border-[#E88F2B] transition text-xs sm:text-sm font-bold cursor-pointer">
+                    {currencies.map((currency) => (
+                      <option key={currency} className="bg-white dark:bg-[#000000] text-slate-900 dark:text-white">{currency}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="bg-slate-100 dark:bg-black/20 border border-slate-300 dark:border-[#E88F2B]/25 rounded-xl p-3 flex items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-1.5 mb-0.5">
+                    <p className="text-slate-500 dark:text-gray-400 text-xs font-medium">Exchange Rate</p>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#E88F2B] animate-pulse inline-block" />
+                  </div>
+                  <p className="text-slate-500 dark:text-slate-400 text-[10px] font-mono">
+                    1 USD = 0.9234 EUR
+                  </p>
+                </div>
+                <div className="text-right">
+                  <h4 className="text-xl sm:text-2xl font-black font-mono text-slate-900 dark:text-white">€923.45</h4>
+                </div>
+              </div>
+
+              <button 
+                onClick={() => navigate("/convert")}
+                className="w-full bg-[#E88F2B] text-white font-bold py-3 rounded-xl hover:scale-[1.02] transition duration-300 shadow-xl shadow-[#E88F2B]/20 cursor-pointer text-sm"
+              >
+                Convert Now
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 mt-4">
+              <div className="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl p-3">
+                <p className="text-[#E88F2B] dark:text-[#E88F2B] font-bold text-xs mb-0.5">256-bit SSL</p>
+                <span className="text-[10px] text-slate-550 dark:text-slate-400">
+                  Advanced Encryption
+                </span>
+              </div>
+
+              <div className="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl p-3">
+                <p className="text-[#E88F2B] dark:text-[#E88F2B] font-bold text-xs mb-0.5">Protected API</p>
+                <span className="text-[10px] text-slate-555 dark:text-slate-400">
+                  Secure Data Requests
+                </span>
+              </div>
+            </div>
+          </div>
         </motion.div>
       </section>
 
