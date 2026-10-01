@@ -1,6 +1,6 @@
 ﻿import { useState, useMemo } from 'react';
 import { ArrowUpRight, TrendingDown, Zap, AlertTriangle } from 'lucide-react';
-import { ACCENT, accentAlpha, pick } from "../../styles/colors";
+import { BORDER, pick, PRIMARY, TEXT, TEXT_MUTED, TEXT_SECONDARY } from "../../styles/colors";
 
 const ORDER_TYPES = ['market', 'limit', 'stop', 'stop_limit', 'take_profit', 'stop_loss'];
 
@@ -105,7 +105,7 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
     >
       <div className="flex items-center gap-2 mb-1">
         <Zap size={18} className="text-accent" />
-        <span className="text-lg font-black uppercase tracking-wider" style={tc('#94a3b8', '#475569')}>Place Order</span>
+        <span className="text-lg font-black uppercase tracking-wider" style={pick(TEXT_MUTED, darkMode)}>Place Order</span>
       </div>
 
       <div className="flex gap-2">
@@ -114,7 +114,7 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
           style={{
             background: side === 'buy' ? 'rgba(34,197,94,0.2)' : 'transparent',
             border: side === 'buy' ? '1px solid rgba(34,197,94,0.4)' : darkMode ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(148,163,184,0.12)',
-            color: side === 'buy' ? '#22c55e' : tc('#64748b', '#475569').color,
+            color: side === 'buy' ? '#22c55e' : pick(TEXT_SECONDARY, darkMode).color,
           }}
         ><ArrowUpRight size={14} className="inline mr-1" />BUY</button>
         <button onClick={() => setSide('sell')}
@@ -122,7 +122,7 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
           style={{
             background: side === 'sell' ? 'rgba(239,68,68,0.2)' : 'transparent',
             border: side === 'sell' ? '1px solid rgba(239,68,68,0.4)' : darkMode ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(148,163,184,0.12)',
-            color: side === 'sell' ? '#ef4444' : tc('#64748b', '#475569').color,
+            color: side === 'sell' ? '#ef4444' : pick(TEXT_SECONDARY, darkMode).color,
           }}
         ><TrendingDown size={14} className="inline mr-1" />SELL</button>
       </div>
@@ -132,27 +132,27 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
           <button key={ot} onClick={() => setOrderType(ot)}
             className="px-2 py-1.5 rounded-lg text-[9px] font-bold uppercase transition-all cursor-pointer"
             style={{
-              background: orderType === ot ? accentAlpha(darkMode, 0.14) : 'transparent',
-              border: orderType === ot ? `1px solid ${accentAlpha(darkMode, 0.3)}` : darkMode ? '1px solid rgba(255,255,255,0.03)' : '1px solid rgba(148,163,184,0.08)',
-              color: orderType === ot ? pick(ACCENT, darkMode) : tc('#64748b', '#475569').color,
+              background: orderType === ot ? pick(PRIMARY, darkMode) : 'transparent',
+              border: orderType === ot ? '1px solid ' + pick(PRIMARY, darkMode) : '1px solid ' + pick(BORDER, darkMode),
+              color: orderType === ot ? '#ffffff' : pick(TEXT_SECONDARY, darkMode),
             }}
           >{ot.replace('_', ' ')}</button>
         ))}
       </div>
 
       <div>
-        <label htmlFor="order-amount" className="text-[11px] font-bold uppercase tracking-wider block mb-1" style={tc('#64748b', '#475569')}>Amount (USD)</label>
+        <label htmlFor="order-amount" className="text-[11px] font-bold uppercase tracking-wider block mb-1" style={pick(TEXT_SECONDARY, darkMode)}>Amount (USD)</label>
         <input id="order-amount" name="order-amount" type="number" value={amount} onChange={(e) => setAmount(e.target.value)}
           placeholder="0.00" min="0" step="0.01"
           className="w-full px-3 py-2.5 rounded-xl text-[13px] font-mono font-bold outline-none transition-all"
           style={{
             background: darkMode ? 'rgba(255,255,255,0.04)' : 'rgba(15,23,42,0.04)',
             border: darkMode ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(148,163,184,0.15)',
-            color: darkMode ? '#f1f5f9' : '#0f172a',
+            color: pick(TEXT, darkMode),
           }}
         />
         <div className="flex justify-between mt-1.5">
-          <span className="text-[10px]" style={tc('#64748b', '#475569')}>Bal: ${balance.toFixed(2)}</span>
+          <span className="text-[10px]" style={pick(TEXT_SECONDARY, darkMode)}>Bal: ${balance.toFixed(2)}</span>
           {[25, 50, 75, 100].map((pct) => (
             <button key={pct} onClick={() => setAmount(((balance * pct) / 100).toFixed(2))}
               className="text-[10px] font-bold text-accent hover:text-accent-hover cursor-pointer"
@@ -163,14 +163,14 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
 
       {['limit', 'stop_limit'].includes(orderType) && (
         <div>
-          <label htmlFor="order-limit-price" className="text-[11px] font-bold uppercase block mb-1" style={tc('#64748b', '#475569')}>Limit Price (USD)</label>
+          <label htmlFor="order-limit-price" className="text-[11px] font-bold uppercase block mb-1" style={pick(TEXT_SECONDARY, darkMode)}>Limit Price (USD)</label>
           <input id="order-limit-price" name="order-limit-price" type="number" value={limitPrice} onChange={(e) => setLimitPrice(e.target.value)}
             placeholder={formatPrice(currentPrice)} min="0" step="0.01"
             className="w-full px-3 py-2.5 rounded-xl text-[13px] font-mono font-bold outline-none"
             style={{
               background: darkMode ? 'rgba(255,255,255,0.04)' : 'rgba(15,23,42,0.04)',
               border: darkMode ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(148,163,184,0.15)',
-              color: darkMode ? '#f1f5f9' : '#0f172a',
+              color: pick(TEXT, darkMode),
             }}
           />
         </div>
@@ -178,14 +178,14 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
 
       {['stop', 'stop_limit'].includes(orderType) && (
         <div>
-          <label htmlFor="order-stop-price" className="text-[11px] font-bold uppercase block mb-1" style={tc('#64748b', '#475569')}>Stop Price (USD)</label>
+          <label htmlFor="order-stop-price" className="text-[11px] font-bold uppercase block mb-1" style={pick(TEXT_SECONDARY, darkMode)}>Stop Price (USD)</label>
           <input id="order-stop-price" name="order-stop-price" type="number" value={stopPrice} onChange={(e) => setStopPrice(e.target.value)}
             placeholder={formatPrice(currentPrice)} min="0" step="0.01"
             className="w-full px-3 py-2.5 rounded-xl text-[13px] font-mono font-bold outline-none"
             style={{
               background: darkMode ? 'rgba(255,255,255,0.04)' : 'rgba(15,23,42,0.04)',
               border: darkMode ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(148,163,184,0.15)',
-              color: darkMode ? '#f1f5f9' : '#0f172a',
+              color: pick(TEXT, darkMode),
             }}
           />
         </div>
@@ -193,40 +193,40 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
 
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label htmlFor="order-take-profit" className="text-[10px] font-bold uppercase block mb-1" style={tc('#64748b', '#475569')}>Take Profit</label>
+          <label htmlFor="order-take-profit" className="text-[10px] font-bold uppercase block mb-1" style={pick(TEXT_SECONDARY, darkMode)}>Take Profit</label>
           <input id="order-take-profit" name="order-take-profit" type="number" value={takeProfit} onChange={(e) => setTakeProfit(e.target.value)}
             placeholder="TP" min="0" step="0.01"
             className="w-full px-2.5 py-2 rounded-lg text-[11px] font-mono font-bold outline-none"
             style={{
               background: darkMode ? 'rgba(34,197,94,0.04)' : 'rgba(34,197,94,0.02)',
               border: '1px solid rgba(34,197,94,0.15)',
-              color: darkMode ? '#f1f5f9' : '#0f172a',
+              color: pick(TEXT, darkMode),
             }}
           />
         </div>
         <div>
-          <label htmlFor="order-stop-loss" className="text-[10px] font-bold uppercase block mb-1" style={tc('#64748b', '#475569')}>Stop Loss</label>
+          <label htmlFor="order-stop-loss" className="text-[10px] font-bold uppercase block mb-1" style={pick(TEXT_SECONDARY, darkMode)}>Stop Loss</label>
           <input id="order-stop-loss" name="order-stop-loss" type="number" value={stopLoss} onChange={(e) => setStopLoss(e.target.value)}
             placeholder="SL" min="0" step="0.01"
             className="w-full px-2.5 py-2 rounded-lg text-[11px] font-mono font-bold outline-none"
             style={{
               background: darkMode ? 'rgba(239,68,68,0.04)' : 'rgba(239,68,68,0.02)',
               border: '1px solid rgba(239,68,68,0.15)',
-              color: darkMode ? '#f1f5f9' : '#0f172a',
+              color: pick(TEXT, darkMode),
             }}
           />
         </div>
       </div>
 
       <div>
-        <label htmlFor="order-leverage" className="text-[10px] font-bold uppercase block mb-1" style={tc('#64748b', '#475569')}>
+        <label htmlFor="order-leverage" className="text-[10px] font-bold uppercase block mb-1" style={pick(TEXT_SECONDARY, darkMode)}>
           Leverage: {parsed.lev}x
         </label>
         <input id="order-leverage" name="order-leverage" type="range" value={leverage} onChange={(e) => setLeverage(e.target.value)}
           min="1" max="125" step="1"
           className="w-full accent-accent"
         />
-        <div className="flex justify-between text-[9px]" style={tc('#64748b', '#475569')}>
+        <div className="flex justify-between text-[9px]" style={pick(TEXT_SECONDARY, darkMode)}>
           <span>1x</span><span>25x</span><span>50x</span><span>75x</span><span>100x</span><span>125x</span>
         </div>
       </div>
@@ -238,23 +238,23 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
         }}
       >
         <div className="flex justify-between text-[11px]">
-          <span style={tc('#64748b', '#475569')}>Price</span>
-          <span className="font-mono font-bold" style={tc('#cbd5e1', '#334155')}>${formatPrice(execPrice)}</span>
+          <span style={pick(TEXT_SECONDARY, darkMode)}>Price</span>
+          <span className="font-mono font-bold" style={pick(TEXT, darkMode)}>${formatPrice(execPrice)}</span>
         </div>
         <div className="flex justify-between text-[11px]">
-          <span style={tc('#64748b', '#475569')}>Est. Quantity</span>
-          <span className="font-mono font-bold" style={tc('#cbd5e1', '#334155')}>
+          <span style={pick(TEXT_SECONDARY, darkMode)}>Est. Quantity</span>
+          <span className="font-mono font-bold" style={pick(TEXT, darkMode)}>
             {estimatedQty.toFixed(8)} {asset?.symbol || ''}
           </span>
         </div>
         <div className="flex justify-between text-[11px]">
-          <span style={tc('#64748b', '#475569')}>Fee (0.1%)</span>
+          <span style={pick(TEXT_SECONDARY, darkMode)}>Fee (0.1%)</span>
           <span className="font-mono font-bold text-accent">${fee.toFixed(4)}</span>
         </div>
         {parsed.lev > 1 && (
           <>
             <div className="flex justify-between text-[11px]">
-              <span style={tc('#64748b', '#475569')}>Margin Required</span>
+              <span style={pick(TEXT_SECONDARY, darkMode)}>Margin Required</span>
               <span className="font-mono font-bold" style={tc('#fbbf24', '#b45309')}>${marginRequired.toFixed(2)}</span>
             </div>
             {liquidationPrice && (
@@ -268,8 +268,8 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
         <div className="flex justify-between text-[11px] pt-1"
           style={{ borderTop: darkMode ? '1px solid rgba(255,255,255,0.04)' : '1px solid rgba(148,163,184,0.08)' }}
         >
-          <span className="font-bold" style={tc('#94a3b8', '#475569')}>{parsed.lev > 1 ? 'Total Exposure' : 'Total'}</span>
-          <span className="font-mono font-black" style={tc('#e2e8f0', '#1e293b')}>
+          <span className="font-bold" style={pick(TEXT_MUTED, darkMode)}>{parsed.lev > 1 ? 'Total Exposure' : 'Total'}</span>
+          <span className="font-mono font-black" style={pick(TEXT, darkMode)}>
             ${(parsed.lev > 1 ? parsed.amount * parsed.lev : totalWithFee).toFixed(2)}
           </span>
         </div>

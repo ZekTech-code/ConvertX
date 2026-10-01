@@ -129,7 +129,7 @@ export default function SpreadEstimator({ rate, to, amount }) {
             className={`px-2.5 py-1 text-[10px] font-bold rounded-lg border transition cursor-pointer font-sans ${
               selectedScenario === key
                 ? "border-accent/40 text-accent"
-                : "border-border text-text-secondary hover:border-border-strong dark:hover:border-white/20"
+                : "border-border text-text-secondary hover:border-accent hover:bg-accent-soft"
             }`}
             style={selectedScenario === key ? { background: `${SCENARIO_COLORS[key]}18` } : {}}
           >

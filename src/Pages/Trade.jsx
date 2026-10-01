@@ -123,7 +123,7 @@ export default function Trade() {
 
   if (!user) {
     return (
-      <div className={`min-h-screen flex items-center justify-center ${darkMode ? "bg-canvas" : "bg-white"}`}>
+      <div className="min-h-screen flex items-center justify-center bg-canvas text-text">
         <div className="text-center p-8">
           <BarChart3 size={48} className="mx-auto mb-4 text-accent" />
           <h2 className={`text-xl font-black mb-2 ${darkMode ? "text-white" : "text-text"}`}>

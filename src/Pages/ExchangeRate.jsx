@@ -312,8 +312,7 @@ function PairSelector({ activePair, setActivePair, rates, darkMode }) {
                       : "transparent",
                     color:
                       isActive ? pick(ACCENT, darkMode)
-                      : darkMode ? "#94a3b8"
-                      : "#475569",
+                      : pick(TEXT_MUTED, darkMode),
                   }}>
                   <span className="flex items-center gap-2 font-mono">
                     <CurrencyFlagImage
@@ -438,10 +437,9 @@ function RateChart({
                   : "transparent",
                 color:
                   activeWindow === w ? "#ffffff"
-                  : darkMode ? "#64748b"
-                  : "#94a3b8",
+                  : pick(TEXT_MUTED, darkMode),
                 boxShadow:
-                  activeWindow === w ? `0 0 14px ${accentAlpha(darkMode, 0.35)}` : "none",
+                  activeWindow === w ? "var(--cx-shadow-primary)" : "none",
               }}>
               {w}
             </button>

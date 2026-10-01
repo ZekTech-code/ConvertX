@@ -95,9 +95,6 @@ export default function CryptoTicker() {
 
   return (
     <div className="w-full bg-surface-muted border-b border-border backdrop-blur-sm overflow-hidden relative">
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-12 z-10 bg-[#ffffff]" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-12 z-10 bg-[#ffffff]" />
-
       {loading ? (
         <div className="flex items-center gap-2 px-6 py-2 text-text-secondary text-xs">
           <Loader size={12} className="animate-spin text-accent" />
@@ -112,7 +109,7 @@ export default function CryptoTicker() {
           {doubled.map((coin, idx) => (
             <span
               key={`${coin.id}-${idx}`}
-              className="inline-flex items-center gap-2 px-5 text-xs font-sans border-r border-border-strong /60 last:border-r-0"
+              className="inline-flex items-center gap-2 px-5 text-xs font-sans border-r border-border-strong/60 last:border-r-0"
             >
               <span className="font-black text-text">{coin.symbol}</span>
               <span className="font-mono text-text tabular-nums">

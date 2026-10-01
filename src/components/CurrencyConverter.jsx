@@ -730,7 +730,7 @@ export default function CurrencyConverter() {
                   <span className="text-[10px] font-bold text-text-muted block mb-1 font-sans uppercase tracking-wider">Converted Result</span>
                   
                   <div className="py-2 animate-pulse" style={{ display: loading ? 'block' : 'none' }}>
-                    <div className="h-8 w-44 bg-surface-sunken /10 rounded-lg" />
+                    <div className="h-8 w-44 bg-surface-sunken/10 rounded-lg" />
                   </div>
                   
                   <div className="space-y-1" style={{ display: loading ? 'none' : 'block' }}>
@@ -875,7 +875,7 @@ export default function CurrencyConverter() {
                   <ResponsiveContainer width="100%" height={144}>
                     <AreaChart data={waveChartData} margin={{ top: 6, right: 4, left: 10, bottom: 0 }}>
                       <defs>
-                        {/* Gradient defs removed - using solid colors */}
+                        
                       </defs>
                       <CartesianGrid strokeDasharray="3 8" vertical={false} stroke={darkMode ? "rgba(255,255,255,0.06)" : "rgba(15,23,42,0.08)"} />
                       <XAxis
@@ -964,7 +964,7 @@ export default function CurrencyConverter() {
           </div>
 
           {recentConversions.length === 0 ? (
-            <div className="py-8 text-center border border-dashed border-border rounded-2xl bg-surface-muted/60 /5 text-text-secondary text-xs font-semibold font-sans">
+            <div className="py-8 text-center border border-dashed border-border rounded-2xl bg-surface-muted/60 text-text-secondary text-xs font-semibold font-sans">
               No conversions logged. Enter values in the converter and click "Confirm Conversion &amp; Save" above to save your first trade.
             </div>
           ) : (

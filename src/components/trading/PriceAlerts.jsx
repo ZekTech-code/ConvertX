@@ -1,7 +1,7 @@
 ﻿import { useState, useCallback } from "react";
 import { Bell, BellOff, Plus, Trash2, TrendingUp, TrendingDown, CheckCircle } from "lucide-react";
 import { getCoinIcon } from "../../utils/coinIcons";
-import { ACCENT, accentAlpha, BORDER, pick, SURFACE_MUTED, TEXT, TEXT_SECONDARY } from "../../styles/colors";
+import { ACCENT, accentAlpha, BORDER, pick, PRIMARY, SURFACE_MUTED, TEXT, TEXT_SECONDARY } from "../../styles/colors";
 
 export default function PriceAlerts({ alerts, selectedAsset, currentPrice, darkMode, onAddAlert, onRemoveAlert }) {
   const [showForm, setShowForm] = useState(false);
@@ -96,9 +96,9 @@ export default function PriceAlerts({ alerts, selectedAsset, currentPrice, darkM
                   onClick={() => setCondition(c)}
                   className="flex-1 py-2 rounded-lg text-[13px] font-bold uppercase transition-all cursor-pointer flex items-center justify-center gap-1"
                   style={{
-                    background: condition === c ? accentAlpha(darkMode, 0.14) : "transparent",
-                    border: condition === c ? `1px solid ${accentAlpha(darkMode, 0.3)}` : "1px solid " + pick(BORDER, darkMode),
-                    color: condition === c ? pick(ACCENT, darkMode) : pick(TEXT_SECONDARY, darkMode),
+                    background: condition === c ? pick(PRIMARY, darkMode) : "transparent",
+                    border: condition === c ? "1px solid " + pick(PRIMARY, darkMode) : "1px solid " + pick(BORDER, darkMode),
+                    color: condition === c ? "#ffffff" : pick(TEXT_SECONDARY, darkMode),
                   }}
                 >
                   {c === "above" ? <TrendingUp size={12} /> : <TrendingDown size={12} />}

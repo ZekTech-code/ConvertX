@@ -191,7 +191,7 @@ export default function CurrencyConverterHomePage() {
 
 
   return (
-    <div className="min-h-screen bg-white text-text overflow-hidden transition-colors duration-300">
+    <div className="min-h-screen bg-canvas text-text overflow-hidden transition-colors duration-300">
 
       <Navbar />
 
@@ -233,7 +233,7 @@ export default function CurrencyConverterHomePage() {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate("/rates")}
-              className="border border-border-strong /15 bg-surface-muted hover:bg-surface-sunken dark:hover:bg-white/10 backdrop-blur-xl px-7 py-4 rounded-2xl transition-all duration-300 cursor-pointer text-text"
+              className="border border-border-strong/15 bg-surface-muted hover:bg-surface-sunken dark:hover:bg-white/10 backdrop-blur-xl px-7 py-4 rounded-2xl transition-all duration-300 cursor-pointer text-text"
             >
               View Exchange Rates
             </motion.button>
@@ -301,7 +301,7 @@ export default function CurrencyConverterHomePage() {
                   </label>
                   <select id="hero-from" name="hero-from" className="w-full min-w-0 bg-surface-muted border border-border-strong text-text rounded-xl px-4 py-2.5 outline-none focus:border-accent transition text-xs sm:text-sm font-bold cursor-pointer">
                     {currencies.map((currency) => (
-                      <option key={currency} className="bg-white text-text">{currency}</option>
+                      <option key={currency} className="bg-surface text-text">{currency}</option>
                     ))}
                   </select>
                 </div>
@@ -312,7 +312,7 @@ export default function CurrencyConverterHomePage() {
                   </label>
                   <select id="hero-to" name="hero-to" className="w-full min-w-0 bg-surface-muted border border-border-strong text-text rounded-xl px-4 py-2.5 outline-none focus:border-accent transition text-xs sm:text-sm font-bold cursor-pointer">
                     {currencies.map((currency) => (
-                      <option key={currency} className="bg-white text-text">{currency}</option>
+                      <option key={currency} className="bg-surface text-text">{currency}</option>
                     ))}
                   </select>
                 </div>
@@ -475,7 +475,7 @@ export default function CurrencyConverterHomePage() {
                   <p className="text-text-secondary">API Protection</p>
                   <span className="text-accent">98%</span>
                 </div>
-                <div className="w-full h-2 bg-surface-sunken /10 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-surface-sunken/10 rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     whileInView={{ width: "98%" }}
@@ -491,7 +491,7 @@ export default function CurrencyConverterHomePage() {
                   <p className="text-text-secondary">Server Stability</p>
                   <span className="text-accent">99.9%</span>
                 </div>
-                <div className="w-full h-2 bg-surface-sunken /10 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-surface-sunken/10 rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     whileInView={{ width: "99.9%" }}
@@ -507,7 +507,7 @@ export default function CurrencyConverterHomePage() {
                   <p className="text-text-secondary">Data Encryption</p>
                   <span className="text-accent">256-bit</span>
                 </div>
-                <div className="w-full h-2 bg-surface-sunken /10 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-surface-sunken/10 rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     whileInView={{ width: "100%" }}
@@ -647,7 +647,7 @@ export default function CurrencyConverterHomePage() {
                         className={`w-full bg-surface-muted border text-text rounded-xl pl-10 pr-4 py-3 text-xs outline-none transition ${
                           contactErrors.name
                             ? "border-danger focus:border-danger focus:ring-1 focus:ring-danger/30"
-                            : "border-border focus:border-accent focus:border-accent"
+                            : "border-border focus:border-accent focus:ring-1 focus:ring-accent"
                         }`}
                         placeholder="John Doe"
                       />
@@ -679,7 +679,7 @@ export default function CurrencyConverterHomePage() {
                         className={`w-full bg-surface-muted border text-text rounded-xl pl-10 pr-4 py-3 text-xs outline-none transition ${
                           contactErrors.email
                             ? "border-danger focus:border-danger focus:ring-1 focus:ring-danger/30"
-                            : "border-border focus:border-accent focus:border-accent"
+                            : "border-border focus:border-accent focus:ring-1 focus:ring-accent"
                         }`}
                         placeholder="john@example.com"
                       />
@@ -701,12 +701,12 @@ export default function CurrencyConverterHomePage() {
                     name="contact-subject"
                     value={contactSubject}
                     onChange={(e) => setContactSubject(e.target.value)}
-                    className="w-full bg-surface-muted border border-border text-text rounded-xl px-4 py-3 text-xs outline-none focus:border-accent focus:border-accent transition cursor-pointer"
+                    className="w-full bg-surface-muted border border-border text-text rounded-xl px-4 py-3 text-xs outline-none focus:border-accent focus:ring-1 focus:ring-accent transition cursor-pointer"
                   >
-                    <option value="General Inquiry" className="bg-white text-text">General Inquiry</option>
-                    <option value="Technical Support" className="bg-white text-text">Technical Support</option>
+                    <option value="General Inquiry" className="bg-surface text-text">General Inquiry</option>
+                    <option value="Technical Support" className="bg-surface text-text">Technical Support</option>
                     <option value="Feedback & Suggestions" className="bg-white text-text">Feedback & Suggestions</option>
-                    <option value="Partnership" className="bg-white text-text">Partnership</option>
+                    <option value="Partnership" className="bg-surface text-text">Partnership</option>
                   </select>
                 </div>
 
@@ -730,7 +730,7 @@ export default function CurrencyConverterHomePage() {
                       className={`w-full bg-surface-muted border text-text rounded-xl pl-10 pr-4 py-3 text-xs outline-none transition resize-none ${
                         contactErrors.message
                           ? "border-danger focus:border-danger focus:ring-1 focus:ring-danger/30"
-                          : "border-border focus:border-accent focus:border-accent"
+                          : "border-border focus:border-accent focus:ring-1 focus:ring-accent"
                       }`}
                       placeholder="Describe your request in detail..."
                     />

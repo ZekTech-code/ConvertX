@@ -187,7 +187,7 @@ export default function WatchlistWidget({ baseCurrency = "USD" }) {
 
                 <div className="flex items-center gap-2">
                   {loading && rate == null ? (
-                    <span className="w-14 h-3 bg-surface-sunken /10 rounded animate-pulse" />
+                    <span className="w-14 h-3 bg-surface-sunken/10 rounded animate-pulse" />
                   ) : (
                     <span
                       className={`text-xs font-mono font-bold tabular-nums transition-colors duration-500 ${

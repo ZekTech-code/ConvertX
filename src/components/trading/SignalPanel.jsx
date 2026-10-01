@@ -1,6 +1,7 @@
 ﻿import { useMemo } from 'react';
 import { TrendingUp, TrendingDown, Minus, Shield, AlertTriangle, Target, Clock } from 'lucide-react';
 import { generateSignals, aggregateSignal, calculateATR } from '../../services/technicalAnalysis';
+import { pick, TEXT, TEXT_MUTED, TEXT_SECONDARY } from "../../styles/colors";
 
 function emptyAnalysis(summary, source = null) {
   return {
@@ -90,8 +91,6 @@ export default function SignalPanel({ currentPrice, priceHistory, priceHistoryMe
     };
   }, [currentPrice, priceHistory, priceHistoryMeta]);
 
-  const tc = (dark, light) => ({ color: darkMode ? dark : light });
-
   const colors = {
     'STRONG BUY': { bg: 'rgba(34,197,94,0.12)', border: 'rgba(34,197,94,0.3)', text: '#22c55e', icon: TrendingUp },
     BUY: { bg: 'rgba(34,197,94,0.08)', border: 'rgba(34,197,94,0.2)', text: '#22c55e', icon: TrendingUp },
@@ -113,7 +112,7 @@ export default function SignalPanel({ currentPrice, priceHistory, priceHistoryMe
     >
       <div className="flex items-center gap-2 mb-1">
         <Shield size={18} className="text-accent" />
-        <span className="text-lg font-black uppercase tracking-wider" style={tc('#94a3b8', '#475569')}>Trading Signals</span>
+        <span className="text-lg font-black uppercase tracking-wider" style={pick(TEXT_MUTED, darkMode)}>Trading Signals</span>
       </div>
 
       <div className="rounded-xl p-4 text-center" style={{ background: overallStyle.bg, border: `1px solid ${overallStyle.border}` }}>
@@ -122,12 +121,12 @@ export default function SignalPanel({ currentPrice, priceHistory, priceHistoryMe
           {analysis.overall}
         </div>
         {analysis.summary && (
-          <p className="text-[11px] mt-1" style={tc('#94a3b8', '#475569')}>{analysis.summary}</p>
+          <p className="text-[11px] mt-1" style={pick(TEXT_MUTED, darkMode)}>{analysis.summary}</p>
         )}
         <div className="mt-2 h-1.5 rounded-full overflow-hidden" style={{ background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(15,23,42,0.05)' }}>
           <div className="h-full rounded-full transition-all duration-500" style={{ width: `${analysis.strength}%`, background: overallStyle.text }} />
         </div>
-        <p className="text-[11px] mt-1 font-bold" style={tc('#64748b', '#475569')}>Confidence: {analysis.confidence}%</p>
+        <p className="text-[11px] mt-1 font-bold" style={pick(TEXT_SECONDARY, darkMode)}>Confidence: {analysis.confidence}%</p>
       </div>
 
       {analysis.isActionable && (
@@ -138,34 +137,34 @@ export default function SignalPanel({ currentPrice, priceHistory, priceHistoryMe
           }}
         >
           <div className="flex justify-between text-[11px]">
-            <span style={tc('#64748b', '#475569')}>Entry</span>
-            <span className="font-mono font-bold" style={tc('#e2e8f0', '#1e293b')}>${analysis.entryPrice?.toFixed(4)}</span>
+            <span style={pick(TEXT_SECONDARY, darkMode)}>Entry</span>
+            <span className="font-mono font-bold" style={pick(TEXT, darkMode)}>${analysis.entryPrice?.toFixed(4)}</span>
           </div>
           <div className="flex justify-between text-[11px]">
-            <span style={tc('#64748b', '#475569')}>Stop Loss</span>
+            <span style={pick(TEXT_SECONDARY, darkMode)}>Stop Loss</span>
             <span className="font-mono font-bold" style={{ color: '#ef4444' }}>${analysis.stopLoss?.toFixed(4)}</span>
           </div>
           {analysis.takeProfits.map((tp) => (
             <div key={tp.level} className="flex justify-between text-[11px]">
-              <span style={tc('#64748b', '#475569')}>TP {tp.level} (RR {tp.rrr}:1)</span>
+              <span style={pick(TEXT_SECONDARY, darkMode)}>TP {tp.level} (RR {tp.rrr}:1)</span>
               <span className="font-mono font-bold" style={{ color: '#22c55e' }}>${tp.price.toFixed(4)}</span>
             </div>
           ))}
           <div className="flex justify-between text-[11px] pt-1"
             style={{ borderTop: darkMode ? '1px solid rgba(255,255,255,0.04)' : '1px solid rgba(148,163,184,0.08)' }}
           >
-            <span className="font-bold" style={tc('#94a3b8', '#475569')}>Risk/Reward</span>
+            <span className="font-bold" style={pick(TEXT_MUTED, darkMode)}>Risk/Reward</span>
             <span className={`font-mono font-bold ${analysis.riskReward >= 2 ? 'text-positive' : 'text-warning'}`}>
               1:{Math.abs(analysis.riskReward).toFixed(1)}
             </span>
           </div>
           <div className="flex justify-between text-[11px]">
-            <span style={tc('#64748b', '#475569')}>Trend</span>
+            <span style={pick(TEXT_SECONDARY, darkMode)}>Trend</span>
             <span className="font-bold" style={{ color: analysis.trend === 'BULLISH' ? '#22c55e' : analysis.trend === 'BEARISH' ? '#ef4444' : '#f59e0b' }}>
               {analysis.trend}
             </span>
           </div>
-          <div className="flex items-center gap-1.5 text-[9px]" style={tc('#64748b', '#475569')}>
+          <div className="flex items-center gap-1.5 text-[9px]" style={pick(TEXT_SECONDARY, darkMode)}>
             <Clock size={9} />
             {analysis.generatedAt && <span>Generated: {new Date(analysis.generatedAt).toLocaleTimeString()}</span>}
           </div>
@@ -179,7 +178,7 @@ export default function SignalPanel({ currentPrice, priceHistory, priceHistoryMe
             border: darkMode ? '1px solid rgba(255,255,255,0.04)' : '1px solid rgba(148,163,184,0.08)',
           }}
         >
-          <span className="text-[11px] font-bold" style={tc('#64748b', '#475569')}>RSI (14)</span>
+          <span className="text-[11px] font-bold" style={pick(TEXT_SECONDARY, darkMode)}>RSI (14)</span>
           <span className="text-[11px] font-mono font-black"
             style={{ color: analysis.rsi > 70 ? '#ef4444' : analysis.rsi < 30 ? '#22c55e' : '#f59e0b' }}
           >{analysis.rsi.toFixed(1)}</span>
@@ -189,7 +188,7 @@ export default function SignalPanel({ currentPrice, priceHistory, priceHistoryMe
       <div className="space-y-1 max-h-[200px] overflow-y-auto">
         {analysis.signals.length === 0 && (
           <div className="text-center py-3">
-            <p className="text-[11px]" style={tc('#64748b', '#475569')}>No confirmed signal generated yet</p>
+            <p className="text-[11px]" style={pick(TEXT_SECONDARY, darkMode)}>No confirmed signal generated yet</p>
           </div>
         )}
         {analysis.signals.map((sig, i) => {
@@ -202,8 +201,8 @@ export default function SignalPanel({ currentPrice, priceHistory, priceHistoryMe
               <Target size={9} className="mt-0.5 shrink-0" style={{ color: sigColors.text }} />
               <div className="min-w-0">
                 <span className="text-[11px] font-black" style={{ color: sigColors.text }}>{sig.source}</span>
-                <p className="text-[10px]" style={tc('#94a3b8', '#475569')}>{sig.message}</p>
-                <span className="text-[8px] font-bold" style={tc('#64748b', '#475569')}>Strength: {sig.strength}%</span>
+                <p className="text-[10px]" style={pick(TEXT_MUTED, darkMode)}>{sig.message}</p>
+                <span className="text-[8px] font-bold" style={pick(TEXT_SECONDARY, darkMode)}>Strength: {sig.strength}%</span>
               </div>
             </div>
           );
@@ -212,7 +211,7 @@ export default function SignalPanel({ currentPrice, priceHistory, priceHistoryMe
 
       <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-accent/5 border border-accent/10">
         <AlertTriangle size={9} className="text-accent shrink-0" />
-        <span className="text-[10px]" style={tc('#64748b', '#475569')}>Signals use market data only and are not financial advice.</span>
+        <span className="text-[10px]" style={pick(TEXT_SECONDARY, darkMode)}>Signals use market data only and are not financial advice.</span>
       </div>
     </div>
   );

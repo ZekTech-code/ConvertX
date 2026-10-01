@@ -14,7 +14,7 @@ import { useTheme } from "../../context/useTheme";
 import { formatRate } from "../../utils/formatRate";
 import { exportConversionHistoryAsCsv } from "../../utils/exportCsv";
 import ConvertXIcon from "./ConvertXIcon";
-import { ACCENT, accentAlpha, BORDER, CANVAS, NEGATIVE, POSITIVE, SURFACE, SURFACE_MUTED, TEXT, TEXT_MUTED, VIVID, WARNING, pick } from "../../styles/colors";
+import { ACCENT, accentAlpha, BORDER, NEGATIVE, pick, POSITIVE, SURFACE, SURFACE_MUTED, SURFACE_SUNKEN, TEXT, TEXT_MUTED, VIVID, WARNING } from "../../styles/colors";
 
 const TABS = [
   { id: "flow",       label: "Flow Volume",   Icon: BarChart2 },
@@ -77,16 +77,16 @@ function DonutTooltip({ active, payload, darkMode: dm = true }) {
   const color = d.payload.fill || PALETTE[0];
   return (
     <div style={{
-      background: dm ? "#000000" : "#ffffff",
+      background: dm ? SURFACE.dark : SURFACE.light,
       border: `1px solid ${color}55`,
       borderRadius: 10,
       padding: "9px 13px",
       boxShadow: `0 4px 20px ${color}22`,
     }}>
-      <p style={{ fontSize: 12, fontWeight: 800, color: dm ? "#f8fafc" : "#000000", fontFamily: "monospace" }}>{d.name}</p>
+      <p style={{ fontSize: 12, fontWeight: 800, color: dm ? TEXT.light : TEXT.dark, fontFamily: "monospace" }}>{d.name}</p>
       <p style={{ fontSize: 11, color: color, fontWeight: 700, marginTop: 2 }}>
         {d.payload.pct}% &nbsp;
-        <span style={{ color: dm ? "#64748b" : "#94a3b8", fontSize: 10 }}>({fmtVal(d.value)})</span>
+        <span style={{ color: dm ? TEXT_MUTED.dark : TEXT_MUTED.light, fontSize: 10 }}>({fmtVal(d.value)})</span>
       </p>
     </div>
   );
@@ -111,7 +111,7 @@ function DonutPanel({ data, centerLabel, title, valueKey = "value", themeColors 
       <div style={{ position: "relative", alignSelf: "center" }}>
         <PieChart width={168} height={168}>
           <defs>
-            {/* Gradient defs removed - using solid colors */}
+            
           </defs>
           <Pie
             data={data}
@@ -230,18 +230,18 @@ export default function ExchangeFlowChart({ recentConversions = [], chartData = 
   const { darkMode } = useTheme();
 
   const themeColors = {
-    bg: CANVAS[darkMode ? "dark" : "light"],
+    bg: pick(SURFACE_MUTED, darkMode),
     bgSecondary: SURFACE_MUTED[darkMode ? "dark" : "light"],
     bgCard: pick(SURFACE_MUTED, darkMode),
     border: pick(BORDER, darkMode),
     borderLight: darkMode ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.06)",
     text: TEXT[darkMode ? "dark" : "light"],
     textMuted: TEXT_MUTED[darkMode ? "dark" : "light"],
-    textDimmer: darkMode ? "#4a5875" : "#78879e",
+    textDimmer: pick(TEXT_MUTED, darkMode),
     gridStroke: darkMode ? "rgba(255,255,255,0.06)" : "rgba(15,23,42,0.08)",
     buttonBg: pick(TEXT, darkMode),
-    buttonBgHover: darkMode ? "#334155" : "#e2e8f0",
-    tooltip: SURFACE[darkMode ? "dark" : "light"],
+    buttonBgHover: pick(SURFACE_SUNKEN, darkMode),
+    tooltip: pick(SURFACE, darkMode),
     accent: ACCENT[darkMode ? "dark" : "light"],
     accentSoft: accentAlpha(darkMode, 0.12),
     accentBorder: accentAlpha(darkMode, 0.22),
@@ -539,9 +539,9 @@ useEffect(() => {
                     border: "none",
                     cursor: "pointer",
                     transition: "all 0.2s ease",
-                    background: period === p ? (darkMode ? "rgba(255,255,255,0.1)" : "#ffffff") : "transparent",
+                    background: period === p ? themeColors.accent : "transparent",
                     color: period === p ? themeColors.onAccent : themeColors.textMuted,
-                    boxShadow: period === p && !darkMode ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+                    boxShadow: period === p ? "var(--cx-shadow-primary)" : "none",
                   }}
                 >
                   {p}
@@ -775,20 +775,16 @@ useEffect(() => {
                         position: "relative",
                         borderRadius: 16,
                         overflow: "hidden",
-                        background: darkMode
-                          ? "#000000"
-                          : "#ffffff",
-                        border: `1px solid ${themeColors.accentBorder}`,
-                        boxShadow: darkMode
-                          ? "inset 0 1px 0 rgba(255,255,255,0.04), 0 18px 40px rgba(2,6,23,0.18)"
-                          : "inset 0 1px 0 rgba(255,255,255,0.75), 0 18px 36px rgba(0,0,0,0.08)",
+                        background: pick(SURFACE_MUTED, darkMode),
+                        border: "1px solid " + pick(BORDER, darkMode),
+                        boxShadow: "var(--cx-shadow-card)",
                       }}>
                         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: `${color}20` }} />
 
                         <ResponsiveContainer width="100%" height={320}>
                           <BarChart data={visibleFlowVolumeData} margin={{ top: 16, right: 18, left: -8, bottom: 4 }} barCategoryGap="28%" barSize={52}>
                             <defs>
-                              {/* Gradient defs removed - using solid colors */}
+                              
                             </defs>
                             <Customized
                               component={({ width, height }) => (
@@ -797,7 +793,7 @@ useEffect(() => {
                                   y={0}
                                   width={width}
                                   height={height}
-                                  fill={darkMode ? "#030712" : "#f8fafc"}
+                                  fill={pick(SURFACE_MUTED, darkMode)}
                                   opacity={0.78}
                                 />
                               )}
@@ -914,7 +910,7 @@ useEffect(() => {
                         barSize={22}
                       >
                         <defs>
-                          {/* Gradient defs removed - using solid colors */}
+                          
                         </defs>
                         <CartesianGrid horizontal={false} strokeDasharray="4 4" stroke={gridStroke} />
                         <XAxis type="number" tickLine={false} axisLine={false} tick={axisStyle} tickFormatter={yFmt} />
@@ -991,7 +987,7 @@ useEffect(() => {
                       ].map(({ label, color }) => (
                         <div key={label} style={{ display: "flex", alignItems: "center", gap: 7 }}>
                           <span style={{ display: "inline-block", width: 22, height: 5, borderRadius: 99, background: color }} />
-                          <span style={{ fontSize: 10, fontWeight: 700, color: darkMode ? "#475569" : "#64748b" }}>{label}</span>
+                          <span style={{ fontSize: 10, fontWeight: 700, color: themeColors.textMuted }}>{label}</span>
                         </div>
                       ))}
                     </div>
@@ -1040,7 +1036,7 @@ useEffect(() => {
                     margin={{ top: 20, right: 20, left: -10, bottom: 0 }}
                   >
                     <defs>
-                      {/* Gradient defs removed - using solid colors */}
+                      
                     </defs>
                     <CartesianGrid strokeDasharray="4 4" vertical={false} stroke={gridStroke} />
                     <XAxis dataKey="name" tickLine={false} axisLine={false} tick={axisStyle} />
@@ -1107,7 +1103,7 @@ useEffect(() => {
                     <ResponsiveContainer width="100%" height={300}>
                       <AreaChart data={cumulativeGraphData} margin={{ top: 10, right: 14, left: -10, bottom: 0 }}>
                         <defs>
-                          {/* Gradient defs removed - using solid colors */}
+                          
                         </defs>
                         <CartesianGrid strokeDasharray="4 4" vertical={false} stroke={gridStroke} />
                         <XAxis dataKey="date" tickLine={false} axisLine={false} tick={axisStyle} tickFormatter={d => d.slice(5)} />
@@ -1188,7 +1184,7 @@ useEffect(() => {
                   <ResponsiveContainer width="100%" height={280}>
                     <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                       <defs>
-                        {/* Gradient defs removed - using solid colors */}
+                        
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={themeColors.gridStroke} />
                       <XAxis
@@ -1240,7 +1236,7 @@ useEffect(() => {
                   </ResponsiveContainer>
                 )}
 
-                <p style={{ fontSize: 9, color: darkMode ? "#334155" : "#94a3b8", marginTop: 10, fontWeight: 600 }}>
+                <p style={{ fontSize: 9, color: themeColors.textMuted, marginTop: 10, fontWeight: 600 }}>
                   * Rates sourced from open.er-api.com · Auto-refreshes every 60 seconds · Historical data covers last 30 days.
                 </p>
               </div>

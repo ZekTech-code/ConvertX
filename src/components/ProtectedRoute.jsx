@@ -11,15 +11,39 @@ export default function ProtectedRoute({ children }) {
   useEffect(() => {
     if (!isFirebaseEnabled) return;
 
-    const unsubscribe = onAuthStateChanged(firebaseAuth, (firebaseUser) => {
-      if (!firebaseUser && isAuthenticated) {
-        window.location.href = "/get-started";
-        return;
-      }
+    let settled = false;
+    const settle = () => {
+      if (settled) return;
+      settled = true;
       setFirebaseValidated(true);
-    });
+    };
 
-    return () => unsubscribe();
+    // If Firebase never reports an auth state (network failure, invalid API
+    // key, blocked token refresh) we must not render `null` forever.
+    const timeout = setTimeout(settle, 6000);
+
+    const unsubscribe = onAuthStateChanged(
+      firebaseAuth,
+      (firebaseUser) => {
+        clearTimeout(timeout);
+        if (!firebaseUser && isAuthenticated) {
+          window.location.href = "/get-started";
+          return;
+        }
+        settle();
+      },
+      () => {
+        // Auth listener error (e.g. securetoken 400) — fall through to the
+        // local session check instead of hanging on a blank screen.
+        clearTimeout(timeout);
+        settle();
+      },
+    );
+
+    return () => {
+      clearTimeout(timeout);
+      unsubscribe();
+    };
   }, [isAuthenticated]);
 
   if (!firebaseValidated) {

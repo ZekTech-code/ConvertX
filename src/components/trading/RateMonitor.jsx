@@ -1,7 +1,7 @@
 ﻿import { useMemo, useState } from "react";
 import { BarChart2, TrendingUp, TrendingDown, Search } from "lucide-react";
 import { getCoinIcon } from "../../utils/coinIcons";
-import { ACCENT, accentAlpha, BORDER, NEGATIVE, pick, POSITIVE, SURFACE_MUTED, TEXT, TEXT_SECONDARY } from "../../styles/colors";
+import { accentAlpha, BORDER, NEGATIVE, pick, POSITIVE, PRIMARY, SURFACE_MUTED, TEXT, TEXT_SECONDARY } from "../../styles/colors";
 
 export default function RateMonitor({ allPrices, darkMode, onSelectAsset, selectedAssetId }) {
   const [filter, setFilter] = useState("all");
@@ -67,8 +67,8 @@ export default function RateMonitor({ allPrices, darkMode, onSelectAsset, select
             onClick={() => setFilter(tab)}
             className="px-3 py-1.5 rounded-md text-[13px] font-bold uppercase tracking-wider transition-all cursor-pointer"
             style={{
-              background: filter === tab ? pick(ACCENT, darkMode) : "transparent",
-              color: filter === tab ? "#000" : pick(TEXT_SECONDARY, darkMode),
+              background: filter === tab ? pick(PRIMARY, darkMode) : "transparent",
+              color: filter === tab ? "#ffffff" : pick(TEXT_SECONDARY, darkMode),
             }}
           >
             {tab}

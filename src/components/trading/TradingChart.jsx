@@ -494,7 +494,7 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
                 className="px-2.5 py-1 rounded-md text-[10px] font-bold transition-all cursor-pointer"
                 style={{
                   background: timeframe === tf ? pick(PRIMARY, darkMode) : "transparent",
-                  color: timeframe === tf ? "#000" : pick(TEXT_MUTED, darkMode),
+                  color: timeframe === tf ? "#ffffff" : pick(TEXT_MUTED, darkMode),
                 }}
               >
                 {tf}
@@ -509,7 +509,7 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
                 className="px-2.5 py-1 rounded-md text-[10px] font-bold transition-all cursor-pointer uppercase"
                 style={{
                   background: indicator === ind ? pick(PRIMARY, darkMode) : "transparent",
-                  color: indicator === ind ? "#000" : pick(TEXT_MUTED, darkMode),
+                  color: indicator === ind ? "#ffffff" : pick(TEXT_MUTED, darkMode),
                 }}
               >
                 {ind === "ema" ? "EMA" : ind === "bb" ? "BB" : ind === "macd" ? "MACD" : "Off"}

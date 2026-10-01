@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "../context/useTheme";
-import { ACCENT, accentAlpha, pick, POSITIVE, TEXT, TEXT_MUTED, TEXT_SECONDARY } from "../styles/colors";
+import { ACCENT, accentAlpha, pick, BORDER, CANVAS, POSITIVE, SURFACE, SURFACE_MUTED, TEXT, TEXT_MUTED, TEXT_SECONDARY } from "../styles/colors";
 import ConvertXIcon from "../components/exchange/ConvertXIcon";
 import Toast from "../components/Toast";
 import { CountryDropdown } from "../components/CountryDropdowns";
@@ -336,14 +336,14 @@ export default function GetStarted() {
 
   if (isOffline) {
     return (
-      <div style={{ background: "#000000", minHeight: "100vh" }}
-        className="flex items-center justify-center p-6">
-        <div className="text-center max-w-xs p-8 rounded-3xl border border-white/10 bg-white/4 backdrop-blur-xl">
+      <div style={{ minHeight: "100vh" }}
+        className="flex items-center justify-center p-6 bg-canvas text-text">
+        <div className="text-center max-w-xs p-8 rounded-3xl border border-border bg-surface backdrop-blur-xl">
           <div className="w-16 h-16 rounded-2xl bg-danger-soft border border-danger-border flex items-center justify-center mx-auto mb-5">
-            <WifiOff className="w-8 h-8 text-negative" />
+            <WifiOff className="w-8 h-8 text-danger" />
           </div>
-          <h2 className="text-xl font-black text-white mb-2">No Connection</h2>
-          <p className="text-sm text-white/40 leading-relaxed mb-6">
+          <h2 className="text-xl font-black text-text mb-2">No Connection</h2>
+          <p className="text-sm text-text-secondary leading-relaxed mb-6">
             ConvertX needs an active internet connection to authenticate you securely.
           </p>
           <button onClick={() => { if (navigator.onLine) setIsOffline(false); }}
@@ -673,7 +673,7 @@ export default function GetStarted() {
         }
       `}</style>
       <div className="gs2-page gs2-bg relative overflow-x-hidden" style={darkMode ? {
-          "--gs2-page-bg":           "#000000",
+          "--gs2-page-bg":           pick(CANVAS, darkMode),
           "--gs2-dot-color":         "rgba(255,255,255,0.055)",
           "--gs2-header-border":     "rgba(255,255,255,0.05)",
           "--gs2-back-color":        "rgba(255,255,255,0.45)",
@@ -682,7 +682,7 @@ export default function GetStarted() {
           "--gs2-back-hover-color":  "#fff",
           "--gs2-back-hover-bg":     "rgba(255,255,255,0.09)",
           "--gs2-back-hover-border": "rgba(255,255,255,0.18)",
-          "--gs2-card-bg":           "rgba(255,255,255,0.02)",
+          "--gs2-card-bg":           pick(SURFACE, darkMode),
           "--gs2-card-border":       "rgba(255,255,255,0.07)",
           "--gs2-card-shadow":       "0 20px 60px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.3)",
           "--gs2-tab-bar-bg":        "rgba(0,0,0,0.35)",
@@ -691,27 +691,27 @@ export default function GetStarted() {
           "--gs2-tab-on-color":      pick(ACCENT, darkMode),
           "--gs2-tab-off-hover":     "#cbd5e1",
           "--gs2-input-border":      "rgba(255,255,255,0.1)",
-          "--gs2-input-bg":          "rgba(255,255,255,0.05)",
+          "--gs2-input-bg":          pick(SURFACE_MUTED, darkMode),
           "--gs2-input-text":        "#f1f5f9",
           "--gs2-phone-prefix-bg":   "rgba(255,255,255,0.06)",
           "--gs2-phone-prefix-text": "#94a3b8",
           "--gs2-google-border":     "rgba(255,255,255,0.1)",
-          "--gs2-google-bg":         "rgba(255,255,255,0.05)",
+          "--gs2-google-bg":         pick(SURFACE_MUTED, darkMode),
           "--gs2-google-text":       "#e2e8f0",
           "--gs2-google-hover-bg":   "rgba(255,255,255,0.09)",
           "--gs2-google-hover-border":"rgba(255,255,255,0.18)",
-          "--gs2-divider":           "rgba(255,255,255,0.08)",
+          "--gs2-divider":           pick(BORDER, darkMode),
           "--gs2-ticker-bg":         accentAlpha(darkMode, 0.08),
           "--gs2-ticker-border":     accentAlpha(darkMode, 0.16),
           "--gs2-ticker-pair":       "rgba(255,255,255,0.4)",
           "--gs2-ticker-val":        "rgba(255,255,255,0.8)",
-          "--gs2-feat-bg":           "rgba(255,255,255,0.035)",
+          "--gs2-feat-bg":           pick(SURFACE_MUTED, darkMode),
           "--gs2-feat-border":       "rgba(255,255,255,0.065)",
           "--gs2-feat-hover-bg":     "rgba(255,255,255,0.06)",
           "--gs2-feat-icon-bg":      "rgba(255,255,255,0.055)",
           "--gs2-feat-icon-border":  "rgba(255,255,255,0.08)",
         } : {
-          "--gs2-page-bg":           "#ffffff",
+          "--gs2-page-bg":           pick(CANVAS, darkMode),
           "--gs2-dot-color":         accentAlpha(darkMode, 0.08),
           "--gs2-header-border":     "rgba(0,0,0,0.07)",
           "--gs2-back-color":        "#475569",
@@ -720,7 +720,7 @@ export default function GetStarted() {
           "--gs2-back-hover-color":  "#0f172a",
           "--gs2-back-hover-bg":     "rgba(255,255,255,0.95)",
           "--gs2-back-hover-border": "rgba(0,0,0,0.2)",
-          "--gs2-card-bg":           "rgba(255,255,255,0.95)",
+          "--gs2-card-bg":           pick(SURFACE, darkMode),
           "--gs2-card-border":       "rgba(203,213,225,0.6)",
           "--gs2-card-shadow":       "0 16px 48px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04)",
           "--gs2-tab-bar-bg":        "rgba(248,249,250,1)",
@@ -729,21 +729,21 @@ export default function GetStarted() {
           "--gs2-tab-on-color":      "#0f172a",
           "--gs2-tab-off-hover":     "#475569",
           "--gs2-input-border":      "#e2e8f0",
-          "--gs2-input-bg":          "#f8fafc",
+          "--gs2-input-bg":          pick(SURFACE_MUTED, darkMode),
           "--gs2-input-text":        "#1e293b",
           "--gs2-phone-prefix-bg":   "#f1f5f9",
           "--gs2-phone-prefix-text": "#475569",
           "--gs2-google-border":     "#e2e8f0",
-          "--gs2-google-bg":         "#fff",
+          "--gs2-google-bg":         pick(SURFACE, darkMode),
           "--gs2-google-text":       "#374151",
           "--gs2-google-hover-bg":   "#f8fafc",
           "--gs2-google-hover-border":"#cbd5e1",
-          "--gs2-divider":           "#e2e8f0",
+          "--gs2-divider":           pick(BORDER, darkMode),
           "--gs2-ticker-bg":         accentAlpha(darkMode, 0.08),
           "--gs2-ticker-border":     accentAlpha(darkMode, 0.16),
           "--gs2-ticker-pair":       "#64748b",
           "--gs2-ticker-val":        "#1e293b",
-          "--gs2-feat-bg":           "rgba(255,255,255,0.65)",
+          "--gs2-feat-bg":           pick(SURFACE_MUTED, darkMode),
           "--gs2-feat-border":       "rgba(203,213,225,0.7)",
           "--gs2-feat-hover-bg":     "rgba(255,255,255,0.9)",
           "--gs2-feat-icon-bg":      "rgba(248,249,250,0.9)",

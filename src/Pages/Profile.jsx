@@ -377,7 +377,7 @@ export default function Profile() {
       <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 md:pb-8 flex flex-col gap-8">
         
         <div className="bg-surface border border-border rounded-3xl p-6 sm:p-8 shadow-card flex flex-col sm:flex-row items-center gap-6">
-          <div className={`w-24 h-24 rounded-full border flex items-center justify-center overflow-hidden shrink-0 bg-surface-muted ${avatar.startsWith("data:image/") ? "border-border" : "border-border"}`}>
+          <div className={`w-24 h-24 rounded-full border flex items-center justify-center overflow-hidden shrink-0 bg-surface-muted border-border`}>
             {avatar.startsWith("data:image/") ? (
               <img src={avatar} alt="Profile" className="w-full h-full object-cover" />
             ) : (
@@ -870,7 +870,7 @@ export default function Profile() {
                         aria-label="Real-time price alerts"
                         checked={pushNotifications}
                         onChange={(e) => setPushNotifications(e.target.checked)}
-                        className="w-10 h-6 shrink-0 rounded-full border-border bg-surface-sunken /15 text-accent focus:ring-accent cursor-pointer"
+                        className="w-10 h-6 shrink-0 rounded-full border-border bg-surface-sunken/15 text-accent focus:ring-accent cursor-pointer"
                       />
                     </div>
 
@@ -888,7 +888,7 @@ export default function Profile() {
                         aria-label="Weekly reserve market reports"
                         checked={emailReports}
                         onChange={(e) => setEmailReports(e.target.checked)}
-                        className="w-10 h-6 shrink-0 rounded-full border-border bg-surface-sunken /15 text-accent focus:ring-accent cursor-pointer"
+                        className="w-10 h-6 shrink-0 rounded-full border-border bg-surface-sunken/15 text-accent focus:ring-accent cursor-pointer"
                       />
                     </div>
                   </div>
@@ -991,7 +991,7 @@ export default function Profile() {
                                   className={`h-full rounded-full transition-all duration-300 ${
                                     idx <= validatePasswordStrength(newPassword).score
                                       ? validatePasswordStrength(newPassword).color
-                                      : "bg-surface-sunken /15"
+                                      : "bg-surface-sunken/15"
                                   }`}
                                 />
                               ))}
@@ -1088,7 +1088,7 @@ export default function Profile() {
                     </div>
 
                     {securityLogs.length === 0 ? (
-                      <div className="p-8 text-center border border-dashed border-border rounded-2xl bg-surface-muted/60 /5 text-text-muted text-xs font-semibold font-sans">
+                      <div className="p-8 text-center border border-dashed border-border rounded-2xl bg-surface-muted/60 text-text-muted text-xs font-semibold font-sans">
                         No security activity recorded yet.
                       </div>
                     ) : (
@@ -1325,7 +1325,7 @@ export default function Profile() {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-surface border-border border border-border rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl space-y-6 z-50 font-sans"
+              className="bg-surface border border-border rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl space-y-6 z-50 font-sans"
             >
               <div className="text-center space-y-1.5">
                 <div className="w-12 h-12 rounded-full bg-warning-soft text-warning flex items-center justify-center mx-auto">
@@ -1365,7 +1365,7 @@ export default function Profile() {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-surface border-border border border-border rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl space-y-6 z-50 font-sans"
+              className="bg-surface border border-border rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl space-y-6 z-50 font-sans"
             >
               <div className="text-center space-y-1.5">
                 <div className="w-12 h-12 rounded-full bg-danger-soft text-danger flex items-center justify-center mx-auto">

@@ -22,7 +22,7 @@ export async function hashPassword(password, salt) {
 
 export function validatePasswordStrength(password) {
   if (!password) {
-    return { score: 0, label: "None", color: "bg-surface-sunken /10", feedback: "" };
+    return { score: 0, label: "None", color: "bg-surface-sunken/10", feedback: "" };
   }
 
   let score = 0;

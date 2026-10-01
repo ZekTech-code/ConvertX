@@ -3,7 +3,7 @@ import { History, ArrowUpRight, ArrowDownRight, Download, Search } from "lucide-
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { getCoinIcon } from "../../utils/coinIcons";
-import { ACCENT, accentAlpha, BORDER, NEGATIVE, pick, POSITIVE, SURFACE_MUTED, TEXT, TEXT_MUTED, TEXT_SECONDARY } from "../../styles/colors";
+import { ACCENT, BORDER, NEGATIVE, pick, POSITIVE, PRIMARY, SURFACE_MUTED, TEXT, TEXT_MUTED, TEXT_SECONDARY } from "../../styles/colors";
 
 export default function TradeHistory({ trades, darkMode }) {
   const [filter, setFilter] = useState("all");
@@ -269,9 +269,9 @@ export default function TradeHistory({ trades, darkMode }) {
             onClick={() => setFilter(f)}
             className="flex-1 py-2 rounded-lg text-[14px] font-bold uppercase tracking-wider transition-all cursor-pointer"
             style={{
-              background: filter === f ? accentAlpha(darkMode, 0.14) : "transparent",
-              border: filter === f ? `1px solid ${accentAlpha(darkMode, 0.3)}` : "1px solid " + pick(BORDER, darkMode),
-              color: filter === f ? pick(ACCENT, darkMode) : pick(TEXT_SECONDARY, darkMode),
+              background: filter === f ? pick(PRIMARY, darkMode) : "transparent",
+              border: filter === f ? "1px solid " + pick(PRIMARY, darkMode) : "1px solid " + pick(BORDER, darkMode),
+              color: filter === f ? "#ffffff" : pick(TEXT_SECONDARY, darkMode),
             }}
           >
             {f}
