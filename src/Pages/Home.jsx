@@ -597,9 +597,9 @@ export default function CurrencyConverterHomePage() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-accent/10 border border-accent/20 rounded-2xl p-8 text-center my-auto"
+                className="bg-success-soft border border-success-border rounded-2xl p-8 text-center my-auto"
               >
-                <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center text-accent text-2xl mx-auto mb-4 font-bold">
+                <div className="w-12 h-12 rounded-full bg-success-soft border border-success-border flex items-center justify-center text-success text-2xl mx-auto mb-4 font-bold">
                   ✓
                 </div>
                 <h3 className="text-xl font-bold text-text mb-2">Message Dispatched</h3>

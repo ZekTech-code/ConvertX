@@ -719,8 +719,6 @@ export default function CurrencyConverter() {
               </div>
 
               <div className="bg-surface-muted border border-border p-5 rounded-2xl shadow-inner relative overflow-hidden flex flex-col gap-3">
-                <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-accent/10 rounded-full blur-xl pointer-events-none" />
-                
                 <div>
                   <span className="text-[10px] font-bold text-text-muted block mb-1 font-sans uppercase tracking-wider">Converted Result</span>
                   

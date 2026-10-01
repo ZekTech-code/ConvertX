@@ -74,20 +74,22 @@
   --cx-accent-ring: rgb(var(--cx-accent-rgb) / 0.35);
   --cx-accent-glow: rgb(var(--cx-accent-rgb) / 0.18);
 
-  /* Neutrals */
-  --cx-canvas: #f3f6fb;
-  --cx-canvas-alt: #eaf0f9;
+  /* Neutrals — deliberately untinted.
+     The vivid blue is reserved for buttons and interactive accents only;
+     cards, inputs and pages stay neutral so they read as clean surfaces. */
+  --cx-canvas: #f8fafc;
+  --cx-canvas-alt: #f1f5f9;
   --cx-surface: #ffffff;
   --cx-surface-raised: #ffffff;
-  --cx-surface-muted: #f6f9fd;
-  --cx-surface-sunken: #eaeff8;
-  --cx-border: #e2e8f2;
-  --cx-border-strong: #cbd6e8;
+  --cx-surface-muted: #f8fafc;
+  --cx-surface-sunken: #f1f5f9;
+  --cx-border: #e2e8f0;
+  --cx-border-strong: #cbd5e1;
 
   /* Typography */
-  --cx-text: #0d1626;
-  --cx-text-secondary: #46536a;
-  --cx-text-muted: #78879e;
+  --cx-text: #1e293b;
+  --cx-text-secondary: #64748b;
+  --cx-text-muted: #94a3b8;
   --cx-text-inverse: #ffffff;
 
   /* Status */
@@ -109,16 +111,17 @@
   --cx-focus-ring: rgb(var(--cx-accent-rgb) / 0.4);
 
   /* Elevation */
-  --cx-shadow-card: 0 1px 2px rgb(13 22 38 / 0.04), 0 8px 24px -8px rgb(13 22 38 / 0.1);
-  --cx-shadow-card-hover: 0 1px 2px rgb(13 22 38 / 0.05), 0 16px 36px -12px rgb(13 22 38 / 0.16);
-  --cx-shadow-pop: 0 12px 40px -8px rgb(13 22 38 / 0.18);
+  --cx-shadow-card: 0 1px 2px rgb(0 0 0 / 0.05), 0 8px 24px -8px rgb(0 0 0 / 0.1);
+  --cx-shadow-card-hover: 0 1px 2px rgb(0 0 0 / 0.06), 0 16px 36px -12px rgb(0 0 0 / 0.16);
+  --cx-shadow-pop: 0 12px 40px -8px rgb(0 0 0 / 0.18);
   --cx-shadow-primary: 0 8px 20px -6px rgb(var(--cx-accent-rgb) / 0.45);
 }
 
 /* --------------------------------------------------------------------------
    3. SEMANTIC TOKENS — DARK MODE
-   Blue intensity is raised (not inverted) so it stays vivid on dark
-   surfaces while keeping text contrast accessible.
+   Surfaces stay neutral and untinted, exactly as before the redesign:
+   black page, translucent-white cards, white/10 borders. Only the accent
+   is blue, and only for buttons, active states and highlights.
    -------------------------------------------------------------------------- */
 .dark {
   --cx-accent: var(--cx-vivid-400);
@@ -137,19 +140,22 @@
   --cx-accent-ring: rgb(var(--cx-accent-rgb) / 0.45);
   --cx-accent-glow: rgb(var(--cx-accent-rgb) / 0.22);
 
-  --cx-canvas: #02040a;
-  --cx-canvas-alt: #060a14;
-  --cx-surface: #0f172a;
-  --cx-surface-raised: #16213a;
-  --cx-surface-muted: #111c31;
-  --cx-surface-sunken: #060b18;
-  --cx-border: #23304d;
-  --cx-border-strong: #33415f;
+  /* Neutrals — untinted, matching the original dark surfaces.
+     Cards are translucent white over a black page; popovers are solid
+     neutral so menus stay legible. */
+  --cx-canvas: #000000;
+  --cx-canvas-alt: #0a0a0a;
+  --cx-surface: rgb(255 255 255 / 0.05);
+  --cx-surface-raised: #141414;
+  --cx-surface-muted: rgb(0 0 0 / 0.35);
+  --cx-surface-sunken: rgb(0 0 0 / 0.25);
+  --cx-border: rgb(255 255 255 / 0.1);
+  --cx-border-strong: rgb(255 255 255 / 0.18);
 
-  --cx-text: #f0f4fb;
-  --cx-text-secondary: #a7b4cb;
-  --cx-text-muted: #71809a;
-  --cx-text-inverse: #02040a;
+  --cx-text: #ffffff;
+  --cx-text-secondary: #94a3b8;
+  --cx-text-muted: #64748b;
+  --cx-text-inverse: #000000;
 
   --cx-success: #34d399;
   --cx-success-soft: rgb(52 211 153 / 0.12);
