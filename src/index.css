@@ -62,11 +62,21 @@ input[type="range"]:focus-visible {
 }
 
 /* --------------------------------------------------------------------------
-   Native select dropdown list follows the theme
+   Native select dropdown list — the OS-rendered menu must stay readable
+   in both themes, so it uses the raised surface rather than the page canvas.
    -------------------------------------------------------------------------- */
+select {
+  color-scheme: light;
+}
+
+.dark select {
+  color-scheme: dark;
+}
+
 select option {
-  background-color: var(--cx-surface);
+  background-color: var(--cx-surface-raised);
   color: var(--cx-text);
+  font-weight: 600;
 }
 
 /* --------------------------------------------------------------------------

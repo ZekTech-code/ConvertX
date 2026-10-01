@@ -3,7 +3,7 @@ import { History, ArrowUpRight, ArrowDownRight, Download, Search } from "lucide-
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { getCoinIcon } from "../../utils/coinIcons";
-import { ACCENT, BORDER, NEGATIVE, pick, POSITIVE, PRIMARY, SURFACE_MUTED, TEXT, TEXT_MUTED, TEXT_SECONDARY } from "../../styles/colors";
+import { ACCENT, BORDER, NEGATIVE, pick, POSITIVE, PRIMARY, SURFACE, SURFACE_MUTED, TEXT, TEXT_MUTED, TEXT_SECONDARY } from "../../styles/colors";
 
 export default function TradeHistory({ trades, darkMode }) {
   const [filter, setFilter] = useState("all");
@@ -208,8 +208,8 @@ export default function TradeHistory({ trades, darkMode }) {
     <div
       className="rounded-2xl p-4 flex h-full w-full flex-col gap-3"
       style={{
-        background: pick(SURFACE_MUTED, darkMode),
-        border: darkMode ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(148,163,184,0.12)",
+        background: pick(SURFACE, darkMode),
+        border: "1px solid " + pick(BORDER, darkMode),
       }}
     >
       <div className="flex items-center justify-between mb-1">
@@ -224,8 +224,8 @@ export default function TradeHistory({ trades, darkMode }) {
             onClick={exportPDF}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[12px] font-bold transition-all cursor-pointer"
             style={{
-              background: pick(SURFACE_MUTED, darkMode),
-              border: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(148,163,184,0.1)",
+              background: "transparent",
+              border: "1px solid " + pick(BORDER, darkMode),
               color: pick(ACCENT, darkMode),
             }}
           >
@@ -315,7 +315,7 @@ export default function TradeHistory({ trades, darkMode }) {
               className="flex items-center justify-between px-3 py-2.5 rounded-lg transition-all"
               style={{
                 background: pick(SURFACE_MUTED, darkMode),
-                border: darkMode ? "1px solid rgba(255,255,255,0.03)" : "1px solid rgba(148,163,184,0.06)",
+                border: "1px solid " + pick(BORDER, darkMode),
               }}
             >
               <div className="flex items-center gap-2.5">

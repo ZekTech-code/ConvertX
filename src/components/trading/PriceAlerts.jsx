@@ -1,7 +1,7 @@
 ﻿import { useState, useCallback } from "react";
 import { Bell, BellOff, Plus, Trash2, TrendingUp, TrendingDown, CheckCircle } from "lucide-react";
 import { getCoinIcon } from "../../utils/coinIcons";
-import { ACCENT, accentAlpha, BORDER, pick, PRIMARY, SURFACE_MUTED, TEXT, TEXT_SECONDARY } from "../../styles/colors";
+import { ACCENT, accentAlpha, BORDER, pick, PRIMARY, SURFACE, SURFACE_MUTED, TEXT, TEXT_SECONDARY } from "../../styles/colors";
 
 export default function PriceAlerts({ alerts, selectedAsset, currentPrice, darkMode, onAddAlert, onRemoveAlert }) {
   const [showForm, setShowForm] = useState(false);
@@ -48,8 +48,8 @@ export default function PriceAlerts({ alerts, selectedAsset, currentPrice, darkM
     <div
       className="rounded-2xl p-4 flex flex-col gap-3"
       style={{
-        background: pick(SURFACE_MUTED, darkMode),
-        border: darkMode ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(148,163,184,0.12)",
+        background: pick(SURFACE, darkMode),
+        border: "1px solid " + pick(BORDER, darkMode),
       }}
     >
       <div className="flex items-center justify-between mb-1">
@@ -69,7 +69,7 @@ export default function PriceAlerts({ alerts, selectedAsset, currentPrice, darkM
           className="p-1.5 rounded-lg transition-all cursor-pointer"
           style={{
             background: showForm ? accentAlpha(darkMode, 0.14) : pick(SURFACE_MUTED, darkMode),
-            border: showForm ? `1px solid ${accentAlpha(darkMode, 0.32)}` : darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(148,163,184,0.1)",
+            border: showForm ? `1px solid ${accentAlpha(darkMode, 0.32)}` : "1px solid " + pick(BORDER, darkMode),
             color: pick(ACCENT, darkMode),
           }}
         >
@@ -82,7 +82,7 @@ export default function PriceAlerts({ alerts, selectedAsset, currentPrice, darkM
           className="rounded-xl p-3 space-y-2"
           style={{
             background: pick(SURFACE_MUTED, darkMode),
-            border: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(148,163,184,0.1)",
+            border: "1px solid " + pick(BORDER, darkMode),
           }}
         >
           <div>

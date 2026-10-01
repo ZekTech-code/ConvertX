@@ -263,7 +263,7 @@ export default function CurrencyConverterHomePage() {
           transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
           className="relative"
         >
-          <div className="relative w-full max-w-md mx-auto lg:max-w-full bg-surface border-border rounded-3xl p-4 sm:p-5 md:p-6 shadow-2xl overflow-hidden">
+          <div className="relative w-full max-w-md mx-auto lg:max-w-full bg-surface border border-border rounded-3xl p-4 sm:p-5 md:p-6 shadow-2xl overflow-hidden">
             <div className="flex items-center justify-between mb-5">
               <div>
                 <h3 className="text-xl font-bold text-text">Currency Converter</h3>
@@ -290,7 +290,7 @@ export default function CurrencyConverterHomePage() {
                   name="hero-amount"
                   type="number"
                   defaultValue="1000"
-                  className="w-full min-w-0 bg-surface-muted border border-border-strong text-text rounded-xl px-4 py-2.5 text-sm sm:text-base font-bold font-mono outline-none focus:border-accent transition"
+                  className="w-full min-w-0 bg-surface-muted text-text rounded-xl px-4 py-2.5 text-sm sm:text-base font-bold font-mono outline-none focus:ring-2 focus:ring-accent/40 transition"
                 />
               </div>
 
@@ -299,7 +299,7 @@ export default function CurrencyConverterHomePage() {
                   <label htmlFor="hero-from" className="block text-[10px] font-semibold uppercase tracking-wider text-text-secondary mb-1.5">
                     From
                   </label>
-                  <select id="hero-from" name="hero-from" className="w-full min-w-0 bg-surface-muted border border-border-strong text-text rounded-xl px-4 py-2.5 outline-none focus:border-accent transition text-xs sm:text-sm font-bold cursor-pointer">
+                  <select id="hero-from" name="hero-from" className="w-full min-w-0 bg-surface text-text rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-accent/40 transition text-xs sm:text-sm font-bold cursor-pointer">
                     {currencies.map((currency) => (
                       <option key={currency} className="bg-surface text-text">{currency}</option>
                     ))}
@@ -310,7 +310,7 @@ export default function CurrencyConverterHomePage() {
                   <label htmlFor="hero-to" className="block text-[10px] font-semibold uppercase tracking-wider text-text-secondary mb-1.5">
                     To
                   </label>
-                  <select id="hero-to" name="hero-to" className="w-full min-w-0 bg-surface-muted border border-border-strong text-text rounded-xl px-4 py-2.5 outline-none focus:border-accent transition text-xs sm:text-sm font-bold cursor-pointer">
+                  <select id="hero-to" name="hero-to" className="w-full min-w-0 bg-surface text-text rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-accent/40 transition text-xs sm:text-sm font-bold cursor-pointer">
                     {currencies.map((currency) => (
                       <option key={currency} className="bg-surface text-text">{currency}</option>
                     ))}

@@ -1,7 +1,7 @@
 ﻿import { useMemo } from "react";
 import { Wallet, TrendingUp, TrendingDown, X } from "lucide-react";
 import { getCoinIcon } from "../../utils/coinIcons";
-import { ACCENT, BORDER, NEGATIVE, pick, POSITIVE, SURFACE_MUTED } from "../../styles/colors";
+import { ACCENT, BORDER, NEGATIVE, pick, POSITIVE, SURFACE, SURFACE_MUTED } from "../../styles/colors";
 
 export default function PortfolioPanel({ balance, positions, getPositionPnL, portfolioValue, totalPnL, initialBalance, darkMode, onClosePosition }) {
   const totalValue = useMemo(() => portfolioValue(), [portfolioValue]);
@@ -21,8 +21,8 @@ export default function PortfolioPanel({ balance, positions, getPositionPnL, por
     <div
       className="rounded-2xl p-4 flex h-full w-full flex-col gap-3"
       style={{
-        background: pick(SURFACE_MUTED, darkMode),
-        border: darkMode ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(148,163,184,0.12)",
+        background: pick(SURFACE, darkMode),
+        border: "1px solid " + pick(BORDER, darkMode),
       }}
     >
       <div className="flex items-center gap-2 mb-1">

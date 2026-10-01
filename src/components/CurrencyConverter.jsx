@@ -154,7 +154,7 @@ function CurrencyFlag({ code, className = "" }) {
     <img
       src={`https://flagcdn.com/w40/${countryCode.toLowerCase()}.png`}
       alt=""
-      className={`h-4 w-6 rounded-xs object-cover shadow-sm ${className}`}
+      className={`h-4 w-6 object-cover shadow-sm ${className}`}
       loading="lazy"
       decoding="async"
     />

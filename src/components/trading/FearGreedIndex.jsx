@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect, useCallback } from "react";
 import { TrendingUp, TrendingDown, Minus, RefreshCw } from "lucide-react";
-import { BORDER, NEGATIVE, POSITIVE, SURFACE_MUTED, SURFACE_SUNKEN, TEXT_MUTED, TEXT_SECONDARY, WARNING, pick, statusAlpha } from "../../styles/colors";
+import { BORDER, NEGATIVE, pick, POSITIVE, statusAlpha, SURFACE, SURFACE_MUTED, SURFACE_SUNKEN, TEXT_MUTED, TEXT_SECONDARY, WARNING } from "../../styles/colors";
 
 // Sentiment scale: red -> amber -> green. Semantic, never the brand accent.
 const FEAR_GREED_LABELS = {
@@ -62,7 +62,7 @@ export default function FearGreedIndex({ darkMode }) {
     <div
       className="rounded-2xl p-4 flex flex-col gap-3"
       style={{
-        background: pick(SURFACE_MUTED, darkMode),
+        background: pick(SURFACE, darkMode),
         border: "1px solid " + pick(BORDER, darkMode),
       }}
     >

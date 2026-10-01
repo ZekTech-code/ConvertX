@@ -2,7 +2,7 @@
 import { createChart } from "lightweight-charts";
 import { Activity } from "lucide-react";
 import { getOHLCData, getBinanceOHLC } from "../../services/ExchangeApi";
-import { ACCENT, accentAlpha, NEGATIVE, pick, POSITIVE, PRIMARY, SURFACE, SURFACE_MUTED, TEXT, TEXT_MUTED, VIVID } from "../../styles/colors";
+import { ACCENT, accentAlpha, BORDER, NEGATIVE, pick, POSITIVE, PRIMARY, SURFACE, SURFACE_MUTED, TEXT, TEXT_MUTED, VIVID } from "../../styles/colors";
 
 function calculateEMA(data, period) {
   const k = 2 / (period + 1);
@@ -460,7 +460,7 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
       className="rounded-2xl overflow-hidden flex flex-col"
       style={{
         background: pick(SURFACE_MUTED, darkMode),
-        border: darkMode ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(148,163,184,0.12)",
+        border: "1px solid " + pick(BORDER, darkMode),
         height: "650px",
       }}
     >

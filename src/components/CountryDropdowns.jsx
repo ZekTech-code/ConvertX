@@ -9,7 +9,7 @@ export function CountryFlagImage({ code, name = "", className = "" }) {
     <img
       src={`https://flagcdn.com/w40/${code.toLowerCase()}.png`}
       alt={name}
-      className={`w-5 h-3.5 object-cover rounded-[3px] shadow-xs shrink-0 ${className}`}
+      className={`w-5 h-3.5 object-cover shadow-xs shrink-0 ${className}`}
       loading="lazy"
       decoding="async"
     />

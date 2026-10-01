@@ -1,6 +1,6 @@
 ﻿import { useState, useMemo } from 'react';
 import { ArrowUpRight, TrendingDown, Zap, AlertTriangle } from 'lucide-react';
-import { BORDER, pick, PRIMARY, TEXT, TEXT_MUTED, TEXT_SECONDARY } from "../../styles/colors";
+import { BORDER, pick, PRIMARY, TEXT, TEXT_MUTED, TEXT_SECONDARY, WARNING } from "../../styles/colors";
 
 const ORDER_TYPES = ['market', 'limit', 'stop', 'stop_limit', 'take_profit', 'stop_loss'];
 
@@ -16,8 +16,6 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
-
-  const tc = (dark, light) => ({ color: darkMode ? dark : light });
 
   const parsed = useMemo(() => ({
     amount: Math.max(0, parseFloat(amount) || 0),
@@ -255,7 +253,7 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
           <>
             <div className="flex justify-between text-[11px]">
               <span style={{ color: pick(TEXT_SECONDARY, darkMode) }}>Margin Required</span>
-              <span className="font-mono font-bold" style={tc('#fbbf24', '#b45309')}>${marginRequired.toFixed(2)}</span>
+              <span className="font-mono font-bold" style={{ color: pick(WARNING, darkMode) }}>${marginRequired.toFixed(2)}</span>
             </div>
             {liquidationPrice && (
               <div className="flex justify-between text-[11px]">

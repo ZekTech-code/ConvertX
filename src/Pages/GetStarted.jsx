@@ -959,7 +959,7 @@ export default function GetStarted() {
                                       <img
                                         src={`https://flagcdn.com/w40/${phoneCountryCode.toLowerCase()}.png`}
                                         alt={selectedPhoneCountry.name}
-                                        style={{ width:18, height:12, objectFit:"cover", borderRadius:2 }} />
+                                        style={{ width:18, height:12, objectFit:"cover" }} />
                                     ) : (
                                       <Phone style={{ width:12, height:12, color:"#94a3b8" }} />
                                     )}

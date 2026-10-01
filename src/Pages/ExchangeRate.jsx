@@ -25,7 +25,7 @@ import {
   ReferenceLine,
 } from "recharts";
 import { useTheme } from "../context/useTheme";
-import { ACCENT, accentAlpha, BORDER, CANVAS, DANGER, NEGATIVE, pick, POSITIVE, PRIMARY, SUCCESS, SURFACE, SURFACE_MUTED, SURFACE_SUNKEN, TEXT, TEXT_MUTED, TEXT_SECONDARY } from "../styles/colors";
+import { ACCENT, accentAlpha, BORDER, CANVAS, DANGER, NEGATIVE, pick, POSITIVE, PRIMARY, SUCCESS, SURFACE, SURFACE_MUTED, SURFACE_RAISED, SURFACE_SUNKEN, TEXT, TEXT_MUTED, TEXT_SECONDARY } from "../styles/colors";
 import { CURRENCY_INFO, CURRENCY_COUNTRY_CODES } from "../utils/currencyData";
 import { getLatestRates, recordRateSnapshot } from "../services/ExchangeApi";
 import MobileBottomNav from "../components/MobileBottomNav";
@@ -33,7 +33,7 @@ import Navbar from "../components/Navbar";
 
 function CurrencyFlagImage({
   code,
-  className = "h-4 w-6 rounded-xs object-cover inline-block align-middle shadow-sm",
+  className = "h-4 w-6 object-cover inline-block align-middle shadow-sm",
 }) {
   const countryCode = CURRENCY_COUNTRY_CODES[code];
   if (!countryCode || countryCode.length !== 2) {
@@ -251,24 +251,20 @@ function PairSelector({ activePair, setActivePair, rates, darkMode }) {
         onClick={() => setOpen((o) => !o)}
         className="flex items-center gap-3 px-4 py-2.5 rounded-2xl text-sm font-bold transition-all duration-200 cursor-pointer"
         style={{
-          background:
-            pick(SURFACE_SUNKEN, darkMode),
-          border:
-            darkMode ?
-              "1px solid rgba(255,255,255,0.1)"
-            : "1px solid rgba(148,163,184,0.25)",
+          background: pick(SURFACE_SUNKEN, darkMode),
+          border: "1px solid " + pick(BORDER, darkMode),
           color: pick(TEXT, darkMode),
         }}>
         <CurrencyFlagImage
           code={activePair.from}
-          className="h-3.5 w-5 rounded-xs object-cover inline-block mr-1.5 align-middle"
+          className="h-3.5 w-5 object-cover inline-block mr-1.5 align-middle"
         />
         <span className="font-mono tracking-wider align-middle">
           {activePair.from}/{activePair.to}
         </span>
         <CurrencyFlagImage
           code={activePair.to}
-          className="h-3.5 w-5 rounded-xs object-cover inline-block ml-1.5 align-middle"
+          className="h-3.5 w-5 object-cover inline-block ml-1.5 align-middle"
         />
         <ChevronDown
           size={14}
@@ -280,21 +276,15 @@ function PairSelector({ activePair, setActivePair, rates, darkMode }) {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: -8, scale: 0.97 }}
+            initial={{ opacity: 0, y: 8, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.97 }}
+            exit={{ opacity: 0, y: 8, scale: 0.97 }}
             transition={{ duration: 0.18 }}
-            className="absolute top-full mt-2 left-0 rounded-2xl overflow-y-auto overflow-x-hidden max-h-60 z-50 min-w-47.5"
+            className="absolute bottom-full left-0 mb-2 rounded-2xl overflow-y-auto overflow-x-hidden max-h-58 z-50 min-w-47.5 origin-bottom"
             style={{
-              background: pick(SURFACE, darkMode),
-              border:
-                darkMode ?
-                  "1px solid rgba(255,255,255,0.1)"
-                : "1px solid rgba(148,163,184,0.2)",
-              boxShadow:
-                darkMode ?
-                  "0 20px 40px rgba(0,0,0,0.5)"
-                : "0 10px 30px rgba(15,23,42,0.12)",
+              background: pick(SURFACE_RAISED, darkMode),
+              border: "1px solid " + pick(BORDER, darkMode),
+              boxShadow: "var(--cx-shadow-pop)",
             }}>
             {PAIR_OPTIONS.map(({ from, to }) => {
               const isActive = activePair.from === from && activePair.to === to;
@@ -317,14 +307,14 @@ function PairSelector({ activePair, setActivePair, rates, darkMode }) {
                   <span className="flex items-center gap-2 font-mono">
                     <CurrencyFlagImage
                       code={from}
-                      className="h-3 w-4.5 rounded-xs object-cover"
+                      className="h-3 w-4.5 object-cover"
                     />
                     <span>
                       {from}/{to}
                     </span>
                     <CurrencyFlagImage
                       code={to}
-                      className="h-3 w-4.5 rounded-xs object-cover"
+                      className="h-3 w-4.5 object-cover"
                     />
                   </span>
                   <span className="font-mono text-[10px]">
@@ -956,7 +946,7 @@ export default function ExchangeRate() {
                         style={{ color: pick(TEXT_MUTED, darkMode) }}>
                         <CurrencyFlagImage
                           code={from}
-                          className="h-3 w-4.5 rounded-xs object-cover inline-block mr-1 align-middle"
+                          className="h-3 w-4.5 object-cover inline-block mr-1 align-middle"
                         />
                         <span className="align-middle">{from}</span>
                       </span>{" "}
@@ -966,7 +956,7 @@ export default function ExchangeRate() {
                         style={{ color: pick(TEXT, darkMode) }}>
                         <CurrencyFlagImage
                           code={to}
-                          className="h-3 w-4.5 rounded-xs object-cover inline-block mr-1 align-middle"
+                          className="h-3 w-4.5 object-cover inline-block mr-1 align-middle"
                         />
                         <span className="align-middle">{to}</span>
                       </span>

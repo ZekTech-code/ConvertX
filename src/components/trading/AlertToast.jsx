@@ -1,7 +1,7 @@
 ﻿import { useEffect, useState } from "react";
 import { CheckCircle, X, TrendingUp, TrendingDown } from "lucide-react";
 import { getCoinIcon } from "../../utils/coinIcons";
-import { POSITIVE, SURFACE, SURFACE_MUTED, SURFACE_SUNKEN, TEXT, TEXT_MUTED, pick } from "../../styles/colors";
+import { BORDER, pick, POSITIVE, SURFACE, SURFACE_MUTED, SURFACE_SUNKEN, TEXT, TEXT_MUTED } from "../../styles/colors";
 
 export default function AlertToast({ alert, onDismiss, darkMode }) {
   const [progress, setProgress] = useState(100);
@@ -109,7 +109,7 @@ export default function AlertToast({ alert, onDismiss, darkMode }) {
             className="p-2 rounded-xl transition-all cursor-pointer shrink-0"
             style={{
               background: pick(SURFACE_MUTED, darkMode),
-              border: darkMode ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(148,163,184,0.15)",
+              border: "1px solid " + pick(BORDER, darkMode),
             }}
           >
             <X size={16} style={{ color: TEXT_MUTED[darkMode] }} />

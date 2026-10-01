@@ -1,7 +1,7 @@
 ﻿import { useMemo, useState } from "react";
 import { BarChart2, TrendingUp, TrendingDown, Search } from "lucide-react";
 import { getCoinIcon } from "../../utils/coinIcons";
-import { accentAlpha, BORDER, NEGATIVE, pick, POSITIVE, PRIMARY, SURFACE_MUTED, TEXT, TEXT_SECONDARY } from "../../styles/colors";
+import { accentAlpha, BORDER, NEGATIVE, pick, POSITIVE, PRIMARY, SURFACE, SURFACE_MUTED, TEXT, TEXT_SECONDARY } from "../../styles/colors";
 
 export default function RateMonitor({ allPrices, darkMode, onSelectAsset, selectedAssetId }) {
   const [filter, setFilter] = useState("all");
@@ -46,8 +46,8 @@ export default function RateMonitor({ allPrices, darkMode, onSelectAsset, select
     <div
       className="rounded-2xl p-4 flex flex-col gap-3"
       style={{
-        background: pick(SURFACE_MUTED, darkMode),
-        border: darkMode ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(148,163,184,0.12)",
+        background: pick(SURFACE, darkMode),
+        border: "1px solid " + pick(BORDER, darkMode),
       }}
     >
       <div className="flex items-center gap-2 mb-1">

@@ -143,7 +143,7 @@ export default function Trade() {
 
   const mode = darkMode ? "dark" : "light";
   const cardStyle = {
-    background: SURFACE_MUTED[mode],
+    background: SURFACE[mode],
     border: "1px solid " + BORDER[mode],
     borderRadius: "16px",
   };

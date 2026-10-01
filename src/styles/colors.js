@@ -46,18 +46,18 @@ export const WARNING = { light: "#b45309", dark: "#fbbf24" };
 export const DANGER = { light: "#cf1b3c", dark: "#fb7185" };
 
 /** Neutrals */
-/* Neutrals — untinted. The vivid blue is reserved for buttons and
-   interactive accents; cards and pages stay clean neutral surfaces. */
-export const CANVAS = { light: "#f8fafc", dark: "#000000" };
-export const SURFACE = { light: "#ffffff", dark: "rgba(255,255,255,0.05)" };
-export const SURFACE_RAISED = { light: "#ffffff", dark: "#141414" };
-export const SURFACE_MUTED = { light: "#f8fafc", dark: "rgba(0,0,0,0.35)" };
-export const SURFACE_SUNKEN = { light: "#f1f5f9", dark: "rgba(0,0,0,0.25)" };
-export const BORDER = { light: "#e2e8f0", dark: "rgba(255,255,255,0.10)" };
-export const BORDER_STRONG = { light: "#cbd5e1", dark: "rgba(255,255,255,0.18)" };
+/* Neutrals — untinted and solid. Solid values (not translucent overlays)
+   so cards read as distinct elevated surfaces on the page in both modes. */
+export const CANVAS = { light: "#f8fafc", dark: "#0a0a0b" };
+export const SURFACE = { light: "#ffffff", dark: "#17171b" };
+export const SURFACE_RAISED = { light: "#ffffff", dark: "#1f1f24" };
+export const SURFACE_MUTED = { light: "#f8fafc", dark: "#121216" };
+export const SURFACE_SUNKEN = { light: "#f1f5f9", dark: "#070708" };
+export const BORDER = { light: "#e2e8f0", dark: "#2a2a31" };
+export const BORDER_STRONG = { light: "#cbd5e1", dark: "#3a3a44" };
 export const TEXT = { light: "#1e293b", dark: "#ffffff" };
-export const TEXT_SECONDARY = { light: "#64748b", dark: "#94a3b8" };
-export const TEXT_MUTED = { light: "#94a3b8", dark: "#64748b" };
+export const TEXT_SECONDARY = { light: "#64748b", dark: "#a1a1aa" };
+export const TEXT_MUTED = { light: "#94a3b8", dark: "#71717a" };
 
 /**
  * Convenience bundle for chart configuration objects.
