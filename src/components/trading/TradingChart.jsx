@@ -1,7 +1,7 @@
 ﻿import { useState, useEffect, useRef, useMemo } from "react";
 import { createChart } from "lightweight-charts";
 import { Activity } from "lucide-react";
-import { getOHLCData, getBinanceOHLC, hasBinanceOHLC } from "../../services/ExchangeApi";
+import { getOHLCData, getBinanceOHLC } from "../../services/ExchangeApi";
 
 function calculateEMA(data, period) {
   const k = 2 / (period + 1);
@@ -113,7 +113,10 @@ function generateSyntheticCandles(startPrice, timeframe) {
   return candles;
 }
 
-const TIMEFRAME_DAYS = { "1H": 1, "4H": 7, "1D": 30, "1W": 90 };
+const TIMEFRAME_DAYS = { "1H": 1, "4H": 7, "1D": 30, "1W": 180 };
+
+const MIN_CHART_CANDLES = 20;
+const MIN_SIGNAL_CANDLES = 30;
 
 export default function TradingChart({ asset, darkMode, currentPrice, pricesReady, onDataReady }) {
   const chartContainerRef = useRef(null);
@@ -334,7 +337,7 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
       for (const c of formatted) {
         if (!seen.has(c.time)) { seen.add(c.time); deduped.push(c); }
       }
-      if (deduped.length < 20) return false;
+      if (deduped.length < MIN_CHART_CANDLES) return false;
 
       candleSeriesRef.current.setData(deduped);
       ema9Ref.current?.setData(calculateEMA(deduped, 9));
@@ -369,18 +372,18 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
       }
       if (cancelled) return;
 
-      if (candles && candles.length >= 20) {
+      if (candles && candles.length >= MIN_SIGNAL_CANDLES) {
         setDataSource("Binance");
         applyCandleData(candles, "Binance");
         return;
       }
 
-      if (pricesReady && !hasBinanceOHLC(asset.id)) {
+      if (pricesReady) {
         candles = await getOHLCData(asset.id, days);
       }
       if (cancelled) return;
 
-      if (candles && candles.length >= 20) {
+      if (candles && candles.length >= MIN_SIGNAL_CANDLES) {
         setDataSource("CoinGecko");
         applyCandleData(candles, "CoinGecko");
         return;

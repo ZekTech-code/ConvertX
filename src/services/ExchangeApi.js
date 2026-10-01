@@ -49,6 +49,20 @@ const TIMEFRAME_TO_BINANCE_INTERVAL = {
 
 export const hasBinanceOHLC = (coinId) => Boolean(COIN_ID_TO_BINANCE[coinId]);
 
+function toCandleSeries(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((c) => ({
+      time: Math.floor(Number(c.time) || 0),
+      open: Number(c.open) || 0,
+      high: Number(c.high) || 0,
+      low: Number(c.low) || 0,
+      close: Number(c.close) || 0,
+      volume: Number(c.volume) || 0,
+    }))
+    .filter((c) => c.time > 0 && c.close > 0 && c.high > 0 && c.low > 0);
+}
+
 function sanitiseCurrencyCode(code) {
   if (typeof code !== "string" || !/^[A-Z]{2,5}$/.test(code.trim())) {
     throw new Error(`Invalid currency code: "${code}"`);
@@ -568,13 +582,15 @@ export const getOHLCData = async (coinId, days = 30) => {
 
     if (data?.error || data?.status?.error_code) throw new Error(data.error || data.status?.error_message || "CoinGecko error");
 
-    const candles = (data || []).map(([time, open, high, low, close]) => ({
-      time: Math.floor(time / 1000),
-      open: open || 0,
-      high: high || 0,
-      low: low || 0,
-      close: close || 0,
-    }));
+    const candles = toCandleSeries(
+      (data || []).map(([time, open, high, low, close]) => ({
+        time: Math.floor(time / 1000),
+        open,
+        high,
+        low,
+        close,
+      }))
+    );
 
     if (candles.length > 0) {
       setCachedJson(cacheKey, cacheTimeKey, candles);

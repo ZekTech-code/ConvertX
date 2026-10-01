@@ -6,6 +6,7 @@ const COINGECKO_BASE = isDev ? "/api/coingecko" : "https://api.coingecko.com/api
 const FOREX_BASE = isDev ? "/api/er-api" : "https://open.er-api.com/v6";
 const REFRESH_INTERVAL = 60000;
 const CACHE_TTL = 300000;
+const PRICE_CACHE_MAX_AGE_MS = 300000;
 
 export const CRYPTO_ASSETS = [
   { id: "bitcoin", symbol: "BTC", name: "Bitcoin", cmcSlug: "bitcoin" },
@@ -243,6 +244,10 @@ function buildEmptyResult() {
   return {};
 }
 
+function hasLivePrices(bag) {
+  return Boolean(bag) && Object.values(bag).some((v) => v && Number(v.usd) > 0);
+}
+
 async function fetchCoinGeckoPrices() {
   if (isCoinGeckoRateLimited()) throw new Error("CoinGecko rate limited");
 
@@ -265,7 +270,9 @@ async function fetchCoinGeckoPrices() {
 }
 
 export function useMarketData() {
-  const [cryptoPrices, setCryptoPrices] = useState(() => getLocalStorage("cg_prices") || buildEmptyResult());
+  const [cryptoPrices, setCryptoPrices] = useState(() =>
+    getLocalStorage("cg_prices", PRICE_CACHE_MAX_AGE_MS) || buildEmptyResult()
+  );
   const [forexRates, setForexRates] = useState(() => getLocalStorage("forex_rates") || {});
   const [cryptoHistory, setCryptoHistory] = useState({});
   const [loading, setLoading] = useState(true);
@@ -277,7 +284,7 @@ export function useMarketData() {
   const fetchCryptoPricesBackground = useCallback(async (existing) => {
     try {
       const cgPrices = await fetchCoinGeckoPrices();
-      if (cgPrices && Object.keys(cgPrices).length > 0 && Object.values(cgPrices).some((v) => v.usd > 0)) {
+      if (hasLivePrices(cgPrices)) {
         const merged = { ...existing, ...cgPrices };
         setCache(buildCacheKey("crypto_prices"), merged);
         setLocalStorage("cg_prices", merged);
@@ -286,19 +293,19 @@ export function useMarketData() {
     } catch {
     }
 
-    return existing && Object.values(existing).some((v) => v.usd > 0) ? existing : buildEmptyResult();
+    return hasLivePrices(existing) ? existing : buildEmptyResult();
   }, []);
 
   const fetchCryptoPrices = useCallback(async () => {
     const cacheKey = buildCacheKey("crypto_prices");
     const cached = getCached(cacheKey);
-    if (cached && Object.values(cached).some((v) => v.usd > 0)) {
+    if (hasLivePrices(cached)) {
       fetchCryptoPricesBackground(cached);
       return cached;
     }
 
-    const persistentCache = getLocalStorage("cg_prices");
-    if (persistentCache && Object.values(persistentCache).some((v) => v.usd > 0)) {
+    const persistentCache = getLocalStorage("cg_prices", PRICE_CACHE_MAX_AGE_MS);
+    if (hasLivePrices(persistentCache)) {
       fetchCryptoPricesBackground(persistentCache);
       return persistentCache;
     }
@@ -427,17 +434,15 @@ export function useMarketData() {
 
   const getCryptoPrice = useCallback(
     (coinId) => {
-      const data = cryptoPrices[coinId];
-      return data?.usd > 0 ? data.usd : null;
+      const price = Number(cryptoPrices[coinId]?.usd);
+      return Number.isFinite(price) && price > 0 ? price : null;
     },
     [cryptoPrices]
   );
 
   const getCryptoChange = useCallback(
     (coinId) => {
-      const data = cryptoPrices[coinId];
-      if (!data || data.usd == null) return null;
-      const change = Number(data.usd_24h_change);
+      const change = Number(cryptoPrices[coinId]?.usd_24h_change);
       return Number.isFinite(change) ? change : null;
     },
     [cryptoPrices]
@@ -465,26 +470,30 @@ export function useMarketData() {
     const result = [];
 
     for (const asset of CRYPTO_ASSETS) {
-      const price = cryptoPrices[asset.id]?.usd;
-      const changeRaw = cryptoPrices[asset.id]?.usd_24h_change;
-      const change = changeRaw != null && Number.isFinite(Number(changeRaw)) ? Number(changeRaw) : null;
-      if (price != null) {
-        result.push({
-          type: "crypto",
-          id: asset.id,
-          symbol: asset.symbol,
-          name: asset.name,
-          price: price > 0 ? price : null,
-          change,
-          volume: cryptoPrices[asset.id]?.usd_24h_vol || 0,
-          marketCap: cryptoPrices[asset.id]?.usd_market_cap || 0,
-        });
-      }
+      const entry = cryptoPrices[asset.id];
+      const price = entry?.usd;
+      const numPrice = Number(price);
+      if (!Number.isFinite(numPrice) || numPrice <= 0) continue;
+
+      const changeRaw = entry?.usd_24h_change;
+      const numChange = Number(changeRaw);
+      const change = Number.isFinite(numChange) ? numChange : null;
+
+      result.push({
+        type: "crypto",
+        id: asset.id,
+        symbol: asset.symbol,
+        name: asset.name,
+        price: numPrice,
+        change,
+        volume: Number(entry?.usd_24h_vol) || 0,
+        marketCap: Number(entry?.usd_market_cap) || 0,
+      });
     }
 
     for (const pair of FOREX_PAIRS) {
       const rate = getForexRate(pair.base, pair.quote);
-      if (rate) {
+      if (Number.isFinite(rate) && rate > 0) {
         result.push({
           type: "forex",
           id: `${pair.base}${pair.quote}`,
