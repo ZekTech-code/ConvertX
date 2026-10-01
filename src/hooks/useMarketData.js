@@ -2,8 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { enqueueCgRequest, isCoinGeckoRateLimited, markCoinGeckoRateLimited } from "../services/ExchangeApi";
 
 const isDev = import.meta.env.DEV;
-const CMC_BASE = isDev ? "/api/cmc" : "https://us-central1-convertxapp.cloudfunctions.net/cmcProxy";
-const COINGECKO_BASE = isDev ? "/api/coingecko" : "https://us-central1-convertxapp.cloudfunctions.net/coingeckoProxy";
+const COINGECKO_BASE = isDev ? "/api/coingecko" : "https://api.coingecko.com/api/v3";
 const FOREX_BASE = isDev ? "/api/er-api" : "https://open.er-api.com/v6";
 const REFRESH_INTERVAL = 60000;
 const CACHE_TTL = 300000;
@@ -82,11 +81,6 @@ export const CRYPTO_ASSETS = [
   { id: "mina-protocol", symbol: "MINA", name: "Mina", cmcSlug: "mina-protocol" },
 ];
 
-if (CRYPTO_ASSETS.length !== 71) {
-  console.error(`CRYPTO_ASSETS has ${CRYPTO_ASSETS.length} entries, expected 71`);
-}
-
-const CMC_SYMBOLS = CRYPTO_ASSETS.map((a) => a.symbol).join(",");
 const COINGECKO_IDS = CRYPTO_ASSETS.map((a) => a.id).join(",");
 
 export const FOREX_PAIRS = [
@@ -161,7 +155,7 @@ async function fetchWithRetry(url, options = {}, timeout = 15000, maxRetries = 2
       return res.json();
     } catch (err) {
       if (attempt < maxRetries) {
-        await new Promise((r) => setTimeout(r, Math.pow(2, attempt) * 10000));
+        await new Promise((r) => setTimeout(r, Math.pow(2, attempt) * 600));
         continue;
       }
       throw err;
@@ -208,12 +202,45 @@ function setLocalStorage(key, data) {
   }
 }
 
-function buildEmptyResult() {
-  const result = {};
-  for (const asset of CRYPTO_ASSETS) {
-    result[asset.id] = { usd: 0, usd_24h_change: 0, usd_24h_vol: 0, usd_market_cap: 0 };
+function crossRateFromRates(rates, base, quote) {
+  if (!rates) return null;
+  if (base === quote) return 1;
+  if (base === "USD") return rates[quote] || null;
+  if (quote === "USD") return rates[base] ? 1 / rates[base] : null;
+  const baseInUSD = rates[base];
+  const quoteInUSD = rates[quote];
+  if (!baseInUSD || !quoteInUSD) return null;
+  return quoteInUSD / baseInUSD;
+}
+
+const FOREX_BASELINE_KEY = "forex_rates_baseline";
+const FOREX_BASELINE_MIN_AGE_MS = 30 * 60 * 1000;
+
+function loadForexBaseline() {
+  try {
+    const raw = localStorage.getItem(FOREX_BASELINE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed.ts !== "number" || !parsed.rates) return null;
+    if (Date.now() - parsed.ts < FOREX_BASELINE_MIN_AGE_MS) return null;
+    return parsed;
+  } catch {
+    return null;
   }
-  return result;
+}
+
+function saveForexBaseline(rates) {
+  try {
+    if (!rates || Object.keys(rates).length === 0) return;
+    const existing = loadForexBaseline();
+    if (existing) return;
+    localStorage.setItem(FOREX_BASELINE_KEY, JSON.stringify({ ts: Date.now(), rates }));
+  } catch {
+  }
+}
+
+function buildEmptyResult() {
+  return {};
 }
 
 async function fetchCoinGeckoPrices() {
@@ -237,34 +264,6 @@ async function fetchCoinGeckoPrices() {
   return result;
 }
 
-async function fetchCMCPrices() {
-  try {
-    const cmcRes = await fetchWithTimeout(
-      `${CMC_BASE}/cryptocurrency/quotes/latest?symbol=${CMC_SYMBOLS}&convert=USD`,
-      { headers: { "Accept": "application/json" } },
-      15000
-    );
-    if (!cmcRes.ok) throw new Error(`CMC HTTP ${cmcRes.status}`);
-    const data = await cmcRes.json();
-    const result = {};
-    const quotes = data?.data || {};
-    for (const asset of CRYPTO_ASSETS) {
-      const quote = quotes[asset.symbol]?.[0];
-      if (quote) {
-        result[asset.id] = {
-          usd: quote.quote?.USD?.price || 0,
-          usd_24h_change: quote.quote?.USD?.percent_change_24h || 0,
-          usd_24h_vol: quote.quote?.USD?.volume_24h || 0,
-          usd_market_cap: quote.quote?.USD?.market_cap || 0,
-        };
-      }
-    }
-    return result;
-  } catch {
-    return null;
-  }
-}
-
 export function useMarketData() {
   const [cryptoPrices, setCryptoPrices] = useState(() => getLocalStorage("cg_prices") || buildEmptyResult());
   const [forexRates, setForexRates] = useState(() => getLocalStorage("forex_rates") || {});
@@ -273,19 +272,9 @@ export function useMarketData() {
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
   const mountedRef = useRef(true);
+  const forexBaselineRef = useRef(loadForexBaseline());
 
   const fetchCryptoPricesBackground = useCallback(async (existing) => {
-    try {
-      const cmcPrices = await fetchCMCPrices();
-      if (cmcPrices && Object.keys(cmcPrices).length > 0 && Object.values(cmcPrices).some((v) => v.usd > 0)) {
-        const merged = { ...existing, ...cmcPrices };
-        setCache(buildCacheKey("crypto_prices"), merged);
-        setLocalStorage("cg_prices", merged);
-        return merged;
-      }
-    } catch {
-    }
-
     try {
       const cgPrices = await fetchCoinGeckoPrices();
       if (cgPrices && Object.keys(cgPrices).length > 0 && Object.values(cgPrices).some((v) => v.usd > 0)) {
@@ -411,6 +400,10 @@ export function useMarketData() {
       if (!mountedRef.current) return;
       setCryptoPrices(prices);
       setForexRates(rates);
+      if (rates && Object.keys(rates).length > 0) {
+        saveForexBaseline(rates);
+        if (!forexBaselineRef.current) forexBaselineRef.current = loadForexBaseline();
+      }
       setLastUpdated(Date.now());
     } catch (err) {
       if (mountedRef.current) setError(err.message);
@@ -451,19 +444,22 @@ export function useMarketData() {
   );
 
   const getForexRate = useCallback(
-    (base, quote) => {
-      if (base === quote) return 1;
-      if (base === "USD") return forexRates[quote] || null;
-      if (quote === "USD") return forexRates[base] ? 1 / forexRates[base] : null;
-      const baseInUSD = forexRates[base];
-      const quoteInUSD = forexRates[quote];
-      if (!baseInUSD || !quoteInUSD) return null;
-      return quoteInUSD / baseInUSD;
-    },
+    (base, quote) => crossRateFromRates(forexRates, base, quote),
     [forexRates]
   );
 
-  const getForexChange = useCallback(() => 0, []);
+  const getForexChange = useCallback(
+    (base, quote) => {
+      const baseline = forexBaselineRef.current;
+      if (!baseline) return null;
+      const current = crossRateFromRates(forexRates, base, quote);
+      const previous = crossRateFromRates(baseline.rates, base, quote);
+      if (!current || !previous) return null;
+      const change = ((current - previous) / previous) * 100;
+      return Number.isFinite(change) ? change : null;
+    },
+    [forexRates]
+  );
 
   const getAllPrices = useCallback(() => {
     const result = [];

@@ -4,7 +4,6 @@ import {
   ArrowRightLeft,
   Loader2,
   AlertCircle,
-  CheckCircle,
   ShieldCheck,
   History,
   ChevronDown,
@@ -284,7 +283,6 @@ export default function CurrencyConverter() {
   const [openCurrencyPicker, setOpenCurrencyPicker] = useState(null);
 
   const [dashError, setDashError] = useState("");
-  const [dashSuccess, setDashSuccess] = useState("");
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const [conversionToast, setConversionToast] = useState({ show: false, message: "" });
 
@@ -473,7 +471,6 @@ export default function CurrencyConverter() {
 
   const handleExecuteExchange = async () => {
     setDashError("");
-    setDashSuccess("");
 
     const sanitizedAmountText = sanitizeInput(amount.toString());
     const amt = parseFloat(sanitizedAmountText);
@@ -529,7 +526,6 @@ export default function CurrencyConverter() {
       "SUCCESS"
     );
 
-    setDashSuccess("Conversion saved successfully.");
     setConversionToast({ show: true, message: `Converted ${amt} ${from} to ${result.toFixed(decimalPlaces)} ${to}` });
   };
 

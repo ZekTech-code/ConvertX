@@ -689,7 +689,6 @@ useEffect(() => {
               <div className="flex flex-col gap-5">
                 {allPairs.slice(0, 20).map((pair, idx) => {
                   const color = PALETTE[idx % 6];
-                  const colorShift = PALETTE[(idx + 1) % 6];
                   const pairData   = flowVolumeData.filter(d => (d[pair] || 0) > 0);
                   const pairTotal  = flowVolumeData.reduce((s, d) => s + (d[pair] || 0), 0);
                   const pairPeak   = flowVolumeData.reduce((best, d) => Math.max(best, d[pair] || 0), 0);

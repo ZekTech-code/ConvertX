@@ -2,8 +2,7 @@ const HISTORY_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 
 const isDev = import.meta.env.DEV;
 
-const CMC_BASE = isDev ? "/api/cmc" : "https://us-central1-convertxapp.cloudfunctions.net/cmcProxy";
-const COINGECKO_BASE = isDev ? "/api/coingecko" : "https://us-central1-convertxapp.cloudfunctions.net/coingeckoProxy";
+const COINGECKO_BASE = isDev ? "/api/coingecko" : "https://api.coingecko.com/api/v3";
 const ER_API_BASE = isDev ? "/api/er-api" : "https://open.er-api.com/v6";
 const BINANCE_BASE = "https://api.binance.com";
 const COINGECKO_RATE_LIMIT_KEY = "cg_rate_limit_until";
@@ -366,45 +365,6 @@ export const getCryptoPrices = async (
 ) => {
   const safeCoinIds = coinIds.map(sanitiseCoinId);
   const cacheKey = `crypto_prices_cache_cg_${safeCoinIds.join(",")}_${vsCurrency}`;
-
-  const symbols = safeCoinIds
-    .map((id) => CMC_SYMBOL_MAP[id])
-    .filter(Boolean)
-    .join(",");
-
-  const vcUpper = vsCurrency.toUpperCase();
-
-  try {
-    const headers = { "Accept": "application/json" };
-
-    const res = await fetchWithTimeout(
-      `${CMC_BASE}/cryptocurrency/quotes/latest?symbol=${symbols}&convert=${vcUpper}`,
-      {
-        headers,
-        timeout: 8000,
-      }
-    );
-
-    if (!res.ok) throw new Error("CoinMarketCap API error");
-
-    const data = await res.json();
-    const result = {};
-    const quotes = data?.data || {};
-
-    for (const coinId of safeCoinIds) {
-      const symbol = CMC_SYMBOL_MAP[coinId];
-      const quote = quotes[symbol]?.[0];
-      if (quote) {
-        result[coinId] = {
-          [vsCurrency]: quote.quote?.[vcUpper]?.price || 0,
-          [`${vsCurrency}_24h_change`]: quote.quote?.[vcUpper]?.percent_change_24h || 0,
-        };
-      }
-    }
-
-    localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), prices: result }));
-    return result;
-  } catch {}
 
   if (!isCoinGeckoRateLimited()) {
     try {

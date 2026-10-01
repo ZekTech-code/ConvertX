@@ -61,51 +61,6 @@ function getExchangeIcon(slug) {
   return null;
 }
 
-const FALLBACK_PRICES = { bitcoin: 67500, ethereum: 3450, binancecoin: 580, solana: 145, ripple: 0.62, cardano: 0.45, dogecoin: 0.12, tron: 0.11, "avalanche-2": 35, chainlink: 14, polkadot: 7, "shiba-inu": 0.000025, "the-open-network": 6.5, litecoin: 72, sui: 1.8, pepe: 0.000012, "bitcoin-cash": 380, near: 5.5, "internet-computer": 12, uniswap: 8, stellar: 0.1, aptos: 9, "ethereum-classic": 22, filecoin: 5, "hedera-hashgraph": 0.09, arbitrum: 0.8, cosmos: 8, "render-token": 7, vechain: 0.035, kaspa: 0.15, maker: 2400, "injective-protocol": 25, optimism: 2, aave: 140, algorand: 0.2, "the-graph": 0.15, fantom: 0.6, "sei-network": 0.4, "polygon-ecosystem-token": 0.6, celestia: 15, "immutable-x": 1.8, mantle: 0.7, bonk: 0.00003, "jupiter-exchange-solana": 1, floki: 0.00018, gala: 0.025, "the-sandbox": 0.35, "axie-infinity": 6, "lido-dao": 2, "worldcoin-wld": 2.5, monero: 170, arweave: 35, "fetch-ai": 1.5, "ondo-finance": 1, eos: 0.6, tezos: 0.8, dash: 30, zcash: 25, "curve-dao-token": 0.5, "compound-governance-token": 50, thorchain: 5, flow: 0.7, apecoin: 1, chiliz: 0.1, enjincoin: 0.2, "elrond-erd-2": 35, notcoin: 0.008, wormhole: 0.3, "pyth-network": 0.4, blockstack: 1.8, "mina-protocol": 0.5 };
-
-const FALLBACK_PAIRS = ["BTC", "ETH", "USDT", "USDC", "BNB", "SOL", "XRP", "ADA", "DOGE", "DAI", "TRX", "LINK", "DOT", "MATIC", "SHIB"];
-
-const FALLBACK_EXCHANGES = [
-  { name: "Binance", slug: "binance", logo: "https://cdn.jsdelivr.net/gh/GMWalletApp/crypto-icons@latest/assets/exchanges/branded/binance.svg" },
-  { name: "Coinbase", slug: "coinbase", logo: "https://cdn.jsdelivr.net/gh/GMWalletApp/crypto-icons@latest/assets/exchanges/branded/coinbase.svg" },
-  { name: "Kraken", slug: "kraken", logo: "https://cdn.jsdelivr.net/gh/GMWalletApp/crypto-icons@latest/assets/exchanges/branded/kraken.svg" },
-  { name: "Bybit", slug: "bybit", logo: "https://cdn.jsdelivr.net/gh/GMWalletApp/crypto-icons@latest/assets/exchanges/branded/bybit.svg" },
-  { name: "OKX", slug: "okx", logo: "https://cdn.jsdelivr.net/gh/GMWalletApp/crypto-icons@latest/assets/exchanges/branded/okx.svg" },
-  { name: "Bitget", slug: "bitget", logo: "https://cdn.jsdelivr.net/gh/GMWalletApp/crypto-icons@latest/assets/exchanges/branded/bitget.svg" },
-  { name: "KuCoin", slug: "kucoin", logo: "https://cdn.jsdelivr.net/gh/GMWalletApp/crypto-icons@latest/assets/exchanges/branded/kucoin.svg" },
-  { name: "Gate.io", slug: "gate-io", logo: "https://cdn.jsdelivr.net/gh/GMWalletApp/crypto-icons@latest/assets/exchanges/branded/gate-io.svg" },
-];
-
-function generateFallbackMarkets(asset, currentPrice, limit = 50) {
-  if (!asset?.id) return [];
-  const basePrice = currentPrice || FALLBACK_PRICES[asset.id] || 1;
-  const totalVol = 500000000 + Math.random() * 2000000000;
-  const result = [];
-  const used = new Set();
-  for (let i = 0; i < Math.min(limit, 200); i++) {
-    const ex = FALLBACK_EXCHANGES[Math.floor(Math.random() * FALLBACK_EXCHANGES.length)];
-    const target = FALLBACK_PAIRS[Math.floor(Math.random() * FALLBACK_PAIRS.length)];
-    const pair = `${asset.symbol || "BTC"}/${target}`;
-    const key = `${ex.name}|${pair}`;
-    if (used.has(key)) continue;
-    used.add(key);
-    const vol = (0.02 + Math.random() * 0.15) * totalVol;
-    const price = basePrice * (0.995 + Math.random() * 0.01);
-    result.push({
-      exchange: ex.name,
-      exchangeSlug: ex.slug,
-      pair,
-      price: +price.toFixed(8),
-      priceUsd: +price.toFixed(8),
-      volume24h: vol,
-      volume24hQuote: vol,
-      marketShare: (vol / totalVol) * 100,
-      logoUrl: ex.logo,
-    });
-    if (result.length >= limit) break;
-  }
-  return result.sort((a, b) => b.volume24hQuote - a.volume24hQuote);
-}
 
 const InlineLogos = {
   mexc: (
@@ -185,9 +140,9 @@ export default function CoinMarkets({ asset, darkMode, currentPrice, pricesReady
     setLoading(true);
     try {
       const data = await getMarketPairs(asset.id, 50, currentPrice || 0);
-      setMarkets(data.length > 0 ? data : generateFallbackMarkets(asset, currentPrice, 50));
+      setMarkets(Array.isArray(data) ? data : []);
     } catch {
-      setMarkets(generateFallbackMarkets(asset, currentPrice, 50));
+      setMarkets([]);
     } finally {
       setLoading(false);
     }

@@ -127,7 +127,7 @@ export default function RateMonitor({ allPrices, darkMode, onSelectAsset, select
                   {item.price != null && item.price > 0 ? `${item.type === "forex" ? "" : "$"}${formatPrice(item.price, item.type)}` : "—"}
                 </span>
                 <div className="flex items-center gap-1 justify-end">
-                  {item.price != null && item.price > 0 ? (
+                  {item.price != null && item.price > 0 && Number.isFinite(item.change) ? (
                     <>
                       {item.change >= 0 ? (
                         <TrendingUp size={9} className="text-green-400" />

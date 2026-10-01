@@ -6,7 +6,6 @@ import { useMarketData } from "../hooks/useMarketData";
 import { useTrading } from "../hooks/useTrading";
 import TradingChart from "../components/trading/TradingChart";
 import CoinMarkets from "../components/trading/CoinMarkets";
-import MarketExchange from "../components/trading/MarketExchange";
 import OrderPanel from "../components/trading/OrderPanel";
 import SignalPanel from "../components/trading/SignalPanel";
 import FearGreedIndex from "../components/trading/FearGreedIndex";
@@ -336,12 +335,14 @@ export default function Trade() {
                       <span className={`text-2xl font-mono font-black ${darkMode ? "text-white" : "text-slate-900"}`}>
                         ${formatPrice(currentPrice)}
                       </span>
-                      <span
-                        className="text-sm font-bold ml-2"
-                        style={{ color: selectedAsset.change >= 0 ? "#22c55e" : "#ef4444" }}
-                      >
-                        {selectedAsset.change >= 0 ? "+" : ""}{selectedAsset.change.toFixed(2)}%
-                      </span>
+                      {Number.isFinite(selectedAsset.change) && (
+                        <span
+                          className="text-sm font-bold ml-2"
+                          style={{ color: selectedAsset.change >= 0 ? "#22c55e" : "#ef4444" }}
+                        >
+                          {selectedAsset.change >= 0 ? "+" : ""}{selectedAsset.change.toFixed(2)}%
+                        </span>
+                      )}
                     </div>
                     <ChevronDown size={16} className={`${darkMode ? "text-slate-400" : "text-slate-500"} transition-transform ${showAssetPicker ? "rotate-180" : ""}`} />
                   </button>
@@ -408,7 +409,7 @@ export default function Trade() {
                           <span className="text-sm font-mono font-bold" style={{ color: darkMode ? "#e2e8f0" : "#1e293b" }}>
                             {item.price != null && item.price > 0 ? `$${formatPrice(item.price)}` : "—"}
                           </span>
-                          {item.price != null && item.price > 0 ? (
+                          {item.price != null && item.price > 0 && Number.isFinite(item.change) ? (
                             <span
                               className="text-[14px] font-bold ml-1.5"
                               style={{ color: item.change >= 0 ? "#22c55e" : "#ef4444" }}
@@ -497,16 +498,6 @@ export default function Trade() {
         </div>
 
         <div className="h-[4vh] shrink-0" />
-
-        <section className="mt-20 lg:mt-24">
-          <MarketExchange
-            allPrices={allPrices}
-            darkMode={darkMode}
-            onSelectAsset={handleSelectAsset}
-            selectedAssetId={selectedAsset?.id}
-            marketData={marketData}
-          />
-        </section>
 
         <div className="mt-2">
           {selectedAsset && (

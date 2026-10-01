@@ -140,32 +140,9 @@ export default function CurrencyConverterHomePage() {
             message: messageVal,
             timestamp: serverTimestamp(),
           });
-        } else {
-          const mockContacts = JSON.parse(localStorage.getItem("mock_contacts") || "[]");
-          mockContacts.push({
-            name: nameVal,
-            email: emailVal,
-            subject: subjectVal,
-            message: messageVal,
-            timestamp: new Date().toISOString(),
-          });
-          localStorage.setItem("mock_contacts", JSON.stringify(mockContacts));
         }
       } catch (dbErr) {
         console.warn("Database write failed (e.g. Firebase permissions), proceeding with email send:", dbErr);
-        try {
-          const mockContacts = JSON.parse(localStorage.getItem("mock_contacts") || "[]");
-          mockContacts.push({
-            name: nameVal,
-            email: emailVal,
-            subject: subjectVal,
-            message: messageVal,
-            timestamp: new Date().toISOString(),
-          });
-          localStorage.setItem("mock_contacts", JSON.stringify(mockContacts));
-        } catch (lsErr) {
-          console.error("Local storage fallback failed:", lsErr);
-        }
       }
 
       const emailResponse = await fetch(`https://formsubmit.co/ajax/${import.meta.env.VITE_CONTACT_EMAIL}`, {
