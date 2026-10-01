@@ -54,10 +54,8 @@ export default function FearGreedIndex({ darkMode }) {
     return () => clearTimeout(timeout);
   }, [fetchData]);
 
-  const tone = FEAR_GREED_LABELS[label] || FEAR_GREED_LABELS.Neutral;
-
   const label = data ? getLabel(data.current) : "Neutral";
-  const style = tone;
+  const sentiment = FEAR_GREED_LABELS[label] || FEAR_GREED_LABELS.Neutral;
   const change = data ? data.current - data.previous : 0;
 
   return (
@@ -106,19 +104,19 @@ export default function FearGreedIndex({ darkMode }) {
         <>
           <div
             className="rounded-xl p-4 text-center"
-            style={{ background: statusAlpha(style.tone, darkMode, 0.12), border: `1px solid ${statusAlpha(style.tone, darkMode, 0.26)}` }}
+            style={{ background: statusAlpha(sentiment.tone, darkMode, 0.12), border: `1px solid ${statusAlpha(sentiment.tone, darkMode, 0.26)}` }}
           >
             {data.current <= 45 ? (
-              <TrendingDown size={28} className="mx-auto mb-2" style={{ color: toneColor(style.tone, darkMode) }} />
+              <TrendingDown size={28} className="mx-auto mb-2" style={{ color: toneColor(sentiment.tone, darkMode) }} />
             ) : data.current <= 55 ? (
-              <Minus size={28} className="mx-auto mb-2" style={{ color: toneColor(style.tone, darkMode) }} />
+              <Minus size={28} className="mx-auto mb-2" style={{ color: toneColor(sentiment.tone, darkMode) }} />
             ) : (
-              <TrendingUp size={28} className="mx-auto mb-2" style={{ color: toneColor(style.tone, darkMode) }} />
+              <TrendingUp size={28} className="mx-auto mb-2" style={{ color: toneColor(sentiment.tone, darkMode) }} />
             )}
-            <div className="text-3xl font-black" style={{ color: toneColor(style.tone, darkMode) }}>
+            <div className="text-3xl font-black" style={{ color: toneColor(sentiment.tone, darkMode) }}>
               {data.current}
             </div>
-            <div className="text-sm font-bold mt-1" style={{ color: toneColor(style.tone, darkMode) }}>
+            <div className="text-sm font-bold mt-1" style={{ color: toneColor(sentiment.tone, darkMode) }}>
               {label}
             </div>
             <div className="mt-3 h-2 rounded-full overflow-hidden" style={{ background: pick(SURFACE_SUNKEN, darkMode) }}>
@@ -126,7 +124,7 @@ export default function FearGreedIndex({ darkMode }) {
                 className="h-full rounded-full transition-all duration-700"
                 style={{
                   width: `${data.current}%`,
-                  background: toneColor(style.tone, darkMode),
+                  background: toneColor(sentiment.tone, darkMode),
                 }}
               />
             </div>

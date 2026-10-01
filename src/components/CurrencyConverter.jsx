@@ -580,11 +580,6 @@ export default function CurrencyConverter() {
 
   return (
     <div className="min-h-screen bg-canvas text-text transition-colors duration-300 flex flex-col relative overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-125 h-125 bg-accent/10 rounded-full blur-[100px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-125 h-125 bg-accent/10 rounded-full blur-[100px]" />
-      </div>
-
       <Navbar />
 
       <Suspense fallback={<div className="h-9 w-full bg-surface-muted animate-pulse" />}>

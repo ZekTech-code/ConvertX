@@ -367,11 +367,6 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-canvas text-text transition-colors duration-300 flex flex-col relative overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-125 h-125 bg-accent/10 rounded-full blur-[100px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-125 h-125 bg-accent/10 rounded-full blur-[100px]" />
-      </div>
-
       <Navbar />
 
       <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 md:pb-8 flex flex-col gap-8">

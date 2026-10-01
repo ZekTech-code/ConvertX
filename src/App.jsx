@@ -33,9 +33,6 @@ const MainApp = () => {
   if (isOffline) {
     return (
       <div className="min-h-screen w-full flex flex-col items-center justify-center p-6 relative z-99999 overflow-hidden select-none transition-colors duration-300 bg-canvas text-text">
-        <div className="absolute top-[-10%] right-[-10%] w-112.5 h-112.5 bg-accent/10 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-112.5 h-112.5 bg-accent/10 rounded-full blur-[100px] pointer-events-none" />
-
         <div className="relative z-10 text-center max-w-md flex flex-col items-center p-8 rounded-3xl border border-border bg-surface text-text shadow-2xl transition-colors duration-300">
           <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6 shadow-sm border bg-danger-soft border-danger-border text-danger transition-colors duration-300">
             <WifiOff className="w-10 h-10 animate-bounce" />

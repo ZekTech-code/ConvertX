@@ -18,9 +18,6 @@ const dotVariants = {
 export default function PageLoader({ title = "Loading", subtitle = "Preparing your experience..." }) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-canvas text-text transition-colors duration-300 relative overflow-hidden">
-      <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-accent/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-accent/10 rounded-full blur-[120px] pointer-events-none" />
-
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

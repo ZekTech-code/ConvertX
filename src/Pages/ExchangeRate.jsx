@@ -25,7 +25,7 @@ import {
   ReferenceLine,
 } from "recharts";
 import { useTheme } from "../context/useTheme";
-import { ACCENT, accentAlpha, BORDER, DANGER, NEGATIVE, pick, POSITIVE, PRIMARY, SUCCESS, SURFACE, SURFACE_MUTED, SURFACE_SUNKEN, TEXT, TEXT_MUTED, TEXT_SECONDARY } from "../styles/colors";
+import { ACCENT, accentAlpha, BORDER, CANVAS, DANGER, NEGATIVE, pick, POSITIVE, PRIMARY, SUCCESS, SURFACE, SURFACE_MUTED, SURFACE_SUNKEN, TEXT, TEXT_MUTED, TEXT_SECONDARY } from "../styles/colors";
 import { CURRENCY_INFO, CURRENCY_COUNTRY_CODES } from "../utils/currencyData";
 import { getLatestRates, recordRateSnapshot } from "../services/ExchangeApi";
 import MobileBottomNav from "../components/MobileBottomNav";
@@ -804,7 +804,7 @@ export default function ExchangeRate() {
     return deriveBotSignal(history, from);
   }, [history, loading, currentRate, from]);
 
-  const bg = pick(SURFACE_MUTED, darkMode);
+  const bg = pick(CANVAS, darkMode);
   const fromInfo = CURRENCY_INFO[from] ?? {};
   const toInfo = CURRENCY_INFO[to] ?? {};
 

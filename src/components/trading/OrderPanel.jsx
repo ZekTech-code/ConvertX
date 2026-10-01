@@ -105,7 +105,7 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
     >
       <div className="flex items-center gap-2 mb-1">
         <Zap size={18} className="text-accent" />
-        <span className="text-lg font-black uppercase tracking-wider" style={pick(TEXT_MUTED, darkMode)}>Place Order</span>
+        <span className="text-lg font-black uppercase tracking-wider" style={{ color: pick(TEXT_MUTED, darkMode) }}>Place Order</span>
       </div>
 
       <div className="flex gap-2">
@@ -141,7 +141,7 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
       </div>
 
       <div>
-        <label htmlFor="order-amount" className="text-[11px] font-bold uppercase tracking-wider block mb-1" style={pick(TEXT_SECONDARY, darkMode)}>Amount (USD)</label>
+        <label htmlFor="order-amount" className="text-[11px] font-bold uppercase tracking-wider block mb-1" style={{ color: pick(TEXT_SECONDARY, darkMode) }}>Amount (USD)</label>
         <input id="order-amount" name="order-amount" type="number" value={amount} onChange={(e) => setAmount(e.target.value)}
           placeholder="0.00" min="0" step="0.01"
           className="w-full px-3 py-2.5 rounded-xl text-[13px] font-mono font-bold outline-none transition-all"
@@ -152,7 +152,7 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
           }}
         />
         <div className="flex justify-between mt-1.5">
-          <span className="text-[10px]" style={pick(TEXT_SECONDARY, darkMode)}>Bal: ${balance.toFixed(2)}</span>
+          <span className="text-[10px]" style={{ color: pick(TEXT_SECONDARY, darkMode) }}>Bal: ${balance.toFixed(2)}</span>
           {[25, 50, 75, 100].map((pct) => (
             <button key={pct} onClick={() => setAmount(((balance * pct) / 100).toFixed(2))}
               className="text-[10px] font-bold text-accent hover:text-accent-hover cursor-pointer"
@@ -163,7 +163,7 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
 
       {['limit', 'stop_limit'].includes(orderType) && (
         <div>
-          <label htmlFor="order-limit-price" className="text-[11px] font-bold uppercase block mb-1" style={pick(TEXT_SECONDARY, darkMode)}>Limit Price (USD)</label>
+          <label htmlFor="order-limit-price" className="text-[11px] font-bold uppercase block mb-1" style={{ color: pick(TEXT_SECONDARY, darkMode) }}>Limit Price (USD)</label>
           <input id="order-limit-price" name="order-limit-price" type="number" value={limitPrice} onChange={(e) => setLimitPrice(e.target.value)}
             placeholder={formatPrice(currentPrice)} min="0" step="0.01"
             className="w-full px-3 py-2.5 rounded-xl text-[13px] font-mono font-bold outline-none"
@@ -178,7 +178,7 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
 
       {['stop', 'stop_limit'].includes(orderType) && (
         <div>
-          <label htmlFor="order-stop-price" className="text-[11px] font-bold uppercase block mb-1" style={pick(TEXT_SECONDARY, darkMode)}>Stop Price (USD)</label>
+          <label htmlFor="order-stop-price" className="text-[11px] font-bold uppercase block mb-1" style={{ color: pick(TEXT_SECONDARY, darkMode) }}>Stop Price (USD)</label>
           <input id="order-stop-price" name="order-stop-price" type="number" value={stopPrice} onChange={(e) => setStopPrice(e.target.value)}
             placeholder={formatPrice(currentPrice)} min="0" step="0.01"
             className="w-full px-3 py-2.5 rounded-xl text-[13px] font-mono font-bold outline-none"
@@ -193,7 +193,7 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
 
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label htmlFor="order-take-profit" className="text-[10px] font-bold uppercase block mb-1" style={pick(TEXT_SECONDARY, darkMode)}>Take Profit</label>
+          <label htmlFor="order-take-profit" className="text-[10px] font-bold uppercase block mb-1" style={{ color: pick(TEXT_SECONDARY, darkMode) }}>Take Profit</label>
           <input id="order-take-profit" name="order-take-profit" type="number" value={takeProfit} onChange={(e) => setTakeProfit(e.target.value)}
             placeholder="TP" min="0" step="0.01"
             className="w-full px-2.5 py-2 rounded-lg text-[11px] font-mono font-bold outline-none"
@@ -205,7 +205,7 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
           />
         </div>
         <div>
-          <label htmlFor="order-stop-loss" className="text-[10px] font-bold uppercase block mb-1" style={pick(TEXT_SECONDARY, darkMode)}>Stop Loss</label>
+          <label htmlFor="order-stop-loss" className="text-[10px] font-bold uppercase block mb-1" style={{ color: pick(TEXT_SECONDARY, darkMode) }}>Stop Loss</label>
           <input id="order-stop-loss" name="order-stop-loss" type="number" value={stopLoss} onChange={(e) => setStopLoss(e.target.value)}
             placeholder="SL" min="0" step="0.01"
             className="w-full px-2.5 py-2 rounded-lg text-[11px] font-mono font-bold outline-none"
@@ -219,14 +219,14 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
       </div>
 
       <div>
-        <label htmlFor="order-leverage" className="text-[10px] font-bold uppercase block mb-1" style={pick(TEXT_SECONDARY, darkMode)}>
+        <label htmlFor="order-leverage" className="text-[10px] font-bold uppercase block mb-1" style={{ color: pick(TEXT_SECONDARY, darkMode) }}>
           Leverage: {parsed.lev}x
         </label>
         <input id="order-leverage" name="order-leverage" type="range" value={leverage} onChange={(e) => setLeverage(e.target.value)}
           min="1" max="125" step="1"
           className="w-full accent-accent"
         />
-        <div className="flex justify-between text-[9px]" style={pick(TEXT_SECONDARY, darkMode)}>
+        <div className="flex justify-between text-[9px]" style={{ color: pick(TEXT_SECONDARY, darkMode) }}>
           <span>1x</span><span>25x</span><span>50x</span><span>75x</span><span>100x</span><span>125x</span>
         </div>
       </div>
@@ -238,23 +238,23 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
         }}
       >
         <div className="flex justify-between text-[11px]">
-          <span style={pick(TEXT_SECONDARY, darkMode)}>Price</span>
-          <span className="font-mono font-bold" style={pick(TEXT, darkMode)}>${formatPrice(execPrice)}</span>
+          <span style={{ color: pick(TEXT_SECONDARY, darkMode) }}>Price</span>
+          <span className="font-mono font-bold" style={{ color: pick(TEXT, darkMode) }}>${formatPrice(execPrice)}</span>
         </div>
         <div className="flex justify-between text-[11px]">
-          <span style={pick(TEXT_SECONDARY, darkMode)}>Est. Quantity</span>
-          <span className="font-mono font-bold" style={pick(TEXT, darkMode)}>
+          <span style={{ color: pick(TEXT_SECONDARY, darkMode) }}>Est. Quantity</span>
+          <span className="font-mono font-bold" style={{ color: pick(TEXT, darkMode) }}>
             {estimatedQty.toFixed(8)} {asset?.symbol || ''}
           </span>
         </div>
         <div className="flex justify-between text-[11px]">
-          <span style={pick(TEXT_SECONDARY, darkMode)}>Fee (0.1%)</span>
+          <span style={{ color: pick(TEXT_SECONDARY, darkMode) }}>Fee (0.1%)</span>
           <span className="font-mono font-bold text-accent">${fee.toFixed(4)}</span>
         </div>
         {parsed.lev > 1 && (
           <>
             <div className="flex justify-between text-[11px]">
-              <span style={pick(TEXT_SECONDARY, darkMode)}>Margin Required</span>
+              <span style={{ color: pick(TEXT_SECONDARY, darkMode) }}>Margin Required</span>
               <span className="font-mono font-bold" style={tc('#fbbf24', '#b45309')}>${marginRequired.toFixed(2)}</span>
             </div>
             {liquidationPrice && (
@@ -268,8 +268,8 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
         <div className="flex justify-between text-[11px] pt-1"
           style={{ borderTop: darkMode ? '1px solid rgba(255,255,255,0.04)' : '1px solid rgba(148,163,184,0.08)' }}
         >
-          <span className="font-bold" style={pick(TEXT_MUTED, darkMode)}>{parsed.lev > 1 ? 'Total Exposure' : 'Total'}</span>
-          <span className="font-mono font-black" style={pick(TEXT, darkMode)}>
+          <span className="font-bold" style={{ color: pick(TEXT_MUTED, darkMode) }}>{parsed.lev > 1 ? 'Total Exposure' : 'Total'}</span>
+          <span className="font-mono font-black" style={{ color: pick(TEXT, darkMode) }}>
             ${(parsed.lev > 1 ? parsed.amount * parsed.lev : totalWithFee).toFixed(2)}
           </span>
         </div>

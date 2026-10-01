@@ -46,13 +46,13 @@ export const WARNING = { light: "#b45309", dark: "#fbbf24" };
 export const DANGER = { light: "#cf1b3c", dark: "#fb7185" };
 
 /** Neutrals */
-export const CANVAS = { light: "#f3f6fb", dark: "#05070e" };
-export const SURFACE = { light: "#ffffff", dark: "#0d1322" };
-export const SURFACE_RAISED = { light: "#ffffff", dark: "#121a2c" };
-export const SURFACE_MUTED = { light: "#f6f9fd", dark: "#101828" };
-export const SURFACE_SUNKEN = { light: "#eaeff8", dark: "#080c16" };
-export const BORDER = { light: "#e2e8f2", dark: "#1e2740" };
-export const BORDER_STRONG = { light: "#cbd6e8", dark: "#2c3a5b" };
+export const CANVAS = { light: "#f3f6fb", dark: "#02040a" };
+export const SURFACE = { light: "#ffffff", dark: "#0f172a" };
+export const SURFACE_RAISED = { light: "#ffffff", dark: "#16213a" };
+export const SURFACE_MUTED = { light: "#f6f9fd", dark: "#111c31" };
+export const SURFACE_SUNKEN = { light: "#eaeff8", dark: "#060b18" };
+export const BORDER = { light: "#e2e8f2", dark: "#23304d" };
+export const BORDER_STRONG = { light: "#cbd6e8", dark: "#33415f" };
 export const TEXT = { light: "#0d1626", dark: "#f0f4fb" };
 export const TEXT_SECONDARY = { light: "#46536a", dark: "#a7b4cb" };
 export const TEXT_MUTED = { light: "#78879e", dark: "#71809a" };

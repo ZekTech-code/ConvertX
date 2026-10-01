@@ -137,19 +137,19 @@
   --cx-accent-ring: rgb(var(--cx-accent-rgb) / 0.45);
   --cx-accent-glow: rgb(var(--cx-accent-rgb) / 0.22);
 
-  --cx-canvas: #05070e;
-  --cx-canvas-alt: #090d18;
-  --cx-surface: #0d1322;
-  --cx-surface-raised: #121a2c;
-  --cx-surface-muted: #101828;
-  --cx-surface-sunken: #080c16;
-  --cx-border: #1e2740;
-  --cx-border-strong: #2c3a5b;
+  --cx-canvas: #02040a;
+  --cx-canvas-alt: #060a14;
+  --cx-surface: #0f172a;
+  --cx-surface-raised: #16213a;
+  --cx-surface-muted: #111c31;
+  --cx-surface-sunken: #060b18;
+  --cx-border: #23304d;
+  --cx-border-strong: #33415f;
 
   --cx-text: #f0f4fb;
   --cx-text-secondary: #a7b4cb;
   --cx-text-muted: #71809a;
-  --cx-text-inverse: #05070e;
+  --cx-text-inverse: #02040a;
 
   --cx-success: #34d399;
   --cx-success-soft: rgb(52 211 153 / 0.12);
