@@ -145,11 +145,10 @@ export default function Trade() {
   const cardStyle = {
     background: SURFACE[mode],
     border: "1px solid " + BORDER[mode],
-    borderRadius: "16px",
   };
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden transition-colors duration-300 bg-canvas text-text">
+    <div className="flat-corners h-screen flex flex-col overflow-hidden transition-colors duration-300 bg-canvas text-text">
       <div className="max-w-400 mx-auto px-2 pt-3 w-full shrink-0">
         <motion.div
           initial={{ opacity: 0, y: -10 }}

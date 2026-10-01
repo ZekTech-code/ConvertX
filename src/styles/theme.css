@@ -43,12 +43,15 @@
   --cx-danger-700: #a51232;
 
   /* Shape language — shared radii */
-  --cx-radius-sm: 0.5rem;
-  --cx-radius-md: 0.75rem;
-  --cx-radius-lg: 1rem;
-  --cx-radius-xl: 1.25rem;
-  --cx-radius-2xl: 1.5rem;
-  --cx-radius-3xl: 1.75rem;
+  /* Corner radii — deliberately tight. The previous scale topped out at
+     28px, which read as soft and consumer-grade; financial dashboards look
+     sharper with 4-12px corners, so every step was pulled down. */
+  --cx-radius-sm: 0.25rem;
+  --cx-radius-md: 0.375rem;
+  --cx-radius-lg: 0.5rem;
+  --cx-radius-xl: 0.5rem;
+  --cx-radius-2xl: 0.625rem;
+  --cx-radius-3xl: 0.75rem;
 }
 
 /* --------------------------------------------------------------------------
@@ -176,6 +179,23 @@
   --cx-shadow-card-hover: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 20px 44px -14px rgb(0 0 0 / 0.85);
   --cx-shadow-pop: 0 24px 60px -12px rgb(0 0 0 / 0.8);
   --cx-shadow-primary: 0 8px 24px -8px rgb(var(--cx-accent-rgb) / 0.5);
+}
+
+/* --------------------------------------------------------------------------
+   3b. TRADE PAGE — FLAT CORNERS
+   The trading view is a dense data grid, so its panels are square-cornered.
+   Scoping this to one class keeps every rounded-* utility working normally
+   everywhere else while letting the trade subtree override it.
+
+   Specificity note: a bare `.flat-corners *` loses to `.rounded-2xl`
+   (0,1,0 vs 0,1,0 with later source order deciding). Doubling the class
+   raises it to 0,2,0 so the override always wins.
+   -------------------------------------------------------------------------- */
+.flat-corners,
+.flat-corners *,
+.flat-corners *::before,
+.flat-corners *::after {
+  border-radius: 0 !important;
 }
 
 /* --------------------------------------------------------------------------

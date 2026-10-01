@@ -711,7 +711,7 @@ useEffect(() => {
                   const isUp       = pctChange !== null && parseFloat(pctChange) >= 0;
 
                   return (
-                    <div key={pair} className={`w-full border shadow-xl ${darkMode ? 'bg-black/95 border-white/10 shadow-black/30' : 'bg-surface border-border shadow-card'}`} style={{
+                    <div key={pair} className={`w-full border shadow-xl ${darkMode ? 'bg-surface-raised border-border shadow-black/30' : 'bg-surface border-border shadow-card'}`} style={{
                       borderRadius: 10,
                       padding: "18px 18px 14px",
                       position: "relative",

@@ -61,6 +61,18 @@ input[type="range"]:focus-visible {
   outline-offset: 2px;
 }
 
+/* Borderless fields (the home hero converter). The global rule above paints
+   an accent border plus a 3px ring on focus, which is what produced the blue
+   outline around these inputs. They are designed to stay borderless, so the
+   ring is dropped and focus is conveyed by the background shift alone.
+   `.field-plain:focus-visible` is 0,2,0 and beats `input:focus-visible`. */
+.field-plain:focus,
+.field-plain:focus-visible {
+  outline: none;
+  border-color: transparent;
+  box-shadow: none;
+}
+
 /* --------------------------------------------------------------------------
    Native select dropdown list — the OS-rendered popup must match the theme,
    otherwise Windows/Chrome paints it grey on top of our dark UI.
