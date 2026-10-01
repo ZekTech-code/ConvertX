@@ -3,6 +3,7 @@ import { History, ArrowUpRight, ArrowDownRight, Download, Search } from "lucide-
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { getCoinIcon } from "../../utils/coinIcons";
+import { ACCENT, accentAlpha, BORDER, NEGATIVE, pick, POSITIVE, SURFACE_MUTED, TEXT, TEXT_MUTED, TEXT_SECONDARY } from "../../styles/colors";
 
 export default function TradeHistory({ trades, darkMode }) {
   const [filter, setFilter] = useState("all");
@@ -207,13 +208,13 @@ export default function TradeHistory({ trades, darkMode }) {
     <div
       className="rounded-2xl p-4 flex h-full w-full flex-col gap-3"
       style={{
-        background: darkMode ? "rgba(255,255,255,0.02)" : "rgba(15,23,42,0.02)",
+        background: pick(SURFACE_MUTED, darkMode),
         border: darkMode ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(148,163,184,0.12)",
       }}
     >
       <div className="flex items-center justify-between mb-1">
         <div className="flex items-center gap-2">
-          <History size={18} className="text-[#E88F2B]" />
+          <History size={18} className="text-accent" />
           <span className="text-lg font-black uppercase tracking-wider" style={tc("#94a3b8", "#475569")}>
             Trade History
           </span>
@@ -223,9 +224,9 @@ export default function TradeHistory({ trades, darkMode }) {
             onClick={exportPDF}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[12px] font-bold transition-all cursor-pointer"
             style={{
-              background: darkMode ? "rgba(255,255,255,0.04)" : "rgba(15,23,42,0.04)",
+              background: pick(SURFACE_MUTED, darkMode),
               border: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(148,163,184,0.1)",
-              color: "#E88F2B",
+              color: pick(ACCENT, darkMode),
             }}
           >
             <Download size={10} />
@@ -236,18 +237,18 @@ export default function TradeHistory({ trades, darkMode }) {
 
       <div className="grid grid-cols-5 gap-2">
         {[
-          { label: "Closed", value: stats.sells, color: darkMode ? "#94a3b8" : "#475569" },
-          { label: "Wins", value: stats.wins, color: "#22c55e" },
-          { label: "Losses", value: stats.losses, color: "#ef4444" },
-          { label: "Win Rate", value: `${stats.winRate.toFixed(0)}%`, color: stats.winRate >= 50 ? "#22c55e" : "#ef4444" },
-          { label: "Total P&L", value: `${stats.totalPnl >= 0 ? "+" : ""}$${stats.totalPnl.toFixed(0)}`, color: stats.totalPnl >= 0 ? "#22c55e" : "#ef4444" },
+          { label: "Closed", value: stats.sells, color: pick(TEXT_MUTED, darkMode) },
+          { label: "Wins", value: stats.wins, color: pick(POSITIVE, darkMode) },
+          { label: "Losses", value: stats.losses, color: pick(NEGATIVE, darkMode) },
+          { label: "Win Rate", value: `${stats.winRate.toFixed(0)}%`, color: stats.winRate >= 50 ? pick(POSITIVE, darkMode) : pick(NEGATIVE, darkMode) },
+          { label: "Total P&L", value: `${stats.totalPnl >= 0 ? "+" : ""}$${stats.totalPnl.toFixed(0)}`, color: stats.totalPnl >= 0 ? pick(POSITIVE, darkMode) : pick(NEGATIVE, darkMode) },
         ].map((s) => (
           <div
             key={s.label}
             className="rounded-lg p-3 text-center"
             style={{
-              background: darkMode ? "rgba(255,255,255,0.02)" : "rgba(15,23,42,0.02)",
-              border: darkMode ? "1px solid rgba(255,255,255,0.04)" : "1px solid rgba(148,163,184,0.08)",
+              background: pick(SURFACE_MUTED, darkMode),
+              border: "1px solid " + pick(BORDER, darkMode),
             }}
           >
             <span className="text-[12px] font-bold block" style={tc("#64748b", "#475569")}>{s.label}</span>
@@ -268,9 +269,9 @@ export default function TradeHistory({ trades, darkMode }) {
             onClick={() => setFilter(f)}
             className="flex-1 py-2 rounded-lg text-[14px] font-bold uppercase tracking-wider transition-all cursor-pointer"
             style={{
-              background: filter === f ? "rgba(232,143,43,0.12)" : "transparent",
-              border: filter === f ? "1px solid rgba(232,143,43,0.25)" : darkMode ? "1px solid rgba(255,255,255,0.03)" : "1px solid rgba(148,163,184,0.08)",
-              color: filter === f ? "#E88F2B" : darkMode ? "#64748b" : "#475569",
+              background: filter === f ? accentAlpha(darkMode, 0.14) : "transparent",
+              border: filter === f ? `1px solid ${accentAlpha(darkMode, 0.3)}` : "1px solid " + pick(BORDER, darkMode),
+              color: filter === f ? pick(ACCENT, darkMode) : pick(TEXT_SECONDARY, darkMode),
             }}
           >
             {f}
@@ -287,9 +288,9 @@ export default function TradeHistory({ trades, darkMode }) {
           placeholder="Search by asset name or symbol..."
           className="w-full pl-9 pr-3 py-2 rounded-lg text-[13px] font-medium outline-none transition-all"
           style={{
-            background: darkMode ? "rgba(255,255,255,0.03)" : "rgba(15,23,42,0.03)",
-            border: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(148,163,184,0.12)",
-            color: darkMode ? "#e2e8f0" : "#1e293b",
+            background: pick(SURFACE_MUTED, darkMode),
+            border: "1px solid " + pick(BORDER, darkMode),
+            color: pick(TEXT, darkMode),
           }}
         />
       </div>
@@ -313,7 +314,7 @@ export default function TradeHistory({ trades, darkMode }) {
               key={trade.id}
               className="flex items-center justify-between px-3 py-2.5 rounded-lg transition-all"
               style={{
-                background: darkMode ? "rgba(255,255,255,0.01)" : "rgba(15,23,42,0.01)",
+                background: pick(SURFACE_MUTED, darkMode),
                 border: darkMode ? "1px solid rgba(255,255,255,0.03)" : "1px solid rgba(148,163,184,0.06)",
               }}
             >
@@ -347,7 +348,7 @@ export default function TradeHistory({ trades, darkMode }) {
                 {trade.pnl != null && (
                   <div
                     className="text-[14px] font-bold"
-                    style={{ color: trade.pnl >= 0 ? "#22c55e" : "#ef4444" }}
+                    style={{ color: trade.pnl >= 0 ? pick(POSITIVE, darkMode) : pick(NEGATIVE, darkMode) }}
                   >
                     {trade.pnl >= 0 ? "+" : ""}${trade.pnl.toFixed(2)}
                   </div>

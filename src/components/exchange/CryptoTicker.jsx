@@ -37,10 +37,10 @@ function ChangeChip({ change }) {
     <span
       className={`inline-flex items-center gap-0.5 text-[10px] font-bold tabular-nums ${
         neutral
-          ? "text-slate-500 dark:text-slate-400"
+          ? "text-text-secondary"
           : positive
-          ? "text-emerald-600 dark:text-emerald-400"
-          : "text-rose-600 dark:text-rose-400"
+          ? "text-positive"
+          : "text-negative"
       }`}
     >
       {neutral ? (
@@ -94,17 +94,17 @@ export default function CryptoTicker() {
   const doubled = [...items, ...items];
 
   return (
-    <div className="w-full bg-slate-100 dark:bg-black/30 border-b border-slate-200 dark:border-white/5 backdrop-blur-sm overflow-hidden relative">
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-12 z-10 bg-[#ffffff] dark:bg-[#000000]" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-12 z-10 bg-[#ffffff] dark:bg-[#000000]" />
+    <div className="w-full bg-surface-muted border-b border-border backdrop-blur-sm overflow-hidden relative">
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-12 z-10 bg-[#ffffff]" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-12 z-10 bg-[#ffffff]" />
 
       {loading ? (
-        <div className="flex items-center gap-2 px-6 py-2 text-slate-500 dark:text-slate-400 text-xs">
-          <Loader size={12} className="animate-spin text-[#E88F2B]" />
+        <div className="flex items-center gap-2 px-6 py-2 text-text-secondary text-xs">
+          <Loader size={12} className="animate-spin text-accent" />
           <span className="font-semibold">Loading crypto prices...</span>
         </div>
       ) : error ? (
-        <div className="px-6 py-2 text-slate-650 dark:text-slate-500 text-xs font-semibold">
+        <div className="px-6 py-2 text-text-secondary text-xs font-semibold">
           Crypto ticker unavailable
         </div>
       ) : (
@@ -112,10 +112,10 @@ export default function CryptoTicker() {
           {doubled.map((coin, idx) => (
             <span
               key={`${coin.id}-${idx}`}
-              className="inline-flex items-center gap-2 px-5 text-xs font-sans border-r border-slate-300 dark:border-slate-800/60 last:border-r-0"
+              className="inline-flex items-center gap-2 px-5 text-xs font-sans border-r border-border-strong /60 last:border-r-0"
             >
-              <span className="font-black text-slate-800 dark:text-slate-100">{coin.symbol}</span>
-              <span className="font-mono text-slate-700 dark:text-slate-200 tabular-nums">
+              <span className="font-black text-text">{coin.symbol}</span>
+              <span className="font-mono text-text tabular-nums">
                 {formatPrice(coin.price)}
               </span>
               <ChangeChip change={coin.change} />

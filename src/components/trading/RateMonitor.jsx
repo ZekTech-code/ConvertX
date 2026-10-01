@@ -1,6 +1,7 @@
 ﻿import { useMemo, useState } from "react";
 import { BarChart2, TrendingUp, TrendingDown, Search } from "lucide-react";
 import { getCoinIcon } from "../../utils/coinIcons";
+import { ACCENT, accentAlpha, BORDER, NEGATIVE, pick, POSITIVE, SURFACE_MUTED, TEXT, TEXT_SECONDARY } from "../../styles/colors";
 
 export default function RateMonitor({ allPrices, darkMode, onSelectAsset, selectedAssetId }) {
   const [filter, setFilter] = useState("all");
@@ -45,12 +46,12 @@ export default function RateMonitor({ allPrices, darkMode, onSelectAsset, select
     <div
       className="rounded-2xl p-4 flex flex-col gap-3"
       style={{
-        background: darkMode ? "rgba(255,255,255,0.02)" : "rgba(15,23,42,0.02)",
+        background: pick(SURFACE_MUTED, darkMode),
         border: darkMode ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(148,163,184,0.12)",
       }}
     >
       <div className="flex items-center gap-2 mb-1">
-        <BarChart2 size={18} className="text-[#E88F2B]" />
+        <BarChart2 size={18} className="text-accent" />
         <span className="text-lg font-black uppercase tracking-wider" style={tc("#94a3b8", "#475569")}>
           Market Watch
         </span>
@@ -66,8 +67,8 @@ export default function RateMonitor({ allPrices, darkMode, onSelectAsset, select
             onClick={() => setFilter(tab)}
             className="px-3 py-1.5 rounded-md text-[13px] font-bold uppercase tracking-wider transition-all cursor-pointer"
             style={{
-              background: filter === tab ? "#E88F2B" : "transparent",
-              color: filter === tab ? "#000" : darkMode ? "#64748b" : "#475569",
+              background: filter === tab ? pick(ACCENT, darkMode) : "transparent",
+              color: filter === tab ? "#000" : pick(TEXT_SECONDARY, darkMode),
             }}
           >
             {tab}
@@ -84,9 +85,9 @@ export default function RateMonitor({ allPrices, darkMode, onSelectAsset, select
           placeholder="Search by asset name or symbol..."
           className="w-full pl-9 pr-3 py-2 rounded-lg text-[13px] font-medium outline-none transition-all"
           style={{
-            background: darkMode ? "rgba(255,255,255,0.03)" : "rgba(15,23,42,0.03)",
-            border: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(148,163,184,0.12)",
-            color: darkMode ? "#e2e8f0" : "#1e293b",
+            background: pick(SURFACE_MUTED, darkMode),
+            border: "1px solid " + pick(BORDER, darkMode),
+            color: pick(TEXT, darkMode),
           }}
         />
       </div>
@@ -107,10 +108,10 @@ export default function RateMonitor({ allPrices, darkMode, onSelectAsset, select
               className="w-full flex items-center justify-between px-3 py-3 rounded-xl transition-all cursor-pointer text-left"
               style={{
                 background: isSelected
-                  ? "rgba(232,143,43,0.12)"
-                  : darkMode ? "rgba(255,255,255,0.01)" : "rgba(15,23,42,0.01)",
+                  ? accentAlpha(darkMode, 0.14)
+                  : pick(SURFACE_MUTED, darkMode),
                 border: isSelected
-                  ? "1px solid rgba(232,143,43,0.3)"
+                  ? `1px solid ${accentAlpha(darkMode, 0.32)}`
                   : darkMode ? "1px solid rgba(255,255,255,0.03)" : "1px solid rgba(148,163,184,0.06)",
               }}
             >
@@ -130,13 +131,13 @@ export default function RateMonitor({ allPrices, darkMode, onSelectAsset, select
                   {item.price != null && item.price > 0 && Number.isFinite(item.change) ? (
                     <>
                       {item.change >= 0 ? (
-                        <TrendingUp size={9} className="text-green-400" />
+                        <TrendingUp size={9} className="text-positive" />
                       ) : (
-                        <TrendingDown size={9} className="text-red-400" />
+                        <TrendingDown size={9} className="text-negative" />
                       )}
                       <span
                         className="text-[14px] font-bold"
-                        style={{ color: item.change >= 0 ? "#22c55e" : "#ef4444" }}
+                        style={{ color: item.change >= 0 ? pick(POSITIVE, darkMode) : pick(NEGATIVE, darkMode) }}
                       >
                         {item.change >= 0 ? "+" : ""}{item.change.toFixed(2)}%
                       </span>

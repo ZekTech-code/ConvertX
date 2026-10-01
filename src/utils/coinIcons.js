@@ -1,3 +1,5 @@
+﻿import { VIVID } from "../styles/colors";
+
 export const COIN_ICONS = {
   bitcoin: "https://coin-images.coingecko.com/coins/images/1/small/bitcoin.png?1696501400",
   ethereum: "https://coin-images.coingecko.com/coins/images/279/small/ethereum.png?1696501628",
@@ -73,8 +75,8 @@ export const COIN_ICONS = {
 };
 
 const FALLBACK_COLORS = [
-  "#E88F2B", "#22c55e", "#3b82f6", "#ef4444", "#a855f7",
-  "#14b8a6", "#f59e0b", "#ec4899", "#6366f1", "#06b6d4",
+  VIVID[600], "#22c55e", VIVID[400], "#ef4444", "#a855f7",
+  "#14b8a6", VIVID[700], "#ec4899", "#6366f1", "#06b6d4",
 ];
 
 function getColor(str) {

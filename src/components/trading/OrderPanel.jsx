@@ -1,5 +1,6 @@
 ﻿import { useState, useMemo } from 'react';
 import { ArrowUpRight, TrendingDown, Zap, AlertTriangle } from 'lucide-react';
+import { ACCENT, accentAlpha, pick } from "../../styles/colors";
 
 const ORDER_TYPES = ['market', 'limit', 'stop', 'stop_limit', 'take_profit', 'stop_loss'];
 
@@ -103,7 +104,7 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
       }}
     >
       <div className="flex items-center gap-2 mb-1">
-        <Zap size={18} className="text-[#E88F2B]" />
+        <Zap size={18} className="text-accent" />
         <span className="text-lg font-black uppercase tracking-wider" style={tc('#94a3b8', '#475569')}>Place Order</span>
       </div>
 
@@ -131,9 +132,9 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
           <button key={ot} onClick={() => setOrderType(ot)}
             className="px-2 py-1.5 rounded-lg text-[9px] font-bold uppercase transition-all cursor-pointer"
             style={{
-              background: orderType === ot ? 'rgba(232,143,43,0.12)' : 'transparent',
-              border: orderType === ot ? '1px solid rgba(232,143,43,0.25)' : darkMode ? '1px solid rgba(255,255,255,0.03)' : '1px solid rgba(148,163,184,0.08)',
-              color: orderType === ot ? '#E88F2B' : tc('#64748b', '#475569').color,
+              background: orderType === ot ? accentAlpha(darkMode, 0.14) : 'transparent',
+              border: orderType === ot ? `1px solid ${accentAlpha(darkMode, 0.3)}` : darkMode ? '1px solid rgba(255,255,255,0.03)' : '1px solid rgba(148,163,184,0.08)',
+              color: orderType === ot ? pick(ACCENT, darkMode) : tc('#64748b', '#475569').color,
             }}
           >{ot.replace('_', ' ')}</button>
         ))}
@@ -154,7 +155,7 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
           <span className="text-[10px]" style={tc('#64748b', '#475569')}>Bal: ${balance.toFixed(2)}</span>
           {[25, 50, 75, 100].map((pct) => (
             <button key={pct} onClick={() => setAmount(((balance * pct) / 100).toFixed(2))}
-              className="text-[10px] font-bold text-[#E88F2B] hover:text-[#f0a04b] cursor-pointer"
+              className="text-[10px] font-bold text-accent hover:text-accent-hover cursor-pointer"
             >{pct}%</button>
           ))}
         </div>
@@ -223,7 +224,7 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
         </label>
         <input id="order-leverage" name="order-leverage" type="range" value={leverage} onChange={(e) => setLeverage(e.target.value)}
           min="1" max="125" step="1"
-          className="w-full accent-[#E88F2B]"
+          className="w-full accent-accent"
         />
         <div className="flex justify-between text-[9px]" style={tc('#64748b', '#475569')}>
           <span>1x</span><span>25x</span><span>50x</span><span>75x</span><span>100x</span><span>125x</span>
@@ -248,18 +249,18 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
         </div>
         <div className="flex justify-between text-[11px]">
           <span style={tc('#64748b', '#475569')}>Fee (0.1%)</span>
-          <span className="font-mono font-bold text-[#E88F2B]">${fee.toFixed(4)}</span>
+          <span className="font-mono font-bold text-accent">${fee.toFixed(4)}</span>
         </div>
         {parsed.lev > 1 && (
           <>
             <div className="flex justify-between text-[11px]">
               <span style={tc('#64748b', '#475569')}>Margin Required</span>
-              <span className="font-mono font-bold" style={tc('#f59e0b', '#d97706')}>${marginRequired.toFixed(2)}</span>
+              <span className="font-mono font-bold" style={tc('#fbbf24', '#b45309')}>${marginRequired.toFixed(2)}</span>
             </div>
             {liquidationPrice && (
               <div className="flex justify-between text-[11px]">
-                <span className="text-red-400">Liquidation Price</span>
-                <span className="font-mono font-bold text-red-400">${formatPrice(liquidationPrice)}</span>
+                <span className="text-negative">Liquidation Price</span>
+                <span className="font-mono font-bold text-negative">${formatPrice(liquidationPrice)}</span>
               </div>
             )}
           </>
@@ -275,9 +276,9 @@ export default function OrderPanel({ asset, currentPrice, darkMode, balance, onE
       </div>
 
       {error && (
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20">
-          <AlertTriangle size={12} className="text-red-400 shrink-0" />
-          <span className="text-[11px] text-red-400">{error}</span>
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-danger-soft border border-danger-border">
+          <AlertTriangle size={12} className="text-negative shrink-0" />
+          <span className="text-[11px] text-negative">{error}</span>
         </div>
       )}
 

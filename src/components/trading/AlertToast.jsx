@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { CheckCircle, X, TrendingUp, TrendingDown } from "lucide-react";
 import { getCoinIcon } from "../../utils/coinIcons";
+import { POSITIVE, SURFACE, SURFACE_MUTED, SURFACE_SUNKEN, TEXT, TEXT_MUTED, pick } from "../../styles/colors";
 
 export default function AlertToast({ alert, onDismiss, darkMode }) {
   const [progress, setProgress] = useState(100);
@@ -55,7 +56,7 @@ export default function AlertToast({ alert, onDismiss, darkMode }) {
       <div
         className="rounded-2xl overflow-hidden pointer-events-auto"
         style={{
-          background: darkMode ? "#000000" : "#ffffff",
+          background: pick(SURFACE, darkMode),
           border: "1px solid rgba(34,197,94,0.25)",
           boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(34,197,94,0.1)",
           backdropFilter: "blur(20px)",
@@ -69,7 +70,7 @@ export default function AlertToast({ alert, onDismiss, darkMode }) {
               border: "1px solid rgba(34,197,94,0.2)",
             }}
           >
-            <CheckCircle size={24} className="text-green-400" />
+            <CheckCircle size={24} className="text-positive" />
           </div>
 
           <div className="flex-1 min-w-0">
@@ -81,7 +82,7 @@ export default function AlertToast({ alert, onDismiss, darkMode }) {
                 height={20}
                 className="rounded-full shrink-0"
               />
-              <span className="text-[15px] font-black" style={{ color: darkMode ? "#f1f5f9" : "#0f172a" }}>
+              <span className="text-[15px] font-black" style={{ color: TEXT[darkMode] }}>
                 {alert.assetSymbol}
               </span>
               <span className="text-[12px] font-bold px-1.5 py-0.5 rounded-md bg-green-500/15 text-green-400">
@@ -90,11 +91,11 @@ export default function AlertToast({ alert, onDismiss, darkMode }) {
             </div>
             <div className="flex items-center gap-1.5 mt-1">
               {alert.condition === "above" ? (
-                <TrendingUp size={13} className="text-green-400" />
+                <TrendingUp size={13} className="text-positive" />
               ) : (
-                <TrendingDown size={13} className="text-red-400" />
+                <TrendingDown size={13} className="text-negative" />
               )}
-              <span className="text-[14px] font-bold" style={{ color: darkMode ? "#94a3b8" : "#475569" }}>
+              <span className="text-[14px] font-bold" style={{ color: TEXT_MUTED[darkMode] }}>
                 Price hit ${formatPrice(alert.targetPrice)}
               </span>
             </div>
@@ -107,20 +108,20 @@ export default function AlertToast({ alert, onDismiss, darkMode }) {
             }}
             className="p-2 rounded-xl transition-all cursor-pointer shrink-0"
             style={{
-              background: darkMode ? "rgba(255,255,255,0.06)" : "rgba(15,23,42,0.06)",
+              background: pick(SURFACE_MUTED, darkMode),
               border: darkMode ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(148,163,184,0.15)",
             }}
           >
-            <X size={16} style={{ color: darkMode ? "#94a3b8" : "#475569" }} />
+            <X size={16} style={{ color: TEXT_MUTED[darkMode] }} />
           </button>
         </div>
 
-        <div className="h-0.75 w-full" style={{ background: darkMode ? "rgba(255,255,255,0.04)" : "rgba(15,23,42,0.04)" }}>
+        <div className="h-0.75 w-full" style={{ background: pick(SURFACE_SUNKEN, darkMode) }}>
           <div
             className="h-full rounded-full transition-all duration-100"
             style={{
               width: `${progress}%`,
-              background: "#22c55e",
+              background: pick(POSITIVE, darkMode),
             }}
           />
         </div>

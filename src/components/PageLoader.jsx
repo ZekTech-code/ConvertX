@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import ConvertXIcon from "./exchange/ConvertXIcon";
 
 const dotVariants = {
@@ -17,9 +17,9 @@ const dotVariants = {
 
 export default function PageLoader({ title = "Loading", subtitle = "Preparing your experience..." }) {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white dark:bg-[#000000] transition-colors duration-300 relative overflow-hidden">
-      <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-[#E88F2B]/8 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-[#E88F2B]/8 rounded-full blur-[120px] pointer-events-none" />
+    <div className="min-h-screen flex flex-col items-center justify-center bg-canvas text-text transition-colors duration-300 relative overflow-hidden">
+      <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-accent/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-accent/10 rounded-full blur-[120px] pointer-events-none" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -31,17 +31,17 @@ export default function PageLoader({ title = "Loading", subtitle = "Preparing yo
           <motion.div
             animate={{ scale: [1, 1.08, 1] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="w-16 h-16 rounded-2xl bg-[#E88F2B] flex items-center justify-center shadow-lg shadow-[#E88F2B]/30"
+            className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center shadow-primary"
           >
-            <ConvertXIcon size={32} stroke="#000" />
+            <ConvertXIcon size={32} stroke="#ffffff" />
           </motion.div>
         </div>
 
         <div className="text-center">
-          <h2 className="text-lg font-black text-gray-900 dark:text-white tracking-wide">
+          <h2 className="text-lg font-black text-text tracking-wide">
             {title}
           </h2>
-          <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+          <p className="text-sm text-text-muted mt-1">
             {subtitle}
           </p>
         </div>
@@ -55,7 +55,7 @@ export default function PageLoader({ title = "Loading", subtitle = "Preparing yo
               initial="initial"
               animate="animate"
               className="w-2.5 h-2.5 rounded-full"
-              style={{ background: "#E88F2B" }}
+              style={{ background: "var(--cx-accent)" }}
             />
           ))}
         </div>

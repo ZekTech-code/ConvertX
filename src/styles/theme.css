@@ -1,0 +1,263 @@
+/* ==========================================================================
+   ConvertX — Central Design System
+   Accent: Vivid Blue (fintech / premium / trustworthy)
+   --------------------------------------------------------------------------
+   This file is the single source of truth for the visual language.
+   Everything else in the app consumes these tokens through Tailwind
+   utilities (bg-surface, text-text, border-border, text-accent, ...),
+   so the accent is never hardcoded in a component.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. RAW VIVID BLUE RAMP (immutable primitives)
+   -------------------------------------------------------------------------- */
+:root {
+  --cx-vivid-50: #eef4ff;
+  --cx-vivid-100: #dbe7ff;
+  --cx-vivid-200: #bed4ff;
+  --cx-vivid-300: #92b8ff;
+  --cx-vivid-400: #5f93fb;
+  --cx-vivid-500: #3370f5;
+  --cx-vivid-600: #1b53e6;
+  --cx-vivid-700: #1442c2;
+  --cx-vivid-800: #16389b;
+  --cx-vivid-900: #173079;
+  --cx-vivid-950: #0d1c48;
+
+  --cx-success-50: #ecfdf5;
+  --cx-success-100: #d1fae5;
+  --cx-success-500: #12a06a;
+  --cx-success-600: #0f8f5e;
+  --cx-success-700: #0b7250;
+
+  --cx-warning-50: #fffbeb;
+  --cx-warning-100: #fef3c7;
+  --cx-warning-500: #f0a712;
+  --cx-warning-600: #b45309;
+  --cx-warning-700: #92400e;
+
+  --cx-danger-50: #fef2f2;
+  --cx-danger-100: #fee2e2;
+  --cx-danger-500: #e12d4c;
+  --cx-danger-600: #cf1b3c;
+  --cx-danger-700: #a51232;
+
+  /* Shape language — shared radii */
+  --cx-radius-sm: 0.5rem;
+  --cx-radius-md: 0.75rem;
+  --cx-radius-lg: 1rem;
+  --cx-radius-xl: 1.25rem;
+  --cx-radius-2xl: 1.5rem;
+  --cx-radius-3xl: 1.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   2. SEMANTIC TOKENS — LIGHT MODE (default)
+   -------------------------------------------------------------------------- */
+:root {
+  /* Accent — vivid blue */
+  --cx-accent: var(--cx-vivid-600);
+  --cx-accent-hover: var(--cx-vivid-700);
+  --cx-accent-active: var(--cx-vivid-800);
+  --cx-accent-rgb: 27 83 230;
+
+  /* Primary action fill (buttons) */
+  --cx-primary: var(--cx-vivid-600);
+  --cx-primary-hover: var(--cx-vivid-700);
+  --cx-primary-active: var(--cx-vivid-800);
+  --cx-on-primary: #ffffff;
+
+  /* Tinted surfaces derived from the accent */
+  --cx-accent-soft: rgb(var(--cx-accent-rgb) / 0.08);
+  --cx-accent-soft-strong: rgb(var(--cx-accent-rgb) / 0.14);
+  --cx-accent-border: rgb(var(--cx-accent-rgb) / 0.22);
+  --cx-accent-ring: rgb(var(--cx-accent-rgb) / 0.35);
+  --cx-accent-glow: rgb(var(--cx-accent-rgb) / 0.18);
+
+  /* Neutrals */
+  --cx-canvas: #f3f6fb;
+  --cx-canvas-alt: #eaf0f9;
+  --cx-surface: #ffffff;
+  --cx-surface-raised: #ffffff;
+  --cx-surface-muted: #f6f9fd;
+  --cx-surface-sunken: #eaeff8;
+  --cx-border: #e2e8f2;
+  --cx-border-strong: #cbd6e8;
+
+  /* Typography */
+  --cx-text: #0d1626;
+  --cx-text-secondary: #46536a;
+  --cx-text-muted: #78879e;
+  --cx-text-inverse: #ffffff;
+
+  /* Status */
+  --cx-success: var(--cx-success-600);
+  --cx-success-soft: var(--cx-success-50);
+  --cx-success-border: #a7e8c9;
+  --cx-warning: var(--cx-warning-600);
+  --cx-warning-soft: var(--cx-warning-50);
+  --cx-warning-border: #f6dfa4;
+  --cx-danger: var(--cx-danger-600);
+  --cx-danger-soft: var(--cx-danger-50);
+  --cx-danger-border: #f6c2cb;
+
+  /* Financial movement (semantic — never the brand accent) */
+  --cx-positive: #0f8f5e;
+  --cx-negative: var(--cx-danger-600);
+
+  /* Interaction */
+  --cx-focus-ring: rgb(var(--cx-accent-rgb) / 0.4);
+
+  /* Elevation */
+  --cx-shadow-card: 0 1px 2px rgb(13 22 38 / 0.04), 0 8px 24px -8px rgb(13 22 38 / 0.1);
+  --cx-shadow-card-hover: 0 1px 2px rgb(13 22 38 / 0.05), 0 16px 36px -12px rgb(13 22 38 / 0.16);
+  --cx-shadow-pop: 0 12px 40px -8px rgb(13 22 38 / 0.18);
+  --cx-shadow-primary: 0 8px 20px -6px rgb(var(--cx-accent-rgb) / 0.45);
+}
+
+/* --------------------------------------------------------------------------
+   3. SEMANTIC TOKENS — DARK MODE
+   Blue intensity is raised (not inverted) so it stays vivid on dark
+   surfaces while keeping text contrast accessible.
+   -------------------------------------------------------------------------- */
+.dark {
+  --cx-accent: var(--cx-vivid-400);
+  --cx-accent-hover: var(--cx-vivid-300);
+  --cx-accent-active: var(--cx-vivid-500);
+  --cx-accent-rgb: 95 147 251;
+
+  --cx-primary: #2e6bf2;
+  --cx-primary-hover: #4b85f8;
+  --cx-primary-active: #2257d6;
+  --cx-on-primary: #ffffff;
+
+  --cx-accent-soft: rgb(var(--cx-accent-rgb) / 0.14);
+  --cx-accent-soft-strong: rgb(var(--cx-accent-rgb) / 0.22);
+  --cx-accent-border: rgb(var(--cx-accent-rgb) / 0.32);
+  --cx-accent-ring: rgb(var(--cx-accent-rgb) / 0.45);
+  --cx-accent-glow: rgb(var(--cx-accent-rgb) / 0.22);
+
+  --cx-canvas: #05070e;
+  --cx-canvas-alt: #090d18;
+  --cx-surface: #0d1322;
+  --cx-surface-raised: #121a2c;
+  --cx-surface-muted: #101828;
+  --cx-surface-sunken: #080c16;
+  --cx-border: #1e2740;
+  --cx-border-strong: #2c3a5b;
+
+  --cx-text: #f0f4fb;
+  --cx-text-secondary: #a7b4cb;
+  --cx-text-muted: #71809a;
+  --cx-text-inverse: #05070e;
+
+  --cx-success: #34d399;
+  --cx-success-soft: rgb(52 211 153 / 0.12);
+  --cx-success-border: rgb(52 211 153 / 0.28);
+  --cx-warning: #fbbf24;
+  --cx-warning-soft: rgb(251 191 36 / 0.12);
+  --cx-warning-border: rgb(251 191 36 / 0.28);
+  --cx-danger: #fb7185;
+  --cx-danger-soft: rgb(251 113 133 / 0.12);
+  --cx-danger-border: rgb(251 113 133 / 0.28);
+
+  --cx-positive: #2dd4a7;
+  --cx-negative: #fb7185;
+
+  --cx-focus-ring: rgb(var(--cx-accent-rgb) / 0.55);
+
+  --cx-shadow-card: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 12px 32px -12px rgb(0 0 0 / 0.7);
+  --cx-shadow-card-hover: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 20px 44px -14px rgb(0 0 0 / 0.85);
+  --cx-shadow-pop: 0 24px 60px -12px rgb(0 0 0 / 0.8);
+  --cx-shadow-primary: 0 8px 24px -8px rgb(var(--cx-accent-rgb) / 0.5);
+}
+
+/* --------------------------------------------------------------------------
+   4. TAILWIND TOKEN BRIDGE
+   `inline` keeps var() references live so light/dark switching is automatic.
+   -------------------------------------------------------------------------- */
+@theme inline {
+  /* Accent */
+  --color-accent: var(--cx-accent);
+  --color-accent-hover: var(--cx-accent-hover);
+  --color-accent-active: var(--cx-accent-active);
+  --color-accent-soft: var(--cx-accent-soft);
+  --color-accent-soft-strong: var(--cx-accent-soft-strong);
+  --color-accent-border: var(--cx-accent-border);
+  --color-accent-glow: var(--cx-accent-glow);
+  --color-on-accent: var(--cx-on-primary);
+
+  /* Primary action */
+  --color-primary: var(--cx-primary);
+  --color-primary-hover: var(--cx-primary-hover);
+  --color-primary-active: var(--cx-primary-active);
+  --color-on-primary: var(--cx-on-primary);
+
+  /* Surfaces */
+  --color-canvas: var(--cx-canvas);
+  --color-canvas-alt: var(--cx-canvas-alt);
+  --color-surface: var(--cx-surface);
+  --color-surface-raised: var(--cx-surface-raised);
+  --color-surface-muted: var(--cx-surface-muted);
+  --color-surface-sunken: var(--cx-surface-sunken);
+
+  /* Borders */
+  --color-border: var(--cx-border);
+  --color-border-strong: var(--cx-border-strong);
+
+  /* Typography */
+  --color-text: var(--cx-text);
+  --color-text-secondary: var(--cx-text-secondary);
+  --color-text-muted: var(--cx-text-muted);
+  --color-text-inverse: var(--cx-text-inverse);
+
+  /* Status */
+  --color-success: var(--cx-success);
+  --color-success-soft: var(--cx-success-soft);
+  --color-success-border: var(--cx-success-border);
+  --color-warning: var(--cx-warning);
+  --color-warning-soft: var(--cx-warning-soft);
+  --color-warning-border: var(--cx-warning-border);
+  --color-danger: var(--cx-danger);
+  --color-danger-soft: var(--cx-danger-soft);
+  --color-danger-border: var(--cx-danger-border);
+
+  /* Financial movement */
+  --color-positive: var(--cx-positive);
+  --color-negative: var(--cx-negative);
+
+  /* Focus */
+  --color-focus-ring: var(--cx-focus-ring);
+
+  /* Raw vivid blue ramp, exposed as utilities (charts, gradients, hovers) */
+  --color-vivid-50: var(--cx-vivid-50);
+  --color-vivid-100: var(--cx-vivid-100);
+  --color-vivid-200: var(--cx-vivid-200);
+  --color-vivid-300: var(--cx-vivid-300);
+  --color-vivid-400: var(--cx-vivid-400);
+  --color-vivid-500: var(--cx-vivid-500);
+  --color-vivid-600: var(--cx-vivid-600);
+  --color-vivid-700: var(--cx-vivid-700);
+  --color-vivid-800: var(--cx-vivid-800);
+  --color-vivid-900: var(--cx-vivid-900);
+  --color-vivid-950: var(--cx-vivid-950);
+
+  /* Radii */
+  --radius-xs: var(--cx-radius-sm);
+  --radius-sm: var(--cx-radius-sm);
+  --radius-md: var(--cx-radius-md);
+  --radius-lg: var(--cx-radius-lg);
+  --radius-xl: var(--cx-radius-xl);
+  --radius-2xl: var(--cx-radius-2xl);
+  --radius-3xl: var(--cx-radius-3xl);
+
+  /* Elevation */
+  --shadow-card: var(--cx-shadow-card);
+  --shadow-card-hover: var(--cx-shadow-card-hover);
+  --shadow-pop: var(--cx-shadow-pop);
+  --shadow-primary: var(--cx-shadow-primary);
+}
+
+/* Everything above is consumed through Tailwind utilities
+   (bg-surface, border-border, text-text, bg-primary, text-accent, ...),
+   so the accent is defined once and applied everywhere automatically. */

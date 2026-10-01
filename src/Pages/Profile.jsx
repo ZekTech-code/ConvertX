@@ -366,18 +366,18 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#000000] text-slate-800 dark:text-slate-100 transition-colors duration-300 flex flex-col relative overflow-hidden">
+    <div className="min-h-screen bg-canvas text-text transition-colors duration-300 flex flex-col relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-125 h-125 bg-[#E88F2B]/10 dark:bg-[#E88F2B]/5 rounded-full blur-[100px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-125 h-125 bg-[#E88F2B]/10 dark:bg-[#E88F2B]/5 rounded-full blur-[100px]" />
+        <div className="absolute top-[-10%] left-[-10%] w-125 h-125 bg-accent/10 rounded-full blur-[100px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-125 h-125 bg-accent/10 rounded-full blur-[100px]" />
       </div>
 
       <Navbar />
 
       <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 md:pb-8 flex flex-col gap-8">
         
-        <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-100 dark:shadow-none backdrop-blur-xl flex flex-col sm:flex-row items-center gap-6">
-          <div className={`w-24 h-24 rounded-full border flex items-center justify-center overflow-hidden shrink-0 bg-slate-50 dark:bg-black/25 ${avatar.startsWith("data:image/") ? "border-slate-200 dark:border-white/10" : "border-slate-200/30"}`}>
+        <div className="bg-surface border border-border rounded-3xl p-6 sm:p-8 shadow-card flex flex-col sm:flex-row items-center gap-6">
+          <div className={`w-24 h-24 rounded-full border flex items-center justify-center overflow-hidden shrink-0 bg-surface-muted ${avatar.startsWith("data:image/") ? "border-border" : "border-border"}`}>
             {avatar.startsWith("data:image/") ? (
               <img src={avatar} alt="Profile" className="w-full h-full object-cover" />
             ) : (
@@ -389,45 +389,45 @@ export default function Profile() {
             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
               <h2 className="text-2xl font-black font-sans">{getUserDisplayName({ ...user, name })}</h2>
               <div className="flex items-center gap-1.5 justify-center sm:justify-start">
-                <span className="bg-[#E88F2B]/10 text-[#E88F2B] px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border border-[#E88F2B]/20">
+                <span className="bg-accent/10 text-accent px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border border-accent/20">
                   {avatar.startsWith("data:image/") ? "Member" : AVATARS[avatar]?.label || "Member"}
                 </span>
                 {is2FAEnabled ? (
-                  <span className="bg-emerald-500/10 text-emerald-500 px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border border-emerald-500/20 flex items-center gap-1">
-                    <Shield className="w-3 h-3 text-emerald-400 animate-pulse" /> 2FA Active
+                  <span className="bg-success-soft text-success px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border border-success-border flex items-center gap-1">
+                    <Shield className="w-3 h-3 text-positive animate-pulse" /> 2FA Active
                   </span>
                 ) : (
-                  <span className="bg-rose-500/10 text-rose-500 px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border border-rose-500/20 flex items-center gap-1">
-                    <ShieldAlert className="w-3 h-3 text-rose-400" /> Standard Security
+                  <span className="bg-danger-soft text-danger px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border border-danger-border flex items-center gap-1">
+                    <ShieldAlert className="w-3 h-3 text-negative" /> Standard Security
                   </span>
                 )}
               </div>
             </div>
-            <p className="text-slate-400 text-sm font-medium flex items-center justify-center sm:justify-start gap-1.5 font-sans">
-              <Mail className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+            <p className="text-text-muted text-sm font-medium flex items-center justify-center sm:justify-start gap-1.5 font-sans">
+              <Mail className="w-4 h-4 text-text-muted" />
               {user?.email}
             </p>
             {bio ? (
-              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xl italic mt-2 leading-relaxed">
+              <p className="text-xs text-text-secondary max-w-xl italic mt-2 leading-relaxed">
                 "{bio}"
               </p>
             ) : (
-              <p className="text-xs text-slate-400 dark:text-slate-600 mt-2 italic font-sans">No biography added yet.</p>
+              <p className="text-xs text-text-muted mt-2 italic font-sans">No biography added yet.</p>
             )}
           </div>
         </div>
 
         <div className="grid lg:grid-cols-4 gap-8 items-start">
           
-          <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-3xl p-4 shadow-xl shadow-slate-100 dark:shadow-none backdrop-blur-xl space-y-1.5">
-            <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-3.5 py-2 font-sans">Settings Sections</span>
+          <div className="bg-surface border border-border rounded-3xl p-4 shadow-card space-y-1.5">
+            <span className="block text-[10px] font-bold uppercase tracking-wider text-text-muted px-3.5 py-2 font-sans">Settings Sections</span>
             
             <button
               onClick={() => { setActiveTab("personal"); clearNotifications(); }}
               className={`w-full text-left px-4 py-3 rounded-2xl flex items-center gap-3 text-sm font-semibold transition cursor-pointer ${
                 activeTab === "personal"
-                  ? "bg-[#E88F2B] text-black shadow-lg shadow-[#E88F2B]/10"
-                  : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
+                  ? "bg-primary text-on-primary shadow-primary"
+                  : "text-text-secondary hover:bg-surface-muted dark:hover:bg-white/5"
               }`}
             >
               <User className="w-4 h-4 shrink-0" />
@@ -438,8 +438,8 @@ export default function Profile() {
               onClick={() => { setActiveTab("preferences"); clearNotifications(); }}
               className={`w-full text-left px-4 py-3 rounded-2xl flex items-center gap-3 text-sm font-semibold transition cursor-pointer ${
                 activeTab === "preferences"
-                  ? "bg-[#E88F2B] text-black shadow-lg shadow-[#E88F2B]/10"
-                  : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
+                  ? "bg-primary text-on-primary shadow-primary"
+                  : "text-text-secondary hover:bg-surface-muted dark:hover:bg-white/5"
               }`}
             >
               <Settings className="w-4 h-4 shrink-0" />
@@ -450,27 +450,27 @@ export default function Profile() {
               onClick={() => { setActiveTab("security"); clearNotifications(); }}
               className={`w-full text-left px-4 py-3 rounded-2xl flex items-center gap-3 text-sm font-semibold transition cursor-pointer ${
                 activeTab === "security"
-                  ? "bg-[#E88F2B] text-black shadow-lg shadow-[#E88F2B]/10"
-                  : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
+                  ? "bg-primary text-on-primary shadow-primary"
+                  : "text-text-secondary hover:bg-surface-muted dark:hover:bg-white/5"
               }`}
             >
               <Lock className="w-4 h-4 shrink-0" />
               <span>Account Security & 2FA</span>
             </button>
 
-            <div className="border-t border-slate-200/60 dark:border-white/5 my-2 pt-2" />
+            <div className="border-t border-border my-2 pt-2" />
 
             <button
               type="button"
               onClick={handleLogout}
-              className="w-full text-left px-4 py-3 rounded-2xl flex items-center gap-3 text-sm font-bold text-rose-500 hover:bg-rose-500/10 transition cursor-pointer border-none bg-transparent"
+              className="w-full text-left px-4 py-3 rounded-2xl flex items-center gap-3 text-sm font-bold text-negative hover:bg-danger-soft transition cursor-pointer border-none bg-transparent"
             >
               <LogOut className="w-4 h-4 shrink-0" />
               <span>Sign Out Session</span>
             </button>
           </div>
 
-          <div className="lg:col-span-3 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-100 dark:shadow-none backdrop-blur-xl min-h-100 flex flex-col justify-between">
+          <div className="lg:col-span-3 bg-surface border border-border rounded-3xl p-6 sm:p-8 shadow-card min-h-100 flex flex-col justify-between">
             
             <div>
               <AnimatePresence mode="wait">
@@ -479,7 +479,7 @@ export default function Profile() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 text-xs font-medium flex items-start gap-2.5"
+                    className="mb-6 p-4 rounded-xl bg-danger-soft border border-danger-border text-negative text-xs font-medium flex items-start gap-2.5"
                   >
                     <AlertCircle className="w-4.5 h-4.5 shrink-0 mt-0.5" />
                     <span>{error}</span>
@@ -491,7 +491,7 @@ export default function Profile() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-bold flex items-center gap-2"
+                    className="mb-6 p-4 rounded-xl bg-success-soft border border-success-border text-positive text-xs font-bold flex items-center gap-2"
                   >
                     <CheckCircle className="w-4.5 h-4.5 shrink-0" />
                     <span>{success}</span>
@@ -504,13 +504,13 @@ export default function Profile() {
                   <form onSubmit={handleSaveProfile} className="space-y-6">
                   <div>
                     <h3 className="text-lg font-bold">Personal Details</h3>
-                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Manage your identity, custom profile picture, and tagline.</p>
+                    <p className="text-xs text-text-muted mt-0.5">Manage your identity, custom profile picture, and tagline.</p>
                   </div>
 
                   <div className="space-y-3">
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Profile Picture</label>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-text-muted">Profile Picture</label>
                     <div className="flex items-center gap-5">
-                      <div className="relative group w-20 h-20 rounded-full overflow-hidden border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-black/25 flex items-center justify-center shrink-0 shadow-lg transition duration-300">
+                      <div className="relative group w-20 h-20 rounded-full overflow-hidden border border-border bg-surface-muted flex items-center justify-center shrink-0 shadow-lg transition duration-300">
                         {avatar.startsWith("data:image/") ? (
                           <img src={avatar} alt="Profile" className="w-full h-full object-cover" />
                         ) : (
@@ -527,24 +527,24 @@ export default function Profile() {
                           htmlFor="profile-picture-upload"
                           className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white text-[10px] font-bold transition duration-200 cursor-pointer"
                         >
-                          <Camera className="w-5 h-5 text-[#E88F2B] mb-0.5" />
+                          <Camera className="w-5 h-5 text-accent mb-0.5" />
                           <span>Change</span>
                         </label>
                       </div>
                       <div className="space-y-1">
                         <label
                           htmlFor="profile-picture-upload"
-                          className="text-xs font-bold text-[#E88F2B] hover:underline cursor-pointer flex items-center gap-1"
+                          className="text-xs font-bold text-accent hover:underline cursor-pointer flex items-center gap-1"
                         >
                           Upload Custom Image
                         </label>
-                        <p className="text-[9px] text-slate-400 dark:text-slate-500 font-medium">Supports PNG, JPG, or JPEG. Max size 2MB. Hover over picture to update.</p>
+                        <p className="text-[9px] text-text-muted font-medium">Supports PNG, JPG, or JPEG. Max size 2MB. Hover over picture to update.</p>
                       </div>
                     </div>
                   </div>
 
                   <div className="space-y-3 pt-2">
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Or Choose System Icon</label>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-text-muted">Or Choose System Icon</label>
                     <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
                       {Object.keys(AVATARS).map((key) => {
                         const av = AVATARS[key];
@@ -556,14 +556,14 @@ export default function Profile() {
                             onClick={() => setAvatar(key)}
                             className={`w-16 h-16 p-0 rounded-full border flex items-center justify-center transition duration-200 relative cursor-pointer overflow-hidden ${
                               isSelected
-                                ? "border-[#E88F2B] scale-105"
-                                : "border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/10"
+                                ? "border-accent scale-105"
+                                : "border-border hover:border-border-strong dark:hover:border-white/10"
                             }`}
                             title={av.label}
                           >
                             {av.svg ? av.svg("w-full h-full") : null}
                             {isSelected && (
-                              <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#E88F2B] text-black flex items-center justify-center text-[10px] z-10">
+                              <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-on-primary flex items-center justify-center text-[10px] z-10">
                                 <Check className="w-3 h-3 stroke-3" />
                               </span>
                             )}
@@ -575,9 +575,9 @@ export default function Profile() {
 
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <label htmlFor="profile-name" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 ml-1">Full Name</label>
+                      <label htmlFor="profile-name" className="block text-[10px] font-bold uppercase tracking-wider text-text-muted ml-1">Full Name</label>
                       <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-text-muted">
                           <User className="w-4 h-4" />
                         </div>
                         <input
@@ -589,16 +589,16 @@ export default function Profile() {
                             setName(e.target.value);
                             setErrors(prev => ({ ...prev, name: "" }));
                           }}
-                          className={`w-full pl-10 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-black/25 border ${
+                          className={`w-full pl-10 pr-4 py-3 rounded-xl bg-surface-muted border ${
                             errors.name
-                              ? "border-rose-500 focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
-                              : "border-slate-200 dark:border-white/10 focus:border-[#E88F2B] focus:ring-1 focus:ring-[#E88F2B]"
-                          } text-slate-800 dark:text-white text-sm outline-none transition font-semibold`}
+                              ? "border-danger focus:border-danger focus:ring-1 focus:ring-danger/30"
+                              : "border-border focus:border-accent focus:ring-1 focus:ring-accent"
+                          } text-text text-sm outline-none transition font-semibold`}
                           placeholder="e.g. John Doe"
                         />
                       </div>
                       {errors.name && (
-                        <p className="mt-1 text-[11px] text-rose-500 font-medium flex items-center gap-1 animate-fade-in">
+                        <p className="mt-1 text-[11px] text-negative font-medium flex items-center gap-1 animate-fade-in">
                           <AlertCircle className="w-3.5 h-3.5" />
                           {errors.name}
                         </p>
@@ -606,7 +606,7 @@ export default function Profile() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label htmlFor="profile-country" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 ml-1">Country</label>
+                      <label htmlFor="profile-country" className="block text-[10px] font-bold uppercase tracking-wider text-text-muted ml-1">Country</label>
                       <CountryDropdown
                         id="profile-country"
                         value={country}
@@ -614,7 +614,7 @@ export default function Profile() {
                         error={errors.country}
                       />
                       {errors.country && (
-                        <p className="mt-1 text-[11px] text-rose-500 font-medium flex items-center gap-1 animate-fade-in">
+                        <p className="mt-1 text-[11px] text-negative font-medium flex items-center gap-1 animate-fade-in">
                           <AlertCircle className="w-3.5 h-3.5" />
                           {errors.country}
                         </p>
@@ -623,7 +623,7 @@ export default function Profile() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label htmlFor="profile-phone" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 ml-1">Phone Number</label>
+                    <label htmlFor="profile-phone" className="block text-[10px] font-bold uppercase tracking-wider text-text-muted ml-1">Phone Number</label>
                     <div className="flex gap-2">
                       <DialCodeDropdown
                         id="profile-dial-code"
@@ -632,7 +632,7 @@ export default function Profile() {
                       />
 
                       <div className="relative flex-1">
-                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-text-muted">
                           <Phone className="w-4 h-4" />
                         </div>
                         <input
@@ -644,17 +644,17 @@ export default function Profile() {
                             setPhoneLocal(e.target.value);
                             setErrors(prev => ({ ...prev, phone: "" }));
                           }}
-                          className={`w-full pl-10 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-black/25 border ${
+                          className={`w-full pl-10 pr-4 py-3 rounded-xl bg-surface-muted border ${
                             errors.phone
-                              ? "border-rose-500 focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
-                              : "border-slate-200 dark:border-white/10 focus:border-[#E88F2B] focus:ring-1 focus:ring-[#E88F2B]"
-                          } text-slate-800 dark:text-white text-sm outline-none transition`}
+                              ? "border-danger focus:border-danger focus:ring-1 focus:ring-danger/30"
+                              : "border-border focus:border-accent focus:ring-1 focus:ring-accent"
+                          } text-text text-sm outline-none transition`}
                           placeholder="555 000 0000"
                         />
                       </div>
                     </div>
                     {errors.phone && (
-                      <p className="mt-1 text-[11px] text-rose-500 font-medium flex items-center gap-1 animate-fade-in">
+                      <p className="mt-1 text-[11px] text-negative font-medium flex items-center gap-1 animate-fade-in">
                         <AlertCircle className="w-3.5 h-3.5" />
                         {errors.phone}
                       </p>
@@ -662,9 +662,9 @@ export default function Profile() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label htmlFor="profile-bio" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 ml-1">Biography / Tagline</label>
+                    <label htmlFor="profile-bio" className="block text-[10px] font-bold uppercase tracking-wider text-text-muted ml-1">Biography / Tagline</label>
                     <div className="relative">
-                      <div className="absolute top-3.5 left-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                      <div className="absolute top-3.5 left-3.5 flex items-center pointer-events-none text-text-muted">
                         <BookOpen className="w-4 h-4" />
                       </div>
                       <textarea
@@ -673,7 +673,7 @@ export default function Profile() {
                         value={bio}
                         onChange={(e) => setBio(e.target.value)}
                         rows={3}
-                        className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-50 dark:bg-black/25 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white text-sm focus:border-[#E88F2B] focus:ring-1 focus:ring-[#E88F2B] outline-none transition"
+                        className="w-full pl-10 pr-4 py-3 rounded-xl bg-surface-muted border border-border text-text text-sm focus:border-accent focus:ring-1 focus:ring-accent outline-none transition"
                         placeholder="Tell us a bit about yourself or business..."
                       />
                     </div>
@@ -682,7 +682,7 @@ export default function Profile() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="bg-[#E88F2B] text-black font-bold px-6 py-3 rounded-xl flex items-center gap-2 hover:scale-105 active:scale-95 transition cursor-pointer disabled:opacity-50 font-sans"
+                    className="bg-primary text-on-primary font-bold px-6 py-3 rounded-xl flex items-center gap-2 hover:bg-primary-hover active:scale-[0.98] transition duration-200 cursor-pointer disabled:opacity-50 font-sans shadow-primary"
                   >
                     {loading ? (
                       <div className="w-4 h-4 border-2 border-black border-t-transparent animate-spin rounded-full" />
@@ -694,18 +694,18 @@ export default function Profile() {
                   </button>
                 </form>
 
-                <div className="mt-8 pt-6 border-t border-rose-500/15 space-y-4">
-                  <div className="rounded-2xl border border-rose-500/15 bg-rose-500/3 p-5 shadow-sm shadow-rose-950/5 dark:border-rose-500/20 dark:bg-rose-500/[0.07] lg:p-6">
+                <div className="mt-8 pt-6 border-t border-danger-border space-y-4">
+                  <div className="rounded-2xl border border-danger-border bg-danger-soft/60 p-5 shadow-sm lg:p-6">
                     <div className="flex flex-col gap-5 font-sans lg:flex-row lg:items-center lg:justify-between">
                       <div className="flex min-w-0 gap-4">
-                        <div className="hidden h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-rose-500/20 bg-rose-500/10 text-rose-500 sm:flex">
+                        <div className="hidden h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-danger-border bg-danger-soft text-danger sm:flex">
                           <AlertCircle className="h-5 w-5" />
                         </div>
                         <div className="min-w-0 max-w-3xl">
-                          <h4 className="text-sm font-black text-rose-500 flex items-center gap-2 tracking-tight">
-                            <AlertCircle className="h-4.5 w-4.5 text-rose-500 sm:hidden" /> Danger Zone - Reset Account Profile
+                          <h4 className="text-sm font-black text-negative flex items-center gap-2 tracking-tight">
+                            <AlertCircle className="h-4.5 w-4.5 text-negative sm:hidden" /> Danger Zone - Reset Account Profile
                           </h4>
-                          <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
+                          <p className="mt-2 text-sm leading-6 text-text-secondary">
                             Resets all personal details, app preferences, developer API keys, and conversion transaction history back to defaults. This action cannot be undone.
                           </p>
                         </div>
@@ -714,14 +714,14 @@ export default function Profile() {
                         <button
                           type="button"
                           onClick={() => setShowResetConfirm(true)}
-                          className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-rose-500/25 bg-rose-500/10 px-5 py-2.5 text-center text-xs font-black text-rose-500 shadow-sm shadow-rose-950/5 transition duration-200 hover:border-rose-500/40 hover:bg-rose-500/15 focus:outline-none focus:ring-2 focus:ring-rose-500/30 sm:w-auto lg:min-w-30"
+                          className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-danger-border bg-danger-soft px-5 py-2.5 text-center text-xs font-black text-negative shadow-sm transition duration-200 hover:border-danger/40 hover:bg-danger/15 focus:outline-none focus:ring-2 focus:ring-danger/30 sm:w-auto lg:min-w-30"
                         >
                           Reset Profile Data
                         </button>
                         <button
                           type="button"
                           onClick={() => setShowDeleteConfirm(true)}
-                          className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-rose-500 bg-rose-600 px-5 py-2.5 text-center text-xs font-black text-white shadow-lg shadow-rose-600/15 transition duration-200 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-500/35 sm:w-auto lg:min-w-29"
+                          className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-danger bg-danger px-5 py-2.5 text-center text-xs font-bold text-on-primary transition duration-200 hover:bg-danger/90 focus:outline-none focus:ring-2 focus:ring-danger/35 sm:w-auto lg:min-w-29"
                         >
                           Delete Account
                         </button>
@@ -736,21 +736,21 @@ export default function Profile() {
                 <form onSubmit={handleSavePreferences} className="space-y-6">
                   <div>
                     <h3 className="text-lg font-bold">Converter Preferences & Rules</h3>
-                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Configure decimal rules, volatility thresholds, and engine parameters.</p>
+                    <p className="text-xs text-text-muted mt-0.5">Configure decimal rules, volatility thresholds, and engine parameters.</p>
                   </div>
 
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <label htmlFor="pref-base" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 ml-1">Default Base Currency</label>
+                      <label htmlFor="pref-base" className="block text-[10px] font-bold uppercase tracking-wider text-text-muted ml-1">Default Base Currency</label>
                       <select
                         id="pref-base"
                         name="pref-base"
                         value={defaultFrom}
                         onChange={(e) => setDefaultFrom(e.target.value)}
-                        className="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-black/25 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white font-bold outline-none cursor-pointer focus:border-[#E88F2B] focus:ring-1 focus:ring-[#E88F2B] transition select font-sans"
+                        className="w-full p-3.5 rounded-xl bg-surface-muted border border-border text-text font-bold outline-none cursor-pointer focus:border-accent focus:ring-1 focus:ring-accent transition select font-sans"
                       >
                         {CURRENCIES.map((c) => (
-                          <option key={c} value={c} className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">
+                          <option key={c} value={c} className="bg-surface border-border text-text font-semibold">
                             {c} — {CURRENCY_INFO[c]?.name}
                           </option>
                         ))}
@@ -758,16 +758,16 @@ export default function Profile() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label htmlFor="pref-target" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 ml-1">Default Target Currency</label>
+                      <label htmlFor="pref-target" className="block text-[10px] font-bold uppercase tracking-wider text-text-muted ml-1">Default Target Currency</label>
                       <select
                         id="pref-target"
                         name="pref-target"
                         value={defaultTo}
                         onChange={(e) => setDefaultTo(e.target.value)}
-                        className="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-black/25 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white font-bold outline-none cursor-pointer focus:border-[#E88F2B] focus:ring-1 focus:ring-[#E88F2B] transition select font-sans"
+                        className="w-full p-3.5 rounded-xl bg-surface-muted border border-border text-text font-bold outline-none cursor-pointer focus:border-accent focus:ring-1 focus:ring-accent transition select font-sans"
                       >
                         {CURRENCIES.map((c) => (
-                          <option key={c} value={c} className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">
+                          <option key={c} value={c} className="bg-surface border-border text-text font-semibold">
                             {c} — {CURRENCY_INFO[c]?.name}
                           </option>
                         ))}
@@ -775,93 +775,93 @@ export default function Profile() {
                     </div>
                   </div>
 
-                  <div className="grid sm:grid-cols-2 gap-4 pt-4 border-t border-slate-100 dark:border-white/5">
+                  <div className="grid sm:grid-cols-2 gap-4 pt-4 border-t border-border">
                     <div className="space-y-1.5">
-                      <label htmlFor="pref-display-style" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 ml-1">Local Currency Display Style</label>
+                      <label htmlFor="pref-display-style" className="block text-[10px] font-bold uppercase tracking-wider text-text-muted ml-1">Local Currency Display Style</label>
                       <select
                         id="pref-display-style"
                         name="pref-display-style"
                         value={displayStyle}
                         onChange={(e) => setDisplayStyle(e.target.value)}
-                        className="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-black/25 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white font-bold outline-none cursor-pointer focus:border-[#E88F2B] transition select font-sans"
+                        className="w-full p-3.5 rounded-xl bg-surface-muted border border-border text-text font-bold outline-none cursor-pointer focus:border-accent transition select font-sans"
                       >
-                        <option value="code" className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">ISO Currency Code (e.g., 100.00 USD)</option>
-                        <option value="symbol" className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">Symbol Prefix (e.g., $100.00)</option>
+                        <option value="code" className="bg-surface border-border text-text font-semibold">ISO Currency Code (e.g., 100.00 USD)</option>
+                        <option value="symbol" className="bg-surface border-border text-text font-semibold">Symbol Prefix (e.g., $100.00)</option>
                       </select>
                     </div>
 
                     <div className="space-y-1.5">
-                      <label htmlFor="pref-decimals" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 ml-1">Decimal Places Precision</label>
+                      <label htmlFor="pref-decimals" className="block text-[10px] font-bold uppercase tracking-wider text-text-muted ml-1">Decimal Places Precision</label>
                       <select
                         id="pref-decimals"
                         name="pref-decimals"
                         value={decimalPlaces}
                         onChange={(e) => setDecimalPlaces(Number(e.target.value))}
-                        className="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-black/25 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white font-bold outline-none cursor-pointer focus:border-[#E88F2B] transition select font-sans"
+                        className="w-full p-3.5 rounded-xl bg-surface-muted border border-border text-text font-bold outline-none cursor-pointer focus:border-accent transition select font-sans"
                       >
-                        <option value={2} className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">2 Decimals (Standard - $1.25)</option>
-                        <option value={3} className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">3 Decimals (Interbank - $1.254)</option>
-                        <option value={4} className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">4 Decimals (High Precision - $1.2541)</option>
+                        <option value={2} className="bg-surface border-border text-text font-semibold">2 Decimals (Standard - $1.25)</option>
+                        <option value={3} className="bg-surface border-border text-text font-semibold">3 Decimals (Interbank - $1.254)</option>
+                        <option value={4} className="bg-surface border-border text-text font-semibold">4 Decimals (High Precision - $1.2541)</option>
                       </select>
                     </div>
 
                     <div className="space-y-1.5">
-                      <label htmlFor="pref-refresh" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 ml-1">Auto-Refresh Exchange Engine</label>
+                      <label htmlFor="pref-refresh" className="block text-[10px] font-bold uppercase tracking-wider text-text-muted ml-1">Auto-Refresh Exchange Engine</label>
                       <select
                         id="pref-refresh"
                         name="pref-refresh"
                         value={refreshRate}
                         onChange={(e) => setRefreshRate(e.target.value)}
-                        className="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-black/25 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white font-bold outline-none cursor-pointer focus:border-[#E88F2B] transition select font-sans"
+                        className="w-full p-3.5 rounded-xl bg-surface-muted border border-border text-text font-bold outline-none cursor-pointer focus:border-accent transition select font-sans"
                       >
-                        <option value="manual" className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">Manual Only (Save data quota)</option>
-                        <option value="30" className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">Every 30 Seconds (High-frequency)</option>
-                        <option value="60" className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">Every 1 Minute (Standard refresh)</option>
-                        <option value="300" className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">Every 5 Minutes (Conservative refresh)</option>
+                        <option value="manual" className="bg-surface border-border text-text font-semibold">Manual Only (Save data quota)</option>
+                        <option value="30" className="bg-surface border-border text-text font-semibold">Every 30 Seconds (High-frequency)</option>
+                        <option value="60" className="bg-surface border-border text-text font-semibold">Every 1 Minute (Standard refresh)</option>
+                        <option value="300" className="bg-surface border-border text-text font-semibold">Every 5 Minutes (Conservative refresh)</option>
                       </select>
                     </div>
 
                     <div className="space-y-1.5">
-                      <label htmlFor="pref-volatility" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 ml-1">Volatility Alert Alarm Bounds</label>
+                      <label htmlFor="pref-volatility" className="block text-[10px] font-bold uppercase tracking-wider text-text-muted ml-1">Volatility Alert Alarm Bounds</label>
                       <select
                         id="pref-volatility"
                         name="pref-volatility"
                         value={volatilityAlert}
                         onChange={(e) => setVolatilityAlert(parseFloat(e.target.value))}
-                        className="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-black/25 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white font-bold outline-none cursor-pointer focus:border-[#E88F2B] transition select font-sans"
+                        className="w-full p-3.5 rounded-xl bg-surface-muted border border-border text-text font-bold outline-none cursor-pointer focus:border-accent transition select font-sans"
                       >
-                        <option value={0.5} className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">Strict Bounds (Rate variation &gt; 0.5%)</option>
-                        <option value={1.0} className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">Medium Bounds (Rate variation &gt; 1.0%)</option>
-                        <option value={2.5} className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">Broad Bounds (Rate variation &gt; 2.5%)</option>
-                        <option value={5.0} className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">Crisis Bounds (Rate variation &gt; 5.0%)</option>
+                        <option value={0.5} className="bg-surface border-border text-text font-semibold">Strict Bounds (Rate variation &gt; 0.5%)</option>
+                        <option value={1.0} className="bg-surface border-border text-text font-semibold">Medium Bounds (Rate variation &gt; 1.0%)</option>
+                        <option value={2.5} className="bg-surface border-border text-text font-semibold">Broad Bounds (Rate variation &gt; 2.5%)</option>
+                        <option value={5.0} className="bg-surface border-border text-text font-semibold">Crisis Bounds (Rate variation &gt; 5.0%)</option>
                       </select>
                     </div>
 
                     <div className="space-y-1.5">
-                      <label htmlFor="pref-chart-range" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 ml-1">Comparison Chart View Span</label>
+                      <label htmlFor="pref-chart-range" className="block text-[10px] font-bold uppercase tracking-wider text-text-muted ml-1">Comparison Chart View Span</label>
                       <select
                         id="pref-chart-range"
                         name="pref-chart-range"
                         value={chartRange}
                         onChange={(e) => setChartRange(Number(e.target.value))}
-                        className="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-black/25 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white font-bold outline-none cursor-pointer focus:border-[#E88F2B] transition select font-sans"
+                        className="w-full p-3.5 rounded-xl bg-surface-muted border border-border text-text font-bold outline-none cursor-pointer focus:border-accent transition select font-sans"
                       >
-                        <option value={7} className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">7 Days (Short-term view)</option>
-                        <option value={30} className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">30 Days (Standard monthly index)</option>
-                        <option value={90} className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">90 Days (Quarterly index)</option>
+                        <option value={7} className="bg-surface border-border text-text font-semibold">7 Days (Short-term view)</option>
+                        <option value={30} className="bg-surface border-border text-text font-semibold">30 Days (Standard monthly index)</option>
+                        <option value={90} className="bg-surface border-border text-text font-semibold">90 Days (Quarterly index)</option>
                       </select>
                     </div>
                   </div>
 
-                  <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-white/5">
-                    <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Notifications & Subscriptions</label>
+                  <div className="space-y-4 pt-4 border-t border-border">
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-text-muted">Notifications & Subscriptions</label>
 
-                    <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50/50 dark:bg-black/10 border border-slate-200/50 dark:border-white/5">
+                    <div className="flex items-center justify-between p-3.5 rounded-2xl bg-surface-muted border border-border">
                       <div className="space-y-0.5 pr-4 font-sans">
                         <h4 className="text-sm font-bold flex items-center gap-1.5">
-                          <Bell className="w-4 h-4 text-[#E88F2B]" /> Real-time Price Alerts
+                          <Bell className="w-4 h-4 text-accent" /> Real-time Price Alerts
                         </h4>
-                        <p className="text-xs text-slate-400 dark:text-slate-500">Notify me immediately of significant volatility swings in default pairings.</p>
+                        <p className="text-xs text-text-muted">Notify me immediately of significant volatility swings in default pairings.</p>
                       </div>
                       <input
                         id="pref-push-notifications"
@@ -870,16 +870,16 @@ export default function Profile() {
                         aria-label="Real-time price alerts"
                         checked={pushNotifications}
                         onChange={(e) => setPushNotifications(e.target.checked)}
-                        className="w-10 h-6 shrink-0 rounded-full border-slate-200 dark:border-white/10 bg-slate-200 dark:bg-white/10 text-[#E88F2B] focus:ring-[#E88F2B] cursor-pointer"
+                        className="w-10 h-6 shrink-0 rounded-full border-border bg-surface-sunken /15 text-accent focus:ring-accent cursor-pointer"
                       />
                     </div>
 
-                    <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50/50 dark:bg-black/10 border border-slate-200/50 dark:border-white/5">
+                    <div className="flex items-center justify-between p-3.5 rounded-2xl bg-surface-muted border border-border">
                       <div className="space-y-0.5 pr-4 font-sans">
                         <h4 className="text-sm font-bold flex items-center gap-1.5">
                           <Globe className="w-4 h-4 text-pink-500" /> Weekly Reserve Market Reports
                         </h4>
-                        <p className="text-xs text-slate-400 dark:text-slate-500">Receive analysis reports tracking reserve indices and spread tracker metrics.</p>
+                        <p className="text-xs text-text-muted">Receive analysis reports tracking reserve indices and spread tracker metrics.</p>
                       </div>
                       <input
                         id="pref-email-reports"
@@ -888,7 +888,7 @@ export default function Profile() {
                         aria-label="Weekly reserve market reports"
                         checked={emailReports}
                         onChange={(e) => setEmailReports(e.target.checked)}
-                        className="w-10 h-6 shrink-0 rounded-full border-slate-200 dark:border-white/10 bg-slate-200 dark:bg-white/10 text-[#E88F2B] focus:ring-[#E88F2B] cursor-pointer"
+                        className="w-10 h-6 shrink-0 rounded-full border-border bg-surface-sunken /15 text-accent focus:ring-accent cursor-pointer"
                       />
                     </div>
                   </div>
@@ -896,7 +896,7 @@ export default function Profile() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="bg-[#E88F2B] text-black font-bold px-6 py-3 rounded-xl flex items-center gap-2 hover:scale-105 active:scale-95 transition cursor-pointer disabled:opacity-50 font-sans"
+                    className="bg-primary text-on-primary font-bold px-6 py-3 rounded-xl flex items-center gap-2 hover:bg-primary-hover active:scale-[0.98] transition duration-200 cursor-pointer disabled:opacity-50 font-sans shadow-primary"
                   >
                     {loading ? (
                       <div className="w-4 h-4 border-2 border-black border-t-transparent animate-spin rounded-full" />
@@ -914,14 +914,14 @@ export default function Profile() {
                   <form onSubmit={handleChangePassword} className="space-y-6 max-w-md">
                     <div>
                       <h3 className="text-lg font-bold">Account Security</h3>
-                      <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Protect your account settings by updating your authentication password.</p>
+                      <p className="text-xs text-text-muted mt-0.5">Protect your account settings by updating your authentication password.</p>
                     </div>
 
                     <div className="space-y-4">
                       <div className="space-y-1.5">
-                        <label htmlFor="current-password" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 ml-1">Current Password</label>
+                        <label htmlFor="current-password" className="block text-[10px] font-bold uppercase tracking-wider text-text-muted ml-1">Current Password</label>
                         <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-text-muted">
                             <Lock className="w-4 h-4" />
                           </div>
                           <input
@@ -931,12 +931,12 @@ export default function Profile() {
                             required
                             value={oldPassword}
                             onChange={(e) => setOldPassword(e.target.value)}
-                            className="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-50 dark:bg-black/25 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white text-sm focus:border-[#E88F2B] focus:ring-1 focus:ring-[#E88F2B] outline-none transition"
+                            className="w-full pl-10 pr-10 py-3 rounded-xl bg-surface-muted border border-border text-text text-sm focus:border-accent focus:ring-1 focus:ring-accent outline-none transition"
                           />
                           <button
                             type="button"
                             onClick={() => setShowOldPassword(!showOldPassword)}
-                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer transition animate-fade-in"
+                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text-secondary dark:hover:text-text-muted cursor-pointer transition animate-fade-in"
                           >
                             {showOldPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
                           </button>
@@ -944,9 +944,9 @@ export default function Profile() {
                       </div>
 
                       <div className="space-y-1.5">
-                        <label htmlFor="new-password" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 ml-1">New Password</label>
+                        <label htmlFor="new-password" className="block text-[10px] font-bold uppercase tracking-wider text-text-muted ml-1">New Password</label>
                         <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-text-muted">
                             <Lock className="w-4 h-4" />
                           </div>
                           <input
@@ -956,13 +956,13 @@ export default function Profile() {
                             required
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
-                            className="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-50 dark:bg-black/25 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white text-sm focus:border-[#E88F2B] focus:ring-1 focus:ring-[#E88F2B] outline-none transition"
+                            className="w-full pl-10 pr-10 py-3 rounded-xl bg-surface-muted border border-border text-text text-sm focus:border-accent focus:ring-1 focus:ring-accent outline-none transition"
                             placeholder="Min. 8 characters"
                           />
                           <button
                             type="button"
                             onClick={() => setShowNewPassword(!showNewPassword)}
-                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer transition animate-fade-in"
+                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text-secondary dark:hover:text-text-muted cursor-pointer transition animate-fade-in"
                           >
                             {showNewPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
                           </button>
@@ -971,14 +971,14 @@ export default function Profile() {
                         {newPassword && (
                           <div className="mt-2.5 space-y-1.5 ml-1">
                             <div className="flex items-center justify-between text-[10px] font-bold">
-                              <span className="text-slate-400 dark:text-slate-500 uppercase tracking-wider">Strength:</span>
+                              <span className="text-text-muted uppercase tracking-wider">Strength:</span>
                               <span
                                 className={`px-1.5 py-0.5 rounded-sm font-extrabold uppercase text-[9px] ${
                                   validatePasswordStrength(newPassword).score <= 2
-                                    ? "bg-rose-500/10 text-rose-500"
+                                    ? "bg-danger-soft text-danger"
                                     : validatePasswordStrength(newPassword).score === 3
-                                    ? "bg-amber-500/10 text-amber-500"
-                                    : "bg-emerald-500/10 text-emerald-500"
+                                    ? "bg-warning-soft text-warning"
+                                    : "bg-success-soft text-success"
                                 }`}
                               >
                                 {validatePasswordStrength(newPassword).label}
@@ -991,12 +991,12 @@ export default function Profile() {
                                   className={`h-full rounded-full transition-all duration-300 ${
                                     idx <= validatePasswordStrength(newPassword).score
                                       ? validatePasswordStrength(newPassword).color
-                                      : "bg-slate-200 dark:bg-white/10"
+                                      : "bg-surface-sunken /15"
                                   }`}
                                 />
                               ))}
                             </div>
-                            <p className="text-[10px] text-slate-400 dark:text-slate-500 leading-normal">
+                            <p className="text-[10px] text-text-muted leading-normal">
                               {validatePasswordStrength(newPassword).feedback}
                             </p>
                           </div>
@@ -1004,9 +1004,9 @@ export default function Profile() {
                       </div>
 
                       <div className="space-y-1.5">
-                        <label htmlFor="confirm-password" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 ml-1">Confirm New Password</label>
+                        <label htmlFor="confirm-password" className="block text-[10px] font-bold uppercase tracking-wider text-text-muted ml-1">Confirm New Password</label>
                         <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-text-muted">
                             <Lock className="w-4 h-4" />
                           </div>
                           <input
@@ -1016,12 +1016,12 @@ export default function Profile() {
                             required
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="w-full pl-10 pr-10 py-3 rounded-xl bg-slate-50 dark:bg-black/25 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white text-sm focus:border-[#E88F2B] focus:ring-1 focus:ring-[#E88F2B] outline-none transition"
+                            className="w-full pl-10 pr-10 py-3 rounded-xl bg-surface-muted border border-border text-text text-sm focus:border-accent focus:ring-1 focus:ring-accent outline-none transition"
                           />
                           <button
                             type="button"
                             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer transition animate-fade-in"
+                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text-secondary dark:hover:text-text-muted cursor-pointer transition animate-fade-in"
                           >
                             {showConfirmPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
                           </button>
@@ -1032,7 +1032,7 @@ export default function Profile() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="bg-[#E88F2B] text-black font-bold px-6 py-3 rounded-xl flex items-center gap-2 hover:scale-105 active:scale-95 transition cursor-pointer disabled:opacity-50 font-sans"
+                      className="bg-primary text-on-primary font-bold px-6 py-3 rounded-xl flex items-center gap-2 hover:bg-primary-hover active:scale-[0.98] transition duration-200 cursor-pointer disabled:opacity-50 font-sans shadow-primary"
                     >
                       {loading ? (
                         <div className="w-4 h-4 border-2 border-black border-t-transparent animate-spin rounded-full" />
@@ -1044,31 +1044,31 @@ export default function Profile() {
                     </button>
                   </form>
 
-                  <div className="pt-6 border-t border-slate-200 dark:border-white/5 space-y-4 max-w-md">
-                    <div className="p-4 rounded-2xl bg-slate-50/50 dark:bg-black/10 border border-slate-200/50 dark:border-white/5">
+                  <div className="pt-6 border-t border-border space-y-4 max-w-md">
+                    <div className="p-4 rounded-2xl bg-surface-muted border border-border">
                       <div className="space-y-1 font-sans">
                         <h4 className="text-sm font-bold flex items-center gap-1.5">
-                          <ShieldAlert className="w-4.5 h-4.5 text-amber-500" />
+                          <ShieldAlert className="w-4.5 h-4.5 text-warning" />
                           Two-Factor Authentication (2FA)
                         </h4>
-                        <p className="text-xs text-slate-400 dark:text-slate-500">
+                        <p className="text-xs text-text-muted">
                           Two-Factor Authentication adds an extra layer of security to your account. This feature will be implemented with server-side TOTP verification in a future update.
                         </p>
-                        <p className="text-[10px] text-amber-500 dark:text-amber-400 font-semibold mt-2">
+                        <p className="text-[10px] text-warning font-semibold mt-2">
                           Note: Firebase Authentication already provides strong security with email verification and server-side session management.
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="pt-8 border-t border-slate-200 dark:border-white/5 space-y-4">
+                  <div className="pt-8 border-t border-border space-y-4">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                       <div className="font-sans">
                         <h4 className="text-base font-bold flex items-center gap-2">
-                          <Activity className="w-5 h-5 text-[#E88F2B]" />
+                          <Activity className="w-5 h-5 text-accent" />
                           Security Audit Activity History
                         </h4>
-                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+                        <p className="text-xs text-text-muted mt-0.5">
                           Review recent security occurrences, access updates, and system integrity actions associated with your profile.
                         </p>
                       </div>
@@ -1079,7 +1079,7 @@ export default function Profile() {
                             clearSecurityLogs(user?.email);
                             setSecurityLogs([]);
                           }}
-                          className="px-3 py-1.5 rounded-lg border border-rose-500/20 hover:border-rose-500/50 bg-rose-500/5 hover:bg-rose-500/10 text-rose-500 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer self-start sm:self-center font-sans"
+                          className="px-3 py-1.5 rounded-lg border border-danger-border hover:border-danger/50 bg-danger-soft/60 hover:bg-danger-soft text-danger text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer self-start sm:self-center font-sans"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                           Clear History
@@ -1088,14 +1088,14 @@ export default function Profile() {
                     </div>
 
                     {securityLogs.length === 0 ? (
-                      <div className="p-8 text-center border border-dashed border-slate-200 dark:border-white/5 rounded-2xl bg-slate-50/50 dark:bg-black/5 text-slate-400 dark:text-slate-500 text-xs font-semibold font-sans">
+                      <div className="p-8 text-center border border-dashed border-border rounded-2xl bg-surface-muted/60 /5 text-text-muted text-xs font-semibold font-sans">
                         No security activity recorded yet.
                       </div>
                     ) : (
-                      <div className="overflow-x-auto border border-slate-200 dark:border-white/5 rounded-2xl">
+                      <div className="overflow-x-auto border border-border rounded-2xl">
                         <table className="w-full border-collapse text-left text-xs font-sans">
                           <thead>
-                            <tr className="bg-slate-100 dark:bg-black/25 text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">
+                            <tr className="bg-surface-muted text-text-secondary uppercase tracking-wider font-bold">
                               <th className="px-4 py-3">Event / Action</th>
                               <th className="px-4 py-3">Timestamp</th>
                               <th className="px-4 py-3">Client IP Address</th>
@@ -1103,32 +1103,32 @@ export default function Profile() {
                               <th className="px-4 py-3 text-right">Status</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-slate-100 dark:divide-white/5 font-medium">
+                          <tbody className="divide-y divide-border font-medium">
                             {securityLogs.map((log) => (
-                              <tr key={log.id} className="hover:bg-slate-100/30 dark:hover:bg-white/5 transition">
+                              <tr key={log.id} className="hover:bg-surface-muted/60 dark:hover:bg-white/5 transition">
                                 <td className="px-4 py-3.5">
-                                  <div className="font-bold text-slate-800 dark:text-slate-200">{log.eventType}</div>
+                                  <div className="font-bold text-text">{log.eventType}</div>
                                   {log.details && (
-                                    <div className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5 font-normal">
+                                    <div className="text-[10px] text-text-muted mt-0.5 font-normal">
                                       {log.details}
                                     </div>
                                   )}
                                 </td>
-                                <td className="px-4 py-3.5 text-slate-500 dark:text-slate-400 whitespace-nowrap">
+                                <td className="px-4 py-3.5 text-text-secondary whitespace-nowrap">
                                   {new Date(log.timestamp).toLocaleString()}
                                 </td>
-                                <td className="px-4 py-3.5 font-mono text-slate-500 dark:text-slate-400">
+                                <td className="px-4 py-3.5 font-mono text-text-secondary">
                                   {log.ip}
                                 </td>
-                                <td className="px-4 py-3.5 text-slate-500 dark:text-slate-400">
+                                <td className="px-4 py-3.5 text-text-secondary">
                                   {log.browser}
                                 </td>
                                 <td className="px-4 py-3.5 text-right whitespace-nowrap">
                                   <span
                                     className={`inline-flex px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wide ${
                                       log.status === "SUCCESS"
-                                        ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
-                                        : "bg-rose-500/10 text-rose-500 border border-rose-500/20"
+                                        ? "bg-success-soft text-success border border-success-border"
+                                        : "bg-danger-soft text-danger border border-danger-border"
                                     }`}
                                   >
                                     {log.status}
@@ -1151,27 +1151,27 @@ export default function Profile() {
                     <div className="space-y-6">
                       <div className="font-sans">
                         <h3 className="text-base font-bold flex items-center gap-2">
-                          <Activity className="w-5 h-5 text-[#E88F2B]" />
+                          <Activity className="w-5 h-5 text-accent" />
                           Conversion Data Tools
                         </h3>
-                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Exchange-rate tools, profile settings, and developer access. ConvertX does not hold user money.</p>
+                        <p className="text-xs text-text-muted mt-0.5">Exchange-rate tools, profile settings, and developer access. ConvertX does not hold user money.</p>
                       </div>
 
                       <div className="grid grid-cols-1 gap-4">
-                        <div className="p-5 rounded-2xl bg-slate-50/50 dark:bg-black/15 border border-slate-200/50 dark:border-white/5">
-                          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 font-sans">
-                            <CheckCircle className="w-4 h-4 text-[#E88F2B]" /> What ConvertX stores
+                        <div className="p-5 rounded-2xl bg-surface-muted border border-border">
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-text-muted flex items-center gap-1.5 font-sans">
+                            <CheckCircle className="w-4 h-4 text-accent" /> What ConvertX stores
                           </h4>
-                          <p className="text-sm leading-6 text-slate-500 dark:text-slate-400 mt-3">
+                          <p className="text-sm leading-6 text-text-secondary mt-3">
                             Your account can save conversion history, profile preferences, security logs, and developer API tokens. It does not create a wallet, demo balance, deposit balance, or trading account.
                           </p>
                         </div>
 
-                        <div className="p-5 rounded-2xl bg-slate-50/50 dark:bg-black/15 border border-slate-200/50 dark:border-white/5">
-                          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 font-sans">
-                            <ShieldCheck className="w-4 h-4 text-[#E88F2B]" /> Trading guidance boundary
+                        <div className="p-5 rounded-2xl bg-surface-muted border border-border">
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-text-muted flex items-center gap-1.5 font-sans">
+                            <ShieldCheck className="w-4 h-4 text-accent" /> Trading guidance boundary
                           </h4>
-                          <p className="text-sm leading-6 text-slate-500 dark:text-slate-400 mt-3">
+                          <p className="text-sm leading-6 text-text-secondary mt-3">
                             The market assistant only highlights high, low, and stable exchange-rate conditions. Users should place any real buy or sell action inside their own trusted trading platform.
                           </p>
                         </div>
@@ -1181,29 +1181,29 @@ export default function Profile() {
                     <div className="space-y-6">
                       <div className="font-sans">
                         <h3 className="text-base font-bold flex items-center gap-2">
-                          <Key className="w-5 h-5 text-indigo-500" />
+                          <Key className="w-5 h-5 text-accent" />
                           Developer API Key Tokens
                         </h3>
-                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Integrate live ConvertX indices into your developer products.</p>
+                        <p className="text-xs text-text-muted mt-0.5">Integrate live ConvertX indices into your developer products.</p>
                       </div>
 
-                      <div className="p-5 rounded-2xl bg-slate-50/50 dark:bg-black/15 border border-slate-200/50 dark:border-white/5 space-y-4">
+                      <div className="p-5 rounded-2xl bg-surface-muted border border-border space-y-4">
                         <div className="space-y-1.5">
-                          <label htmlFor="dev-key-scope" className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 ml-1">Select Access Scopes</label>
+                          <label htmlFor="dev-key-scope" className="block text-[10px] font-bold uppercase tracking-wider text-text-muted ml-1">Select Access Scopes</label>
                           <select
                             id="dev-key-scope"
                             name="dev-key-scope"
                             value={newKeyScope}
                             onChange={(e) => setNewKeyScope(e.target.value)}
-                            className="w-full p-3 rounded-xl bg-slate-50 dark:bg-black/25 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white text-xs font-bold outline-none cursor-pointer focus:border-[#E88F2B] transition select font-sans"
+                            className="w-full p-3 rounded-xl bg-surface-muted border border-border text-text text-xs font-bold outline-none cursor-pointer focus:border-accent transition select font-sans"
                           >
-                            <option value="rates:read" className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">
+                            <option value="rates:read" className="bg-surface border-border text-text font-semibold">
                               rates:read (Read-only exchange feeds)
                             </option>
-                            <option value="conversions:write" className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">
+                            <option value="conversions:write" className="bg-surface border-border text-text font-semibold">
                               conversions:write (Rates + Math queries)
                             </option>
-                            <option value="admin" className="bg-white dark:bg-[#0e172e] text-slate-800 dark:text-white font-semibold">
+                            <option value="admin" className="bg-surface border-border text-text font-semibold">
                               admin (Unlimited Institutional Access)
                             </option>
                           </select>
@@ -1212,7 +1212,7 @@ export default function Profile() {
                         <button
                           type="button"
                           onClick={handleGenerateApiKey}
-                          className="w-full py-2.5 rounded-xl bg-[#E88F2B] text-black text-xs font-black hover:scale-[1.02] active:scale-98 transition flex items-center justify-center gap-1.5 cursor-pointer shadow-md shadow-[#E88F2B]/5 font-sans"
+                          className="w-full py-2.5 rounded-xl bg-primary text-on-primary text-xs font-bold hover:bg-primary-hover active:scale-[0.99] transition duration-200 flex items-center justify-center gap-1.5 cursor-pointer shadow-primary font-sans"
                         >
                           <Plus className="w-4.5 h-4.5" /> Generate Active API Token
                         </button>
@@ -1220,7 +1220,7 @@ export default function Profile() {
 
                       {apiKeys.length > 0 && (
                         <div className="space-y-3 font-sans">
-                          <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 ml-1">Active Credentials</label>
+                          <label className="block text-[10px] font-bold uppercase tracking-wider text-text-muted ml-1">Active Credentials</label>
                           
                           <div className="space-y-3">
                             {apiKeys.map((key) => {
@@ -1229,24 +1229,24 @@ export default function Profile() {
                               return (
                                 <div
                                   key={key.id}
-                                  className="p-4 rounded-2xl bg-slate-50/50 dark:bg-black/15 border border-slate-200/50 dark:border-white/5 flex items-center justify-between gap-4 transition hover:border-[#E88F2B]/20"
+                                  className="p-4 rounded-2xl bg-surface-muted border border-border flex items-center justify-between gap-4 transition hover:border-accent/20"
                                 >
                                   <div className="space-y-1.5 flex-1 min-w-0">
                                     <div className="flex items-center gap-2">
-                                      <span className="font-mono text-xs font-black truncate block text-slate-700 dark:text-slate-200 select-all">
+                                      <span className="font-mono text-xs font-black truncate block text-text select-all">
                                         {isVisible ? key.token : truncated}
                                       </span>
                                       <button
                                         type="button"
                                         onClick={() => toggleKeyVisibility(key.id)}
-                                        className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition cursor-pointer"
+                                        className="text-text-muted hover:text-text-secondary dark:hover:text-text-muted transition cursor-pointer"
                                         title={isVisible ? "Hide Token" : "Show Token"}
                                       >
                                         {isVisible ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                                       </button>
                                     </div>
-                                    <div className="flex items-center gap-2 text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                                      <span className="px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">{key.scope}</span>
+                                    <div className="flex items-center gap-2 text-[9px] font-bold text-text-muted uppercase tracking-wider">
+                                      <span className="px-1.5 py-0.5 rounded bg-accent-soft text-accent border border-accent-border">{key.scope}</span>
                                       <span>Issued {new Date(key.createdAt).toLocaleDateString()}</span>
                                     </div>
                                   </div>
@@ -1255,10 +1255,10 @@ export default function Profile() {
                                     <button
                                       type="button"
                                       onClick={() => handleCopyToClipboard(key.token, key.id)}
-                                      className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 border border-slate-200/50 dark:border-white/5 text-slate-400 hover:text-[#E88F2B] transition cursor-pointer relative"
+                                      className="p-2 rounded-xl bg-surface-muted hover:bg-surface-sunken dark:hover:bg-white/10 border border-border text-text-muted hover:text-accent transition cursor-pointer relative"
                                     >
                                       {showCopyNotification === key.id ? (
-                                        <Check className="w-3.5 h-3.5 text-emerald-400" />
+                                        <Check className="w-3.5 h-3.5 text-positive" />
                                       ) : (
                                         <Copy className="w-3.5 h-3.5" />
                                       )}
@@ -1266,7 +1266,7 @@ export default function Profile() {
                                     <button
                                       type="button"
                                       onClick={() => handleRevokeApiKey(key.id)}
-                                      className="p-2 rounded-xl bg-rose-500/5 hover:bg-rose-500/10 border border-rose-500/20 text-rose-500 transition cursor-pointer"
+                                      className="p-2 rounded-xl bg-danger-soft/60 hover:bg-danger-soft border border-danger-border text-negative transition cursor-pointer"
                                       title="Revoke Token"
                                     >
                                       <Trash2 className="w-3.5 h-3.5" />
@@ -1282,29 +1282,29 @@ export default function Profile() {
                   </div>
 
                   {apiKeys.length > 0 && (
-                    <div className="pt-6 border-t border-slate-200 dark:border-white/5 space-y-3 font-sans">
+                    <div className="pt-6 border-t border-border space-y-3 font-sans">
                       <div className="flex items-center gap-2">
-                        <Terminal className="w-4 h-4 text-[#E88F2B]" />
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">cURL API Request Snippet</h4>
+                        <Terminal className="w-4 h-4 text-accent" />
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-text-muted">cURL API Request Snippet</h4>
                       </div>
 
-                      <div className="p-4 rounded-2xl bg-black dark:bg-[#02040a] border border-slate-200 dark:border-white/5 font-mono text-[11px] text-emerald-400/90 space-y-2 overflow-x-auto relative group">
+                      <div className="p-4 rounded-2xl bg-black border border-border font-mono text-[11px] text-positive/90 space-y-2 overflow-x-auto relative group">
                         <button
                           type="button"
                           onClick={() => handleCopyToClipboard(`curl -X GET "https://api.convertx.financial/v1/latest?base=USD" \\\n  -H "Authorization: Bearer ${apiKeys[0].token}"`, "curl")}
-                          className="absolute top-2.5 right-2.5 p-2 rounded-lg bg-white/5 hover:bg-white/10 opacity-0 group-hover:opacity-100 border border-white/10 text-slate-400 hover:text-[#E88F2B] transition cursor-pointer"
+                          className="absolute top-2.5 right-2.5 p-2 rounded-lg bg-white/5 hover:bg-accent-soft hover:border-accent-border opacity-0 group-hover:opacity-100 border border-white/10 text-text-muted hover:text-accent transition cursor-pointer"
                           title="Copy Snippet"
                         >
                           {showCopyNotification === "curl" ? (
-                            <Check className="w-3.5 h-3.5 text-emerald-400" />
+                            <Check className="w-3.5 h-3.5 text-positive" />
                           ) : (
                             <Copy className="w-3.5 h-3.5" />
                           )}
                         </button>
-                        <span className="text-slate-500 block"># Secure institutional rate check</span>
+                        <span className="text-text-secondary block"># Secure institutional rate check</span>
                         <span>
                           curl -X GET "https://api.convertx.financial/v1/latest?base=USD" \<br />
-                          &nbsp;&nbsp;-H "Authorization: Bearer <span className="text-[#f0a04b] font-bold">{visibleKeys[apiKeys[0].id] ? apiKeys[0].token : `${apiKeys[0].token.slice(0, 12)}...`}</span>"
+                          &nbsp;&nbsp;-H "Authorization: Bearer <span className="text-accent font-bold">{visibleKeys[apiKeys[0].id] ? apiKeys[0].token : `${apiKeys[0].token.slice(0, 12)}...`}</span>"
                         </span>
                       </div>
                     </div>
@@ -1325,14 +1325,14 @@ export default function Profile() {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white dark:bg-[#0e172e] border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl space-y-6 z-50 font-sans"
+              className="bg-surface border-border border border-border rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl space-y-6 z-50 font-sans"
             >
               <div className="text-center space-y-1.5">
-                <div className="w-12 h-12 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto">
+                <div className="w-12 h-12 rounded-full bg-warning-soft text-warning flex items-center justify-center mx-auto">
                   <AlertTriangle className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white">Reset Entire Profile?</h3>
-                <p className="text-xs text-slate-400 dark:text-slate-500 leading-relaxed">
+                <h3 className="text-lg font-bold text-text">Reset Entire Profile?</h3>
+                <p className="text-xs text-text-muted leading-relaxed">
                   This will completely clear your customized settings, API keys, and transaction history.
                 </p>
               </div>
@@ -1341,14 +1341,14 @@ export default function Profile() {
                 <button
                   type="button"
                   onClick={() => setShowResetConfirm(false)}
-                  className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-white/10 text-slate-500 text-xs font-bold hover:bg-slate-100 dark:hover:bg-white/5 cursor-pointer bg-transparent"
+                  className="flex-1 py-3 rounded-xl border border-border text-text-secondary text-xs font-bold hover:bg-surface-muted dark:hover:bg-white/5 cursor-pointer bg-transparent"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={handleResetProfile}
-                  className="flex-1 py-3 rounded-xl bg-rose-500 text-white text-xs font-black cursor-pointer shadow-lg shadow-rose-500/10 hover:bg-rose-600 transition"
+                  className="flex-1 py-3 rounded-xl bg-danger text-on-primary text-xs font-bold cursor-pointer hover:bg-danger/90 transition duration-200"
                 >
                   Yes, Reset
                 </button>
@@ -1365,14 +1365,14 @@ export default function Profile() {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white dark:bg-[#0e172e] border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl space-y-6 z-50 font-sans"
+              className="bg-surface border-border border border-border rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl space-y-6 z-50 font-sans"
             >
               <div className="text-center space-y-1.5">
-                <div className="w-12 h-12 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto">
+                <div className="w-12 h-12 rounded-full bg-danger-soft text-danger flex items-center justify-center mx-auto">
                   <AlertTriangle className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white">Delete Your Account?</h3>
-                <p className="text-xs text-slate-400 dark:text-slate-500 leading-relaxed">
+                <h3 className="text-lg font-bold text-text">Delete Your Account?</h3>
+                <p className="text-xs text-text-muted leading-relaxed">
                   This action will permanently remove your account, preferences, API keys, transaction history, and security audit logs. This cannot be undone.
                 </p>
               </div>
@@ -1381,14 +1381,14 @@ export default function Profile() {
                 <button
                   type="button"
                   onClick={() => setShowDeleteConfirm(false)}
-                  className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-white/10 text-slate-500 text-xs font-bold hover:bg-slate-100 dark:hover:bg-white/5 cursor-pointer bg-transparent"
+                  className="flex-1 py-3 rounded-xl border border-border text-text-secondary text-xs font-bold hover:bg-surface-muted dark:hover:bg-white/5 cursor-pointer bg-transparent"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={handleDeleteAccount}
-                  className="flex-1 py-3 rounded-xl bg-rose-600 text-white text-xs font-black cursor-pointer shadow-lg shadow-rose-500/10 hover:bg-rose-700 transition"
+                  className="flex-1 py-3 rounded-xl bg-danger text-on-primary text-xs font-bold cursor-pointer hover:bg-danger/90 transition duration-200"
                 >
                   Yes, Delete Account
                 </button>

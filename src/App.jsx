@@ -1,7 +1,6 @@
 ﻿import { useState, useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeContext";
-import { useTheme } from "./context/useTheme";
 import { AuthProvider } from "./context/AuthProvider";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { WifiOff } from "lucide-react";
@@ -15,7 +14,6 @@ const GetStarted = lazy(() => import("./Pages/GetStarted"));
 const Profile = lazy(() => import("./Pages/Profile"));
 
 const MainApp = () => {
-  const { darkMode } = useTheme();
   useSecurity();
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
@@ -34,35 +32,18 @@ const MainApp = () => {
 
   if (isOffline) {
     return (
-      <div className={`min-h-screen w-full flex flex-col items-center justify-center p-6 relative z-99999 overflow-hidden select-none transition-colors duration-300 ${
-        darkMode ? "bg-[#000000] text-slate-100" : "bg-white text-slate-800"
-      }`}>
-        {darkMode ? (
-          <>
-            <div className="absolute top-[-10%] right-[-10%] w-112.5 h-112.5 bg-[#E88F2B]/10 rounded-full blur-[100px] pointer-events-none" />
-            <div className="absolute bottom-[-10%] left-[-10%] w-112.5 h-112.5 bg-[#E88F2B]/10 rounded-full blur-[100px] pointer-events-none" />
-          </>
-        ) : (
-          <>
-            <div className="absolute top-[-10%] right-[-10%] w-112.5 h-112.5 bg-rose-50 rounded-full blur-[100px] pointer-events-none" />
-            <div className="absolute bottom-[-10%] left-[-10%] w-112.5 h-112.5 bg-slate-100 rounded-full blur-[100px] pointer-events-none" />
-          </>
-        )}
+      <div className="min-h-screen w-full flex flex-col items-center justify-center p-6 relative z-99999 overflow-hidden select-none transition-colors duration-300 bg-canvas text-text">
+        <div className="absolute top-[-10%] right-[-10%] w-112.5 h-112.5 bg-accent/10 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-112.5 h-112.5 bg-accent/10 rounded-full blur-[100px] pointer-events-none" />
 
-        <div className={`relative z-10 text-center max-w-md flex flex-col items-center p-8 rounded-3xl border shadow-2xl transition-colors duration-300 ${
-          darkMode ? "bg-white/5 border-white/10 text-white" : "bg-white border-slate-100 text-slate-800"
-        }`}>
-          <div className={`w-20 h-20 rounded-full flex items-center justify-center mb-6 shadow-sm border transition-colors duration-300 ${
-            darkMode ? "bg-[#E88F2B]/10 border-[#E88F2B]/20 text-[#E88F2B]" : "bg-rose-50 border-rose-100 text-rose-500"
-          }`}>
+        <div className="relative z-10 text-center max-w-md flex flex-col items-center p-8 rounded-3xl border border-border bg-surface text-text shadow-2xl transition-colors duration-300">
+          <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6 shadow-sm border bg-danger-soft border-danger-border text-danger transition-colors duration-300">
             <WifiOff className="w-10 h-10 animate-bounce" />
           </div>
-          <h2 className="text-2xl font-black tracking-tight mb-2 font-sans">
+          <h2 className="text-2xl font-black tracking-tight mb-2 font-sans text-text">
             No Internet Connection
           </h2>
-          <p className={`text-sm leading-relaxed mb-8 font-sans transition-colors duration-300 ${
-            darkMode ? "text-slate-400" : "text-slate-500"
-          }`}>
+          <p className="text-sm leading-relaxed mb-8 font-sans transition-colors duration-300 text-text-secondary">
             ConvertX requires an active internet connection to load and convert rates. Please verify your Wi-Fi or cellular network connection and try again.
           </p>
           <button
@@ -71,9 +52,7 @@ const MainApp = () => {
                 setIsOffline(false);
               }
             }}
-            className={`w-full font-bold py-3.5 px-6 rounded-xl hover:scale-[1.02] active:scale-98 transition duration-200 cursor-pointer font-sans shadow-md ${
-              darkMode ? "bg-[#E88F2B] hover:shadow-[#E88F2B]/20 text-black" : "bg-slate-900 hover:bg-slate-800 text-white"
-            }`}
+            className="w-full font-bold py-3.5 px-6 rounded-xl hover:scale-[1.02] active:scale-98 transition duration-200 cursor-pointer font-sans bg-primary hover:bg-primary-hover text-on-primary shadow-primary"
           >
             Try Again
           </button>
@@ -86,12 +65,12 @@ const MainApp = () => {
     <BrowserRouter>
       <Suspense
         fallback={
-          <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
+          <div className="min-h-screen flex items-center justify-center bg-canvas text-text">
             <div className="flex flex-col items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-[#E88F2B] flex items-center justify-center animate-pulse">
-                <span className="text-black font-bold">CX</span>
+              <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center animate-pulse shadow-primary">
+                <span className="text-on-primary font-bold">CX</span>
               </div>
-              <p className="text-sm text-slate-500 dark:text-slate-400 animate-pulse">Loading…</p>
+              <p className="text-sm text-text-secondary animate-pulse">Loading…</p>
             </div>
           </div>
         }

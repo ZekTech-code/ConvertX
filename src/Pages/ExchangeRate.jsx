@@ -1,4 +1,4 @@
-
+﻿
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -25,6 +25,7 @@ import {
   ReferenceLine,
 } from "recharts";
 import { useTheme } from "../context/useTheme";
+import { ACCENT, accentAlpha, BORDER, DANGER, NEGATIVE, pick, POSITIVE, PRIMARY, SUCCESS, SURFACE, SURFACE_MUTED, SURFACE_SUNKEN, TEXT, TEXT_MUTED, TEXT_SECONDARY } from "../styles/colors";
 import { CURRENCY_INFO, CURRENCY_COUNTRY_CODES } from "../utils/currencyData";
 import { getLatestRates, recordRateSnapshot } from "../services/ExchangeApi";
 import MobileBottomNav from "../components/MobileBottomNav";
@@ -36,7 +37,7 @@ function CurrencyFlagImage({
 }) {
   const countryCode = CURRENCY_COUNTRY_CODES[code];
   if (!countryCode || countryCode.length !== 2) {
-    return <span className="inline-block text-sm align-middle">🌐</span>;
+    return <span className="inline-block text-sm align-middle">ðŸŒ</span>;
   }
   return (
     <img
@@ -78,17 +79,14 @@ function RateChartTooltip({
     <div
       className="rounded-2xl px-4 py-3"
       style={{
-        background: darkMode ? "rgba(0,0,0,0.96)" : "rgba(255,255,255,0.98)",
-        border:
-          darkMode ?
-            "1px solid rgba(255,255,255,0.12)"
-          : "1px solid rgba(148,163,184,0.25)",
-        boxShadow: "0 12px 32px rgba(0,0,0,0.25)",
+        background: SURFACE[darkMode ? "dark" : "light"],
+        border: "1px solid " + BORDER[darkMode ? "dark" : "light"],
+        boxShadow: "var(--cx-shadow-pop)",
         backdropFilter: "blur(12px)",
       }}>
       <p
         className="text-[10px] font-semibold mb-1"
-        style={{ color: darkMode ? "#64748b" : "#94a3b8" }}>
+        style={{ color: TEXT_MUTED[darkMode ? "dark" : "light"] }}>
         {label}
       </p>
       <p className="text-sm font-black font-mono" style={{ color: lineColor }}>
@@ -96,7 +94,7 @@ function RateChartTooltip({
       </p>
       <p
         className="text-[10px] mt-0.5"
-        style={{ color: darkMode ? "#475569" : "#94a3b8" }}>
+        style={{ color: TEXT_SECONDARY[darkMode ? "dark" : "light"] }}>
         {pair}
       </p>
     </div>
@@ -104,7 +102,7 @@ function RateChartTooltip({
 }
 
 function fmt(val, decimals) {
-  if (val === null || val === undefined || isNaN(val)) return "—";
+  if (val === null || val === undefined || isNaN(val)) return "â€”";
   const value = Number(val);
   const fractionDigits =
     decimals !== undefined ? decimals
@@ -254,12 +252,12 @@ function PairSelector({ activePair, setActivePair, rates, darkMode }) {
         className="flex items-center gap-3 px-4 py-2.5 rounded-2xl text-sm font-bold transition-all duration-200 cursor-pointer"
         style={{
           background:
-            darkMode ? "rgba(255,255,255,0.06)" : "rgba(15,23,42,0.06)",
+            pick(SURFACE_SUNKEN, darkMode),
           border:
             darkMode ?
               "1px solid rgba(255,255,255,0.1)"
             : "1px solid rgba(148,163,184,0.25)",
-          color: darkMode ? "#e2e8f0" : "#1e293b",
+          color: pick(TEXT, darkMode),
         }}>
         <CurrencyFlagImage
           code={activePair.from}
@@ -288,7 +286,7 @@ function PairSelector({ activePair, setActivePair, rates, darkMode }) {
             transition={{ duration: 0.18 }}
             className="absolute top-full mt-2 left-0 rounded-2xl overflow-y-auto overflow-x-hidden max-h-60 z-50 min-w-47.5"
             style={{
-              background: darkMode ? "#0f172a" : "#ffffff",
+              background: pick(SURFACE, darkMode),
               border:
                 darkMode ?
                   "1px solid rgba(255,255,255,0.1)"
@@ -310,10 +308,10 @@ function PairSelector({ activePair, setActivePair, rates, darkMode }) {
                   className="w-full flex items-center justify-between px-4 py-3 text-xs font-semibold transition-all duration-150 cursor-pointer"
                   style={{
                     background:
-                      isActive ? "rgba(232,143,43,0.12)"
+                      isActive ? accentAlpha(darkMode, 0.14)
                       : "transparent",
                     color:
-                      isActive ? "#E88F2B"
+                      isActive ? pick(ACCENT, darkMode)
                       : darkMode ? "#94a3b8"
                       : "#475569",
                   }}>
@@ -331,7 +329,7 @@ function PairSelector({ activePair, setActivePair, rates, darkMode }) {
                     />
                   </span>
                   <span className="font-mono text-[10px]">
-                    {rates[to] != null ? fmt(rates[to]) : "—"}
+                    {rates[to] != null ? fmt(rates[to]) : "â€”"}
                   </span>
                 </button>
               );
@@ -379,7 +377,7 @@ function RateChart({
     history.length >= 2 ?
       history[history.length - 1].rate >= history[0].rate
     : true;
-  const lineColor = isUp ? "#22c55e" : "#ef4444";
+  const lineColor = isUp ? pick(POSITIVE, darkMode) : pick(NEGATIVE, darkMode);
   const gradId = `chartGrad_${pair.replace("/", "_")}`;
 
   return (
@@ -388,15 +386,9 @@ function RateChart({
       custom={2}
       className="rounded-3xl p-6"
       style={{
-        background: darkMode ? "#000000" : "#ffffff",
-        border:
-          darkMode ?
-            "1px solid rgba(255,255,255,0.07)"
-          : "1px solid rgba(148,163,184,0.2)",
-        boxShadow:
-          darkMode ?
-            "0 8px 40px rgba(0,0,0,0.35)"
-          : "0 8px 32px rgba(15,23,42,0.08)",
+        background: SURFACE[darkMode ? "dark" : "light"],
+        border: "1px solid " + BORDER[darkMode ? "dark" : "light"],
+        boxShadow: "var(--cx-shadow-card)",
       }}>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
@@ -404,7 +396,7 @@ function RateChart({
             <BarChart3 size={16} style={{ color: lineColor }} />
             <h2
               className="text-base font-black"
-              style={{ color: darkMode ? "#f1f5f9" : "#0f172a" }}>
+              style={{ color: pick(TEXT, darkMode) }}>
               Rate Trend Chart
             </h2>
             <span
@@ -415,12 +407,12 @@ function RateChart({
                 color: lineColor,
                 border: `1px solid ${lineColor}30`,
               }}>
-              {isUp ? "↑ Rising" : "↓ Falling"}
+              {isUp ? "â†‘ Rising" : "â†“ Falling"}
             </span>
           </div>
           <p
             className="text-xs"
-            style={{ color: darkMode ? "#64748b" : "#94a3b8" }}>
+            style={{ color: pick(TEXT_MUTED, darkMode) }}>
             Exchange rate movement for {pair}
           </p>
         </div>
@@ -429,7 +421,7 @@ function RateChart({
           className="flex items-center rounded-xl p-1 gap-1"
           style={{
             background:
-              darkMode ? "rgba(255,255,255,0.04)" : "rgba(15,23,42,0.04)",
+              pick(SURFACE_MUTED, darkMode),
             border:
               darkMode ?
                 "1px solid rgba(255,255,255,0.06)"
@@ -442,14 +434,14 @@ function RateChart({
               className="px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer"
               style={{
                 background:
-                  activeWindow === w ? "#E88F2B"
+                  activeWindow === w ? pick(PRIMARY, darkMode)
                   : "transparent",
                 color:
-                  activeWindow === w ? "#000"
+                  activeWindow === w ? "#ffffff"
                   : darkMode ? "#64748b"
                   : "#94a3b8",
                 boxShadow:
-                  activeWindow === w ? "0 0 12px rgba(232,143,43,0.3)" : "none",
+                  activeWindow === w ? `0 0 14px ${accentAlpha(darkMode, 0.35)}` : "none",
               }}>
               {w}
             </button>
@@ -466,11 +458,11 @@ function RateChart({
             className="h-full w-full rounded-2xl animate-pulse flex items-center justify-center"
             style={{
               background:
-                darkMode ? "rgba(255,255,255,0.03)" : "rgba(15,23,42,0.03)",
+                pick(SURFACE_MUTED, darkMode),
             }}>
             <Activity
               size={32}
-              style={{ color: darkMode ? "#1e293b" : "#cbd5e1" }}
+              style={{ color: pick(TEXT_SECONDARY, darkMode) }}
             />
           </div>
         : <AreaChart
@@ -491,7 +483,7 @@ function RateChart({
               strokeDasharray="3 3"
               vertical={false}
               stroke={
-                darkMode ? "rgba(148,163,184,0.08)" : "rgba(148,163,184,0.2)"
+                darkMode ? "rgba(255,255,255,0.06)" : "rgba(15,23,42,0.08)"
               }
             />
             <XAxis
@@ -499,7 +491,7 @@ function RateChart({
               axisLine={false}
               tickLine={false}
               tick={{
-                fill: darkMode ? "#475569" : "#94a3b8",
+                fill: TEXT_MUTED[darkMode ? "dark" : "light"],
                 fontSize: 10,
                 fontWeight: 600,
               }}
@@ -509,7 +501,7 @@ function RateChart({
               axisLine={false}
               tickLine={false}
               tick={{
-                fill: darkMode ? "#475569" : "#94a3b8",
+                fill: TEXT_MUTED[darkMode ? "dark" : "light"],
                 fontSize: 10,
                 fontWeight: 600,
               }}
@@ -526,7 +518,7 @@ function RateChart({
                 />
               }
               cursor={{
-                stroke: lineColor,
+                stroke: accentAlpha(darkMode, 0.35),
                 strokeWidth: 1,
                 strokeDasharray: "4 4",
               }}
@@ -548,7 +540,7 @@ function RateChart({
                 r: 5,
                 fill: lineColor,
                 strokeWidth: 2,
-                stroke: darkMode ? "#0f172a" : "#fff",
+                stroke: pick(SURFACE, darkMode),
               }}
               isAnimationActive
               animationDuration={800}
@@ -571,23 +563,23 @@ function RateChart({
             {
               label: "Period Open",
               value: fmt(history[0]?.rate),
-              color: darkMode ? "#94a3b8" : "#64748b",
+              color: pick(TEXT_MUTED, darkMode),
             },
             {
               label: "Period High",
               value: fmt(Math.max(...history.map((d) => d.rate))),
-              color: "#22c55e",
+              color: pick(SUCCESS, darkMode),
             },
             {
               label: "Period Low",
               value: fmt(Math.min(...history.map((d) => d.rate))),
-              color: "#ef4444",
+              color: pick(DANGER, darkMode),
             },
           ].map(({ label, value, color }) => (
             <div key={label} className="text-center">
               <p
                 className="text-[10px] font-semibold mb-1"
-                style={{ color: darkMode ? "#475569" : "#94a3b8" }}>
+                style={{ color: pick(TEXT_MUTED, darkMode) }}>
                 {label}
               </p>
               <p className="text-sm font-black font-mono" style={{ color }}>
@@ -661,55 +653,55 @@ function MarketOverviewCards({ currentRate, pair, loading, darkMode }) {
     {
       label: "Current Rate",
       value:
-        loading ? "…"
+        loading ? "â€¦"
         : currentRate ? `${symTo}${fmt(currentRate)}`
-        : "—",
+        : "â€”",
       icon: Activity,
-      color: "#E88F2B",
-      sub: `1 ${from} = ${currentRate ? fmt(currentRate) : "—"} ${to}`,
+      color: pick(ACCENT, darkMode),
+      sub: `1 ${from} = ${currentRate ? fmt(currentRate) : "â€”"} ${to}`,
     },
     {
       label: "Highest Today",
       value:
-        loading ? "…"
+        loading ? "â€¦"
         : highToday ? `${symTo}${fmt(highToday)}`
-        : "—",
+        : "â€”",
       icon: TrendingUp,
-      color: "#22c55e",
-      sub: openRate ? `+${highPct.toFixed(2)}% above open` : "—",
+      color: pick(SUCCESS, darkMode),
+      sub: openRate ? `+${highPct.toFixed(2)}% above open` : "â€”",
     },
     {
       label: "Lowest Today",
       value:
-        loading ? "…"
+        loading ? "â€¦"
         : lowToday ? `${symTo}${fmt(lowToday)}`
-        : "—",
+        : "â€”",
       icon: TrendingDown,
-      color: "#ef4444",
-      sub: openRate ? `-${lowPct.toFixed(2)}% below open` : "—",
+      color: pick(DANGER, darkMode),
+      sub: openRate ? `-${lowPct.toFixed(2)}% below open` : "â€”",
     },
     {
       label: "24H Change",
-      value: loading ? "…" : `${change24h >= 0 ? "+" : ""}${change24h}%`,
+      value: loading ? "â€¦" : `${change24h >= 0 ? "+" : ""}${change24h}%`,
       icon: change24h >= 0 ? ArrowUpRight : ArrowDownRight,
-      color: change24h >= 0 ? "#22c55e" : "#ef4444",
+      color: change24h >= 0 ? pick(POSITIVE, darkMode) : pick(NEGATIVE, darkMode),
       sub: "vs yesterday close",
     },
     {
       label: "7-Day Change",
-      value: loading ? "…" : `${change7d >= 0 ? "+" : ""}${change7d}%`,
+      value: loading ? "â€¦" : `${change7d >= 0 ? "+" : ""}${change7d}%`,
       icon: change7d >= 0 ? ArrowUpRight : ArrowDownRight,
-      color: change7d >= 0 ? "#22c55e" : "#ef4444",
+      color: change7d >= 0 ? pick(POSITIVE, darkMode) : pick(NEGATIVE, darkMode),
       sub: "vs 7 days ago",
     },
     {
       label: "Volatility Score",
-      value: loading ? "…" : `${volatility}/100`,
+      value: loading ? "â€¦" : `${volatility}/100`,
       icon: Gauge,
       color:
         volatility > 60 ? "#f59e0b"
-        : volatility > 30 ? "#E88F2B"
-        : "#22c55e",
+        : volatility > 30 ? "#fbbf24"
+        : pick(SUCCESS, darkMode),
       sub:
         volatility > 60 ? "High volatility"
         : volatility > 30 ? "Moderate"
@@ -729,7 +721,7 @@ function MarketOverviewCards({ currentRate, pair, loading, darkMode }) {
             className="rounded-2xl p-4"
             style={{
               background:
-                darkMode ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.85)",
+                pick(SURFACE, darkMode),
               border:
                 darkMode ?
                   "1px solid rgba(255,255,255,0.07)"
@@ -742,7 +734,7 @@ function MarketOverviewCards({ currentRate, pair, loading, darkMode }) {
             <div className="flex items-center justify-between mb-3">
               <p
                 className="text-[11px] font-semibold"
-                style={{ color: darkMode ? "#64748b" : "#94a3b8" }}>
+                style={{ color: pick(TEXT_MUTED, darkMode) }}>
                 {label}
               </p>
               <div
@@ -753,12 +745,12 @@ function MarketOverviewCards({ currentRate, pair, loading, darkMode }) {
             </div>
             <p
               className="text-lg font-black font-mono mb-1"
-              style={{ color: darkMode ? "#f1f5f9" : "#0f172a" }}>
+              style={{ color: pick(TEXT, darkMode) }}>
               {value}
             </p>
             <p
               className="text-[10px]"
-              style={{ color: darkMode ? "#475569" : "#94a3b8" }}>
+              style={{ color: pick(TEXT_MUTED, darkMode) }}>
               {sub}
             </p>
           </motion.div>
@@ -814,14 +806,14 @@ export default function ExchangeRate() {
     return deriveBotSignal(history, from);
   }, [history, loading, currentRate, from]);
 
-  const bg = darkMode ? "#000000" : "#f1f5f9";
+  const bg = pick(SURFACE_MUTED, darkMode);
   const fromInfo = CURRENCY_INFO[from] ?? {};
   const toInfo = CURRENCY_INFO[to] ?? {};
 
   return (
     <div
       className="min-h-screen relative overflow-x-hidden"
-      style={{ background: bg, color: darkMode ? "#e2e8f0" : "#1e293b" }}>
+      style={{ background: bg, color: pick(TEXT, darkMode) }}>
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div
           style={{
@@ -871,24 +863,24 @@ export default function ExchangeRate() {
               <div
                 className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest"
                 style={{
-                  background: "rgba(232,143,43,0.1)",
-                  border: "1px solid rgba(232,143,43,0.25)",
-                  color: "#E88F2B",
+                  background: accentAlpha(darkMode, 0.1),
+                  border: `1px solid ${accentAlpha(darkMode, 0.3)}`,
+                  color: pick(ACCENT, darkMode),
                 }}>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#E88F2B] animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
                 Live Rates
               </div>
             </div>
             <h1
               className="text-3xl md:text-4xl font-black leading-tight"
               style={{
-                color: darkMode ? "#f1f5f9" : "#0f172a",
+                color: pick(TEXT, darkMode),
               }}>
               Exchange Rate Intelligence
             </h1>
             <p
               className="text-sm mt-2 max-w-xl"
-              style={{ color: darkMode ? "#64748b" : "#94a3b8" }}>
+              style={{ color: pick(TEXT_MUTED, darkMode) }}>
               Track market movements and discover the best time to exchange
               currencies.
             </p>
@@ -899,15 +891,12 @@ export default function ExchangeRate() {
             custom={1}
             className="rounded-3xl p-6 md:p-8 relative"
             style={{
-              background: darkMode ? "#000000" : "#ffffff",
-              border:
-                darkMode ?
-                  "1px solid rgba(232,143,43,0.15)"
-                : "1px solid rgba(232,143,43,0.2)",
+              background: pick(SURFACE, darkMode),
+              border: `1px solid ${accentAlpha(darkMode, 0.24)}`,
               boxShadow:
                 darkMode ?
-                  "0 0 80px rgba(232,143,43,0.06), 0 8px 40px rgba(0,0,0,0.35)"
-                : "0 0 60px rgba(232,143,43,0.04), 0 8px 32px rgba(15,23,42,0.08)",
+                  `0 0 90px ${accentAlpha(darkMode, 0.07)}, 0 8px 40px rgba(0,0,0,0.35)`
+                : `0 0 70px ${accentAlpha(darkMode, 0.05)}, 0 8px 32px rgba(15,23,42,0.08)`,
             }}>
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative z-10">
               <div className="flex-1">
@@ -921,7 +910,7 @@ export default function ExchangeRate() {
                   {!loading && (
                     <span
                       className="text-xs font-semibold flex items-center gap-1"
-                      style={{ color: darkMode ? "#475569" : "#94a3b8" }}>
+                      style={{ color: pick(TEXT_MUTED, darkMode) }}>
                       <Clock size={11} />
                       {lastUpdated ?
                         lastUpdated.toLocaleTimeString([], {
@@ -937,7 +926,7 @@ export default function ExchangeRate() {
                   <div>
                     <p
                       className="text-[11px] font-semibold mb-1"
-                      style={{ color: darkMode ? "#475569" : "#94a3b8" }}>
+                      style={{ color: pick(TEXT_MUTED, darkMode) }}>
                       Current Exchange Rate
                     </p>
                     <div key="current-rate-wrapper">
@@ -954,19 +943,19 @@ export default function ExchangeRate() {
                       : <p
                           className="text-4xl md:text-5xl font-black font-mono"
                           style={{
-                            color: "#E88F2B",
+                            color: pick(ACCENT, darkMode),
                           }}>
-                          {currentRate ? fmt(currentRate) : "—"}
+                          {currentRate ? fmt(currentRate) : "â€”"}
                         </p>
                       }
                     </div>
                     <p
                       className="text-sm mt-1.5"
-                      style={{ color: darkMode ? "#64748b" : "#94a3b8" }}>
+                      style={{ color: pick(TEXT_MUTED, darkMode) }}>
                       1{" "}
                       <span
                         className="font-bold"
-                        style={{ color: darkMode ? "#94a3b8" : "#64748b" }}>
+                        style={{ color: pick(TEXT_MUTED, darkMode) }}>
                         <CurrencyFlagImage
                           code={from}
                           className="h-3 w-4.5 rounded-xs object-cover inline-block mr-1 align-middle"
@@ -976,7 +965,7 @@ export default function ExchangeRate() {
                       ={" "}
                       <span
                         className="font-bold"
-                        style={{ color: darkMode ? "#f1f5f9" : "#0f172a" }}>
+                        style={{ color: pick(TEXT, darkMode) }}>
                         <CurrencyFlagImage
                           code={to}
                           className="h-3 w-4.5 rounded-xs object-cover inline-block mr-1 align-middle"
@@ -1004,22 +993,22 @@ export default function ExchangeRate() {
                       }}>
                       <p
                         className="text-[10px] font-semibold flex items-center gap-1"
-                        style={{ color: darkMode ? "#475569" : "#94a3b8" }}>
+                        style={{ color: pick(TEXT_MUTED, darkMode) }}>
                         <Bot size={10} /> Bot Signal
                       </p>
                       <p
                         className="text-xs font-black"
                         style={{
                           color:
-                            botSignal.signal === "CONVERT_NOW" ? "#22c55e"
-                            : botSignal.signal === "WAIT" ? "#ef4444"
+                            botSignal.signal === "CONVERT_NOW" ? pick(POSITIVE, darkMode)
+                            : botSignal.signal === "WAIT" ? pick(NEGATIVE, darkMode)
                             : "#f59e0b",
                         }}>
                         {botSignal.trend === "Rising" ?
-                          "↑ "
+                          "â†‘ "
                         : botSignal.trend === "Falling" ?
-                          "↓ "
-                        : "→ "}
+                          "â†“ "
+                        : "â†’ "}
                         {botSignal.trend}
                       </p>
                     </div>
@@ -1038,10 +1027,10 @@ export default function ExchangeRate() {
                       key="sep"
                       className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
                       style={{
-                        background: "#E88F2B",
-                        boxShadow: "0 0 15px rgba(232,143,43,0.25)",
+                        background: pick(ACCENT, darkMode),
+                        boxShadow: `0 0 18px ${accentAlpha(darkMode, 0.3)}`,
                       }}>
-                      <Minus size={12} color="#000" />
+                      <Minus size={12} color="#ffffff" />
                     </div>
                   : <div
                       key={item.code}
@@ -1064,12 +1053,12 @@ export default function ExchangeRate() {
                       </div>
                       <p
                         className="text-xs font-black mt-1"
-                        style={{ color: darkMode ? "#f1f5f9" : "#0f172a" }}>
+                        style={{ color: pick(TEXT, darkMode) }}>
                         {item.code}
                       </p>
                       <p
                         className="text-[9px] truncate max-w-22.5 mx-auto"
-                        style={{ color: darkMode ? "#475569" : "#94a3b8" }}
+                        style={{ color: pick(TEXT_MUTED, darkMode) }}
                         title={item.info.name ?? item.code}>
                         {item.info.name ?? item.code}
                       </p>
@@ -1085,11 +1074,11 @@ export default function ExchangeRate() {
                   background: "rgba(239,68,68,0.1)",
                   border: "1px solid rgba(239,68,68,0.25)",
                 }}>
-                <AlertTriangle size={14} className="text-red-400 shrink-0" />
-                <p className="text-xs text-red-400">{error}. Please refresh.</p>
+                <AlertTriangle size={14} className="text-negative shrink-0" />
+                <p className="text-xs text-negative">{error}. Please refresh.</p>
                 <button
                   onClick={fetchRates}
-                  className="ml-auto text-xs font-bold text-red-400 hover:text-red-300 transition-colors">
+                  className="ml-auto text-xs font-bold text-negative hover:text-negative transition-colors">
                   Retry
                 </button>
               </div>
@@ -1104,7 +1093,7 @@ export default function ExchangeRate() {
             whileInView="visible"
             viewport={{ once: true }}
             className="text-xs font-black uppercase tracking-widest mb-4 flex items-center gap-2"
-            style={{ color: darkMode ? "#475569" : "#94a3b8" }}>
+            style={{ color: pick(TEXT_MUTED, darkMode) }}>
             <Activity size={13} />
             Market Overview
           </motion.h2>
@@ -1123,7 +1112,7 @@ export default function ExchangeRate() {
             whileInView="visible"
             viewport={{ once: true }}
             className="text-xs font-black uppercase tracking-widest mb-4 flex items-center gap-2"
-            style={{ color: darkMode ? "#475569" : "#94a3b8" }}>
+            style={{ color: pick(TEXT_MUTED, darkMode) }}>
             <BarChart3 size={13} />
             Historical Rate Trend
           </motion.h2>
@@ -1140,17 +1129,17 @@ export default function ExchangeRate() {
         <footer className="text-center py-6">
           <p
             className="text-[11px]"
-            style={{ color: darkMode ? "#334155" : "#cbd5e1" }}>
-            Rate data by open.er-api.com · Rate bot signals are for
-            informational purposes only ·{" "}
+            style={{ color: pick(TEXT_SECONDARY, darkMode) }}>
+            Rate data by open.er-api.com Â· Rate bot signals are for
+            informational purposes only Â·{" "}
             <span
               className="font-bold"
               style={{
-                color: "#E88F2B",
+                color: pick(ACCENT, darkMode),
               }}>
               ConvertX
             </span>{" "}
-            © {new Date().getFullYear()}
+            Â© {new Date().getFullYear()}
           </p>
         </footer>
       </main>

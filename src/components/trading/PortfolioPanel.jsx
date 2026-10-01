@@ -1,6 +1,7 @@
 ﻿import { useMemo } from "react";
 import { Wallet, TrendingUp, TrendingDown, X } from "lucide-react";
 import { getCoinIcon } from "../../utils/coinIcons";
+import { ACCENT, BORDER, NEGATIVE, pick, POSITIVE, SURFACE_MUTED } from "../../styles/colors";
 
 export default function PortfolioPanel({ balance, positions, getPositionPnL, portfolioValue, totalPnL, initialBalance, darkMode, onClosePosition }) {
   const totalValue = useMemo(() => portfolioValue(), [portfolioValue]);
@@ -20,12 +21,12 @@ export default function PortfolioPanel({ balance, positions, getPositionPnL, por
     <div
       className="rounded-2xl p-4 flex h-full w-full flex-col gap-3"
       style={{
-        background: darkMode ? "rgba(255,255,255,0.02)" : "rgba(15,23,42,0.02)",
+        background: pick(SURFACE_MUTED, darkMode),
         border: darkMode ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(148,163,184,0.12)",
       }}
     >
       <div className="flex items-center gap-2 mb-1">
-        <Wallet size={18} className="text-[#E88F2B]" />
+        <Wallet size={18} className="text-accent" />
         <span className="text-lg font-black uppercase tracking-wider" style={tc("#94a3b8", "#475569")}>
           Portfolio
         </span>
@@ -35,29 +36,29 @@ export default function PortfolioPanel({ balance, positions, getPositionPnL, por
         <div
           className="rounded-xl p-3"
           style={{
-            background: darkMode ? "rgba(255,255,255,0.02)" : "rgba(15,23,42,0.02)",
-            border: darkMode ? "1px solid rgba(255,255,255,0.04)" : "1px solid rgba(148,163,184,0.08)",
+            background: pick(SURFACE_MUTED, darkMode),
+            border: "1px solid " + pick(BORDER, darkMode),
           }}
         >
           <span className="text-[13px] font-bold block mb-2" style={tc("#64748b", "#475569")}>Allocation</span>
-          <div className="h-2 rounded-full overflow-hidden flex gap-0.5" style={{ background: darkMode ? "rgba(255,255,255,0.04)" : "rgba(15,23,42,0.04)" }}>
-            <div className="h-full rounded-full" style={{ width: `${(balance / totalValue) * 100}%`, background: "#E88F2B" }} title={`Cash: ${((balance / totalValue) * 100).toFixed(1)}%`} />
+          <div className="h-2 rounded-full overflow-hidden flex gap-0.5" style={{ background: pick(SURFACE_MUTED, darkMode) }}>
+            <div className="h-full rounded-full" style={{ width: `${(balance / totalValue) * 100}%`, background: pick(ACCENT, darkMode) }} title={`Cash: ${((balance / totalValue) * 100).toFixed(1)}%`} />
             {positions.map((pos, i) => {
               const posVal = getPositionPnL(pos.id);
               const pct = posVal ? (posVal.currentValue / totalValue) * 100 : 0;
-              const colors = ["#3b82f6", "#22c55e", "#a855f7", "#ef4444", "#14b8a6", "#f59e0b", "#ec4899"];
+              const colors = ["#3b82f6", pick(POSITIVE, darkMode), "#a855f7", pick(NEGATIVE, darkMode), "#14b8a6", "#f59e0b", "#ec4899"];
               return <div key={pos.id} className="h-full rounded-full" style={{ width: `${pct}%`, background: colors[i % colors.length] }} title={`${pos.assetSymbol}: ${pct.toFixed(1)}%`} />;
             })}
           </div>
           <div className="flex flex-wrap gap-2 mt-2">
             <div className="flex items-center gap-1">
-              <div className="w-2 h-2 rounded-full" style={{ background: "#E88F2B" }} />
+              <div className="w-2 h-2 rounded-full" style={{ background: pick(ACCENT, darkMode) }} />
               <span className="text-[11px] font-bold" style={tc("#64748b", "#475569")}>Cash {((balance / totalValue) * 100).toFixed(1)}%</span>
             </div>
             {positions.map((pos, i) => {
               const posVal = getPositionPnL(pos.id);
               const pct = posVal ? (posVal.currentValue / totalValue) * 100 : 0;
-              const colors = ["#3b82f6", "#22c55e", "#a855f7", "#ef4444", "#14b8a6", "#f59e0b", "#ec4899"];
+              const colors = ["#3b82f6", pick(POSITIVE, darkMode), "#a855f7", pick(NEGATIVE, darkMode), "#14b8a6", "#f59e0b", "#ec4899"];
               return (
                 <div key={pos.id} className="flex items-center gap-1">
                   <div className="w-2 h-2 rounded-full" style={{ background: colors[i % colors.length] }} />
@@ -81,22 +82,22 @@ export default function PortfolioPanel({ balance, positions, getPositionPnL, por
           <div className="flex items-center gap-2">
             <span
               className="text-base font-mono font-black"
-              style={{ color: pnl.total >= 0 ? "#22c55e" : "#ef4444" }}
+              style={{ color: pnl.total >= 0 ? pick(POSITIVE, darkMode) : pick(NEGATIVE, darkMode) }}
             >
               {pnl.total >= 0 ? "+" : ""}${pnl.total.toFixed(2)}
             </span>
             <span
               className="text-[14px] font-bold"
-              style={{ color: pnlPercent >= 0 ? "#22c55e" : "#ef4444" }}
+              style={{ color: pnlPercent >= 0 ? pick(POSITIVE, darkMode) : pick(NEGATIVE, darkMode) }}
             >
               ({pnlPercent >= 0 ? "+" : ""}{pnlPercent.toFixed(2)}%)
             </span>
           </div>
         </div>
         {pnl.total >= 0 ? (
-          <TrendingUp size={20} className="text-green-400" />
+          <TrendingUp size={20} className="text-positive" />
         ) : (
-          <TrendingDown size={20} className="text-red-400" />
+          <TrendingDown size={20} className="text-negative" />
         )}
       </div>
 
@@ -105,7 +106,7 @@ export default function PortfolioPanel({ balance, positions, getPositionPnL, por
           <span className="text-[13px] font-bold block" style={tc("#64748b", "#475569")}>Realized</span>
           <span
             className="text-sm font-mono font-bold"
-            style={{ color: pnl.realized >= 0 ? "#22c55e" : "#ef4444" }}
+            style={{ color: pnl.realized >= 0 ? pick(POSITIVE, darkMode) : pick(NEGATIVE, darkMode) }}
           >
             {pnl.realized >= 0 ? "+" : ""}${pnl.realized.toFixed(2)}
           </span>
@@ -114,7 +115,7 @@ export default function PortfolioPanel({ balance, positions, getPositionPnL, por
           <span className="text-[13px] font-bold block" style={tc("#64748b", "#475569")}>Unrealized</span>
           <span
             className="text-sm font-mono font-bold"
-            style={{ color: pnl.unrealized >= 0 ? "#22c55e" : "#ef4444" }}
+            style={{ color: pnl.unrealized >= 0 ? pick(POSITIVE, darkMode) : pick(NEGATIVE, darkMode) }}
           >
             {pnl.unrealized >= 0 ? "+" : ""}${pnl.unrealized.toFixed(2)}
           </span>
@@ -134,8 +135,8 @@ export default function PortfolioPanel({ balance, positions, getPositionPnL, por
                 key={pos.id}
                 className="rounded-xl p-3 flex items-center justify-between"
                 style={{
-                  background: darkMode ? "rgba(255,255,255,0.02)" : "rgba(15,23,42,0.02)",
-                  border: darkMode ? "1px solid rgba(255,255,255,0.04)" : "1px solid rgba(148,163,184,0.08)",
+                  background: pick(SURFACE_MUTED, darkMode),
+                  border: "1px solid " + pick(BORDER, darkMode),
                 }}
               >
                 <div className="flex items-center gap-2.5">
@@ -154,23 +155,23 @@ export default function PortfolioPanel({ balance, positions, getPositionPnL, por
                   <div className="text-right">
                     <span
                       className="text-sm font-mono font-bold block"
-                      style={{ color: posPnL.unrealized >= 0 ? "#22c55e" : "#ef4444" }}
+                      style={{ color: posPnL.unrealized >= 0 ? pick(POSITIVE, darkMode) : pick(NEGATIVE, darkMode) }}
                     >
                       {posPnL.unrealized >= 0 ? "+" : ""}${posPnL.unrealized.toFixed(2)}
                     </span>
                     <span
                       className="text-[14px] font-bold"
-                      style={{ color: posPnL.percentChange >= 0 ? "#22c55e" : "#ef4444" }}
+                      style={{ color: posPnL.percentChange >= 0 ? pick(POSITIVE, darkMode) : pick(NEGATIVE, darkMode) }}
                     >
                       {posPnL.percentChange >= 0 ? "+" : ""}{posPnL.percentChange.toFixed(2)}%
                     </span>
                   </div>
                   <button
                     onClick={() => onClosePosition(pos.id)}
-                    className="w-6 h-6 rounded-lg flex items-center justify-center bg-red-500/10 hover:bg-red-500/20 transition-all cursor-pointer"
+                    className="w-6 h-6 rounded-lg flex items-center justify-center bg-danger-soft hover:bg-danger/20 transition-all cursor-pointer"
                     title="Close position"
                   >
-                    <X size={10} className="text-red-400" />
+                    <X size={10} className="text-negative" />
                   </button>
                 </div>
               </div>

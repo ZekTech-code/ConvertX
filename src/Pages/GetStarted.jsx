@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "../context/useTheme";
+import { ACCENT, accentAlpha, pick, POSITIVE, TEXT, TEXT_MUTED, TEXT_SECONDARY } from "../styles/colors";
 import ConvertXIcon from "../components/exchange/ConvertXIcon";
 import Toast from "../components/Toast";
 import { CountryDropdown } from "../components/CountryDropdowns";
@@ -22,7 +23,7 @@ function Field({ id, label, required, Icon, type = "text", value, onChange,
   return (
     <div>
       <label htmlFor={id} className="gs2-label">
-        {label}{required && <span className="text-rose-400 ml-0.5">*</span>}
+        {label}{required && <span className="text-negative ml-0.5">*</span>}
       </label>
       <div className={`gs2-input-wrap ${focusedField === id ? "gs2-focused" : ""} ${err ? "gs2-error" : ""}`}>
         {Icon && <Icon className="gs2-icon" />}
@@ -338,16 +339,16 @@ export default function GetStarted() {
       <div style={{ background: "#000000", minHeight: "100vh" }}
         className="flex items-center justify-center p-6">
         <div className="text-center max-w-xs p-8 rounded-3xl border border-white/10 bg-white/4 backdrop-blur-xl">
-          <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center mx-auto mb-5">
-            <WifiOff className="w-8 h-8 text-rose-400" />
+          <div className="w-16 h-16 rounded-2xl bg-danger-soft border border-danger-border flex items-center justify-center mx-auto mb-5">
+            <WifiOff className="w-8 h-8 text-negative" />
           </div>
           <h2 className="text-xl font-black text-white mb-2">No Connection</h2>
           <p className="text-sm text-white/40 leading-relaxed mb-6">
             ConvertX needs an active internet connection to authenticate you securely.
           </p>
           <button onClick={() => { if (navigator.onLine) setIsOffline(false); }}
-            className="w-full py-3 rounded-xl font-bold text-sm text-black"
-            style={{ background: "#E88F2B" }}>
+            className="w-full py-3 rounded-xl font-bold text-sm text-on-primary"
+            style={{ background: "var(--cx-accent)" }}>
             Try Again
           </button>
         </div>
@@ -455,8 +456,8 @@ export default function GetStarted() {
           overflow: hidden;
         }
         .gs2-input-wrap.gs2-focused {
-          border-color: #E88F2B;
-          box-shadow: 0 0 0 3px rgba(232,143,43,0.11);
+          border-color: var(--cx-accent);
+          box-shadow: 0 0 0 3px var(--cx-accent-ring);
         }
         .gs2-input-wrap.gs2-error {
           border-color: #f43f5e;
@@ -510,8 +511,8 @@ export default function GetStarted() {
           overflow: hidden;
         }
         .gs2-phone-wrap.gs2-focused {
-          border-color: #E88F2B;
-          box-shadow: 0 0 0 3px rgba(232,143,43,0.11);
+          border-color: var(--cx-accent);
+          box-shadow: 0 0 0 3px var(--cx-accent-ring);
         }
         .gs2-phone-wrap.gs2-error {
           border-color: #f43f5e;
@@ -560,12 +561,12 @@ export default function GetStarted() {
           align-items: center;
           justify-content: center;
           gap: 7px;
-          background: #E88F2B;
-          box-shadow: 0 6px 20px rgba(232,143,43,0.28);
+          background: var(--cx-primary);
+          box-shadow: var(--cx-shadow-primary);
           transition: transform 0.14s, box-shadow 0.14s;
           letter-spacing: 0.01em;
         }
-        .gs2-cta:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(232,143,43,0.36); }
+        .gs2-cta:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 10px 28px var(--cx-accent-glow); }
         .gs2-cta:active:not(:disabled){ transform: scale(0.98); }
         .gs2-cta:disabled { opacity: 0.55; cursor: not-allowed; }
 
@@ -641,7 +642,7 @@ export default function GetStarted() {
           border: 1px solid var(--gs2-feat-border);
           transition: border-color 0.2s, background 0.2s;
         }
-        .gs2-feat:hover { background: var(--gs2-feat-hover-bg); border-color: rgba(232,143,43,0.22); }
+        .gs2-feat:hover { background: var(--gs2-feat-hover-bg); border-color: var(--cx-accent-border); }
         .gs2-feat-icon {
           width: 32px; height: 32px;
           border-radius: 8px;
@@ -659,12 +660,12 @@ export default function GetStarted() {
 
         .gs2-verify {
           background: transparent;
-          border: 1px solid rgba(232,143,43,0.15);
+          border: 1px solid var(--cx-accent-border);
           border-radius: 16px;
           padding: 22px;
         }
 
-        .gs2-check { width: 15px; height: 15px; accent-color: #E88F2B; border-radius: 4px; cursor: pointer; flex-shrink: 0; margin-top: 1px; }
+        .gs2-check { width: 15px; height: 15px; accent-color: var(--cx-accent); border-radius: 4px; cursor: pointer; flex-shrink: 0; margin-top: 1px; }
 
         @media (max-width: 640px) {
           .gs2-header { padding: 14px 16px; }
@@ -686,8 +687,8 @@ export default function GetStarted() {
           "--gs2-card-shadow":       "0 20px 60px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.3)",
           "--gs2-tab-bar-bg":        "rgba(0,0,0,0.35)",
           "--gs2-tab-bar-border":    "rgba(255,255,255,0.06)",
-          "--gs2-tab-on-bg":         "rgba(232,143,43,0.1)",
-          "--gs2-tab-on-color":      "#E88F2B",
+          "--gs2-tab-on-bg":         accentAlpha(darkMode, 0.12),
+          "--gs2-tab-on-color":      pick(ACCENT, darkMode),
           "--gs2-tab-off-hover":     "#cbd5e1",
           "--gs2-input-border":      "rgba(255,255,255,0.1)",
           "--gs2-input-bg":          "rgba(255,255,255,0.05)",
@@ -700,8 +701,8 @@ export default function GetStarted() {
           "--gs2-google-hover-bg":   "rgba(255,255,255,0.09)",
           "--gs2-google-hover-border":"rgba(255,255,255,0.18)",
           "--gs2-divider":           "rgba(255,255,255,0.08)",
-          "--gs2-ticker-bg":         "rgba(232,143,43,0.06)",
-          "--gs2-ticker-border":     "rgba(232,143,43,0.12)",
+          "--gs2-ticker-bg":         accentAlpha(darkMode, 0.08),
+          "--gs2-ticker-border":     accentAlpha(darkMode, 0.16),
           "--gs2-ticker-pair":       "rgba(255,255,255,0.4)",
           "--gs2-ticker-val":        "rgba(255,255,255,0.8)",
           "--gs2-feat-bg":           "rgba(255,255,255,0.035)",
@@ -711,7 +712,7 @@ export default function GetStarted() {
           "--gs2-feat-icon-border":  "rgba(255,255,255,0.08)",
         } : {
           "--gs2-page-bg":           "#ffffff",
-          "--gs2-dot-color":         "rgba(232,143,43,0.06)",
+          "--gs2-dot-color":         accentAlpha(darkMode, 0.08),
           "--gs2-header-border":     "rgba(0,0,0,0.07)",
           "--gs2-back-color":        "#475569",
           "--gs2-back-border":       "rgba(0,0,0,0.1)",
@@ -738,8 +739,8 @@ export default function GetStarted() {
           "--gs2-google-hover-bg":   "#f8fafc",
           "--gs2-google-hover-border":"#cbd5e1",
           "--gs2-divider":           "#e2e8f0",
-          "--gs2-ticker-bg":         "rgba(232,143,43,0.06)",
-          "--gs2-ticker-border":     "rgba(232,143,43,0.12)",
+          "--gs2-ticker-bg":         accentAlpha(darkMode, 0.08),
+          "--gs2-ticker-border":     accentAlpha(darkMode, 0.16),
           "--gs2-ticker-pair":       "#64748b",
           "--gs2-ticker-val":        "#1e293b",
           "--gs2-feat-bg":           "rgba(255,255,255,0.65)",
@@ -763,21 +764,21 @@ export default function GetStarted() {
         <header className="gs2-header relative z-20">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-lg"
-              style={{ background: "#E88F2B", boxShadow: "0 4px 14px rgba(232,143,43,0.28)" }}>
-              <ConvertXIcon size={18} stroke="#000" />
+              style={{ background: "var(--cx-accent)", boxShadow: "var(--cx-shadow-primary)" }}>
+              <ConvertXIcon size={18} stroke="#ffffff" />
             </div>
             <div>
               <span className="gs2-heading text-[15px] font-black tracking-wide"
-                style={{ color: darkMode ? "#fff" : "#0f172a" }}>ConvertX</span>
+                style={{ color: pick(TEXT, darkMode) }}>ConvertX</span>
               <p className="text-[9px] font-semibold tracking-widest uppercase leading-none mt-0.5"
-                style={{ color: darkMode ? "rgba(255,255,255,0.3)" : "#64748b" }}>Secure Currency Platform</p>
+                style={{ color: pick(TEXT_SECONDARY, darkMode) }}>Secure Currency Platform</p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest"
-              style={{ background: "rgba(232,143,43,0.08)", border: "1px solid rgba(232,143,43,0.18)", color: "#E88F2B" }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
+              style={{ background: accentAlpha(darkMode, 0.1), border: `1px solid ${accentAlpha(darkMode, 0.22)}`, color: pick(ACCENT, darkMode) }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-positive animate-pulse inline-block" />
               Live Rates
             </span>
             <Link to="/" className="gs2-back-pill">
@@ -800,15 +801,15 @@ export default function GetStarted() {
               <div className="flex items-center gap-3 mb-5 pb-4"
                 style={{ borderBottom: `1px solid ${darkMode ? "rgba(255,255,255,0.07)" : "rgba(203,213,225,0.6)"}` }}>
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-                  style={{ background:"#E88F2B", boxShadow:"0 4px 12px rgba(232,143,43,0.25)" }}>
+                  style={{ background: "var(--cx-accent)", boxShadow: "var(--cx-shadow-primary)" }}>
                   {isSignUp
-                    ? <User style={{ width:16, height:16, color:"#000" }} />
-                    : <Lock style={{ width:14, height:14, color:"#000" }} />
+                    ? <User style={{ width:16, height:16, color:"#ffffff" }} />
+                    : <Lock style={{ width:14, height:14, color:"#ffffff" }} />
                   }
                 </div>
                 <div>
                   <p className="gs2-heading font-black text-[13px] tracking-wide"
-                    style={{ color: darkMode ? "#f1f5f9" : "#0f172a", lineHeight:1.2 }}>
+                    style={{ color: pick(TEXT, darkMode), lineHeight:1.2 }}>
                     {isSignUp ? "Create Account" : "Welcome Back"}
                   </p>
                   <p style={{ fontSize:10, color:"#94a3b8", fontWeight:500, marginTop:2 }}>
@@ -819,9 +820,9 @@ export default function GetStarted() {
                 </div>
                 <div className="ml-auto">
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full"
-                    style={{ background:"rgba(232,143,43,0.08)", border:"1px solid rgba(232,143,43,0.18)",
-                      fontSize:8, fontWeight:800, color:"#E88F2B", letterSpacing:"0.08em", textTransform:"uppercase" }}>
-                    <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse inline-block" />
+                style={{ background: accentAlpha(darkMode, 0.1), border: `1px solid ${accentAlpha(darkMode, 0.22)}`,
+                fontSize:8, fontWeight:800, color: pick(ACCENT, darkMode), letterSpacing:"0.08em", textTransform:"uppercase" }}>
+                    <span className="w-1 h-1 rounded-full bg-positive animate-pulse inline-block" />
                     Secure
                   </span>
                 </div>
@@ -862,25 +863,25 @@ export default function GetStarted() {
                   <div className="gs2-verify text-center">
                     <div className="flex justify-center mb-3">
                       <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest"
-                        style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)", color: "#10b981" }}>
+                        style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)", color: pick(POSITIVE, darkMode) }}>
                         <CheckCircle2 className="w-2.5 h-2.5" /> Email Registered
                       </span>
                     </div>
                     <div className="flex justify-center mb-3">
                       <div className="w-14 h-14 rounded-xl flex items-center justify-center"
-                        style={{ background: "rgba(232,143,43,0.1)", border: "1px solid rgba(232,143,43,0.18)" }}>
-                        <Inbox className="w-7 h-7 text-[#E88F2B]" />
+                        style={{ background: accentAlpha(darkMode, 0.12), border: `1px solid ${accentAlpha(darkMode, 0.22)}` }}>
+                        <Inbox className="w-7 h-7 text-accent" />
                       </div>
                     </div>
-                    <h4 className="gs2-heading text-lg font-black text-slate-900 mb-1">Check Your Inbox</h4>
-                    <p className="text-[11px] text-slate-400 leading-relaxed">
-                      We sent a link to <span className="font-bold text-[#E88F2B]">{verifiedEmail || email.trim()}</span>
+                    <h4 className="gs2-heading text-lg font-black text-text mb-1">Check Your Inbox</h4>
+                    <p className="text-[11px] text-text-muted leading-relaxed">
+                      We sent a link to <span className="font-bold text-accent">{verifiedEmail || email.trim()}</span>
                     </p>
-                    <div className="mt-3 p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
-                      <p className="text-[10px] font-semibold text-slate-600 leading-relaxed">
+                    <div className="mt-3 p-3 rounded-xl bg-surface-muted border border-border text-center">
+                      <p className="text-[10px] font-semibold text-text-secondary leading-relaxed">
                         Click the link in your email to activate your account.
                       </p>
-                      <p className="mt-1 text-[10px] text-slate-400">Can't find it? Check spam.</p>
+                      <p className="mt-1 text-[10px] text-text-muted">Can't find it? Check spam.</p>
                     </div>
                   </div>
                   <button type="button" disabled={resendingEmail || resendCooldown > 0}
@@ -890,7 +891,7 @@ export default function GetStarted() {
                   </button>
                   <button type="button"
                     onClick={() => { setVerificationPending(false); setVerifiedEmail(""); }}
-                    className="w-full text-[11px] font-bold text-slate-400 hover:text-slate-700 transition py-1 cursor-pointer">
+                    className="w-full text-[11px] font-bold text-text-muted hover:text-text transition py-1 cursor-pointer">
                     ← Back to Login
                   </button>
                 </motion.div>
@@ -1004,7 +1005,7 @@ export default function GetStarted() {
                               />
                               {email.trim() && !errors.email && (
                                 <div className="absolute right-8 top-1/2 -translate-y-1/2"
-                                  style={{ color: validateEmail(email) ? "#10b981" : "#f43f5e" }}>
+                                  style={{ color: validateEmail(email) ? pick(POSITIVE, darkMode) : "#f43f5e" }}>
                                   {validateEmail(email) ? <CheckCircle2 style={{width:12,height:12}} /> : <AlertCircle style={{width:12,height:12}} />}
                                 </div>
                               )}
@@ -1039,7 +1040,7 @@ export default function GetStarted() {
                       {!isSignUp && (
                         <button type="button" disabled={loading || resetLoading || success}
                           onClick={handleForgotPassword}
-                          className="text-[10px] font-bold text-[#E88F2B] hover:text-[#E88F2B] transition disabled:opacity-50 cursor-pointer">
+                          className="text-[10px] font-bold text-accent hover:text-accent-hover transition disabled:opacity-50 cursor-pointer">
                           {resetLoading ? "Sending…" : "Forgot password?"}
                         </button>
                       )}
@@ -1058,7 +1059,7 @@ export default function GetStarted() {
                       <button type="button" tabIndex={-1}
                         disabled={loading || success || lockoutTimeLeft > 0}
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-2.5 text-slate-400 hover:text-slate-600 transition cursor-pointer disabled:opacity-50">
+                        className="absolute right-2.5 text-text-muted hover:text-text-secondary transition cursor-pointer disabled:opacity-50">
                         {showPassword ? <EyeOff style={{ width:14,height:14 }} /> : <Eye style={{ width:14,height:14 }} />}
                       </button>
                     </div>
@@ -1067,11 +1068,11 @@ export default function GetStarted() {
                     {isSignUp && password && pwStrength && (
                       <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} className="mt-2 space-y-1">
                         <div className="flex items-center justify-between">
-                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Strength</span>
+                          <span className="text-[9px] font-bold text-text-muted uppercase tracking-widest">Strength</span>
                           <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full"
                             style={{
                               background: pwStrength.score <= 2 ? "rgba(244,63,94,0.1)" : pwStrength.score === 3 ? "rgba(245,158,11,0.1)" : "rgba(16,185,129,0.1)",
-                              color:      pwStrength.score <= 2 ? "#f43f5e"             : pwStrength.score === 3 ? "#f59e0b"             : "#10b981"
+                              color:      pwStrength.score <= 2 ? "#f43f5e"             : pwStrength.score === 3 ? "#f59e0b"             : pick(POSITIVE, darkMode)
                             }}>
                             {pwStrength.label}
                           </span>
@@ -1080,7 +1081,7 @@ export default function GetStarted() {
                           {[1,2,3,4,5].map(i => (
                             <div key={i} className="gs2-bar flex-1"
                               style={{ background: i <= pwStrength.score
-                                ? (pwStrength.score <= 2 ? "#f43f5e" : pwStrength.score === 3 ? "#f59e0b" : "#10b981")
+                                ? (pwStrength.score <= 2 ? "#f43f5e" : pwStrength.score === 3 ? "#f59e0b" : pick(POSITIVE, darkMode))
                                 : "#e2e8f0" }} />
                           ))}
                         </div>
@@ -1095,11 +1096,11 @@ export default function GetStarted() {
                           checked={acceptTerms}
                           disabled={loading || success || lockoutTimeLeft > 0}
                           onChange={e => { setAcceptTerms(e.target.checked); setErrors(p=>({...p,acceptTerms:""})); }} />
-                        <label htmlFor="terms" className="text-[11px] text-slate-400 leading-normal cursor-pointer select-none">
+                        <label htmlFor="terms" className="text-[11px] text-text-muted leading-normal cursor-pointer select-none">
                           I agree to the{" "}
-                          <a href="#" className="text-[#E88F2B] hover:underline font-semibold">Terms of Service</a>
+                          <a href="#" className="text-accent hover:underline font-semibold">Terms of Service</a>
                           {" "}and{" "}
-                          <a href="#" className="text-[#E88F2B] hover:underline font-semibold">Privacy Policy</a>
+                          <a href="#" className="text-accent hover:underline font-semibold">Privacy Policy</a>
                         </label>
                       </div>
                       {errors.acceptTerms && <p className="gs2-err-msg mt-1"><AlertCircle className="w-3 h-3 shrink-0" />{errors.acceptTerms}</p>}
@@ -1130,7 +1131,7 @@ export default function GetStarted() {
 
                   <div className="flex items-center gap-2.5">
                     <div className="gs2-divider" />
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest select-none">or</span>
+                    <span className="text-[10px] font-bold text-text-muted uppercase tracking-widest select-none">or</span>
                     <div className="gs2-divider" />
                   </div>
 
@@ -1145,11 +1146,11 @@ export default function GetStarted() {
                     Continue with Google
                   </button>
 
-                  <p className="text-center text-[11px] text-slate-400">
+                  <p className="text-center text-[11px] text-text-muted">
                     {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
                     <button type="button"
                       onClick={() => handleToggleMode(isSignUp ? "signin" : "signup")}
-                      className="text-[#E88F2B] font-bold hover:text-[#E88F2B] transition cursor-pointer">
+                      className="text-accent font-bold hover:text-accent transition cursor-pointer">
                       {isSignUp ? "Sign in" : "Create one"}
                     </button>
                   </p>
@@ -1168,26 +1169,26 @@ export default function GetStarted() {
           >
             <div className="text-center mb-8">
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-4"
-                style={{ background:"rgba(232,143,43,0.08)", border:"1px solid rgba(232,143,43,0.18)", color:"#E88F2B" }}>
+                style={{ background: accentAlpha(darkMode, 0.1), border: `1px solid ${accentAlpha(darkMode, 0.22)}`, color: pick(ACCENT, darkMode) }}>
                 <Sparkles style={{ width:11,height:11 }} />
                 Join the Institutional Network
               </span>
               <h1 className="gs2-heading text-3xl sm:text-4xl font-black leading-tight tracking-tight"
-                style={{ color: darkMode ? "#f1f5f9" : "#0f172a" }}>
+                style={{ color: pick(TEXT, darkMode) }}>
                 A smarter way to manage{" "}
-                <span style={{ color: "#E88F2B" }}>
+                <span style={{ color: pick(ACCENT, darkMode) }}>
                   global conversions.
                 </span>
               </h1>
               <p className="text-sm leading-relaxed mt-3 max-w-md mx-auto"
-                style={{ color: darkMode ? "rgba(255,255,255,0.4)" : "#64748b" }}>
+                style={{ color: pick(TEXT_SECONDARY, darkMode) }}>
                 Access real-time institutional exchange indices, interactive charts, and zero-spread market indicators — all in one place.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
               {[
-                { icon: <Globe style={{width:15,height:15,color:"#E88F2B"}} />, title:"180+ Supported Assets",
+                { icon: <Globe style={{width:15,height:15,color:pick(ACCENT, darkMode)}} />, title:"180+ Supported Assets",
                   desc:"Real-time conversion feeds across global currencies instantly." },
                 { icon: <Landmark style={{width:15,height:15,color:"#34d399"}} />, title:"Bank Rate Preview",
                   desc:"Compare commercial bank spreads vs live mid-market rates." },
@@ -1200,9 +1201,9 @@ export default function GetStarted() {
                   <div className="gs2-feat-icon">{f.icon}</div>
                   <div>
                     <h4 className="text-[12px] font-bold"
-                      style={{ color: darkMode ? "#f1f5f9" : "#1e293b" }}>{f.title}</h4>
+                      style={{ color: pick(TEXT, darkMode) }}>{f.title}</h4>
                     <p className="text-[10px] leading-relaxed mt-0.5"
-                      style={{ color: darkMode ? "rgba(255,255,255,0.35)" : "#64748b" }}>{f.desc}</p>
+                      style={{ color: pick(TEXT_SECONDARY, darkMode) }}>{f.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -1210,14 +1211,14 @@ export default function GetStarted() {
 
             <div className="overflow-hidden rounded-xl py-1"
               style={{
-                background: darkMode ? "rgba(255,255,255,0.03)" : "rgba(99,102,241,0.05)",
+                background: darkMode ? "rgba(255,255,255,0.03)" : accentAlpha(darkMode, 0.06),
                 border: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(99,102,241,0.1)"
               }}>
               <LiveRateTicker />
             </div>
 
             <p className="text-center text-[10px] font-medium mt-6"
-              style={{ color: darkMode ? "rgba(255,255,255,0.2)" : "#94a3b8" }}>
+              style={{ color: pick(TEXT_MUTED, darkMode) }}>
               © {new Date().getFullYear()} ConvertX Financial Inc. All rights reserved.
             </p>
           </motion.div>

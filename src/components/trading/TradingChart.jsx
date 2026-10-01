@@ -2,6 +2,7 @@
 import { createChart } from "lightweight-charts";
 import { Activity } from "lucide-react";
 import { getOHLCData, getBinanceOHLC } from "../../services/ExchangeApi";
+import { ACCENT, accentAlpha, NEGATIVE, pick, POSITIVE, PRIMARY, SURFACE, SURFACE_MUTED, TEXT, TEXT_MUTED, VIVID } from "../../styles/colors";
 
 function calculateEMA(data, period) {
   const k = 2 / (period + 1);
@@ -165,8 +166,8 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
       height: mainHeight,
       layout: {
         attributionLogo: false,
-        background: { type: "solid", color: darkMode ? "#000000" : "#ffffff" },
-        textColor: darkMode ? "#94a3b8" : "#475569",
+        background: { type: "solid", color: pick(SURFACE, darkMode) },
+        textColor: pick(TEXT_MUTED, darkMode),
       },
       grid: {
         vertLines: { color: darkMode ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)" },
@@ -184,16 +185,16 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
     });
 
     const candleSeries = chart.addCandlestickSeries({
-      upColor: "#22c55e", downColor: "#ef4444",
-      borderUpColor: "#22c55e", borderDownColor: "#ef4444",
-      wickUpColor: "#22c55e", wickDownColor: "#ef4444",
+      upColor: pick(POSITIVE, darkMode), downColor: pick(NEGATIVE, darkMode),
+      borderUpColor: pick(POSITIVE, darkMode), borderDownColor: pick(NEGATIVE, darkMode),
+      wickUpColor: pick(POSITIVE, darkMode), wickDownColor: pick(NEGATIVE, darkMode),
     });
 
-    const ema9Series = chart.addLineSeries({ color: "#E88F2B", lineWidth: 1.5, title: "EMA 9", priceLineVisible: false, lastValueVisible: false });
-    const ema21Series = chart.addLineSeries({ color: "#fbbf24", lineWidth: 1.5, title: "EMA 21", priceLineVisible: false, lastValueVisible: false });
+    const ema9Series = chart.addLineSeries({ color: pick(ACCENT, darkMode), lineWidth: 1.5, title: "EMA 9", priceLineVisible: false, lastValueVisible: false });
+    const ema21Series = chart.addLineSeries({ color: accentAlpha(darkMode, 0.7), lineWidth: 1.5, title: "EMA 21", priceLineVisible: false, lastValueVisible: false });
 
-    const bbUpperSeries = chart.addLineSeries({ color: "rgba(99,102,241,0.4)", lineWidth: 1, lineStyle: 2, priceLineVisible: false, lastValueVisible: false, visible: indicator === "bb" });
-    const bbLowerSeries = chart.addLineSeries({ color: "rgba(99,102,241,0.4)", lineWidth: 1, lineStyle: 2, priceLineVisible: false, lastValueVisible: false, visible: indicator === "bb" });
+    const bbUpperSeries = chart.addLineSeries({ color: accentAlpha(darkMode, 0.32), lineWidth: 1, lineStyle: 2, priceLineVisible: false, lastValueVisible: false, visible: indicator === "bb" });
+    const bbLowerSeries = chart.addLineSeries({ color: accentAlpha(darkMode, 0.32), lineWidth: 1, lineStyle: 2, priceLineVisible: false, lastValueVisible: false, visible: indicator === "bb" });
 
     const volumeSeries = chart.addHistogramSeries({
       priceFormat: { type: "volume" },
@@ -225,10 +226,10 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
       const p = initialData[i - 1];
       const n = initialData[i + 1];
       if (c.close > p.close && c.close > n.close && c.close > (initialData[i - 2]?.close || 0)) {
-        markers.push({ time: c.time, position: "aboveBar", color: "#22c55e", shape: "circle", size: 0.5 });
+        markers.push({ time: c.time, position: "aboveBar", color: pick(POSITIVE, darkMode), shape: "circle", size: 0.5 });
       }
       if (c.close < p.close && c.close < n.close && c.close < (initialData[i - 2]?.close || 0)) {
-        markers.push({ time: c.time, position: "belowBar", color: "#ef4444", shape: "circle", size: 0.5 });
+        markers.push({ time: c.time, position: "belowBar", color: pick(NEGATIVE, darkMode), shape: "circle", size: 0.5 });
       }
     }
     candleSeries.setMarkers(markers);
@@ -249,8 +250,8 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
         height: macdHeight,
         layout: {
           attributionLogo: false,
-          background: { type: "solid", color: darkMode ? "#000000" : "#ffffff" },
-          textColor: darkMode ? "#94a3b8" : "#475569",
+          background: { type: "solid", color: pick(SURFACE, darkMode) },
+          textColor: pick(TEXT_MUTED, darkMode),
         },
         grid: {
           vertLines: { color: darkMode ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)" },
@@ -261,8 +262,8 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
         crosshair: { mode: 0 },
       });
 
-      macdLineSeries = macdChart.addLineSeries({ color: "#3b82f6", lineWidth: 1.5, priceLineVisible: false, lastValueVisible: false });
-      macdSignalSeries = macdChart.addLineSeries({ color: "#E88F2B", lineWidth: 1.5, priceLineVisible: false, lastValueVisible: false });
+      macdLineSeries = macdChart.addLineSeries({ color: pick(ACCENT, darkMode), lineWidth: 1.5, priceLineVisible: false, lastValueVisible: false });
+      macdSignalSeries = macdChart.addLineSeries({ color: darkMode ? VIVID[200] : VIVID[800], lineWidth: 1.5, priceLineVisible: false, lastValueVisible: false });
       macdHistSeries = macdChart.addHistogramSeries({ priceLineVisible: false, lastValueVisible: false });
 
       const macdData = calculateMACD(initialData);
@@ -458,57 +459,57 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
     <div
       className="rounded-2xl overflow-hidden flex flex-col"
       style={{
-        background: darkMode ? "rgba(255,255,255,0.015)" : "rgba(15,23,42,0.015)",
+        background: pick(SURFACE_MUTED, darkMode),
         border: darkMode ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(148,163,184,0.12)",
         height: "650px",
       }}
     >
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 pb-2">
         <div className="flex items-center gap-2">
-          <Activity size={14} className="text-[#E88F2B] animate-pulse" />
-          <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: darkMode ? "#94a3b8" : "#475569" }}>
+          <Activity size={14} className="text-accent animate-pulse" />
+          <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: pick(TEXT_MUTED, darkMode) }}>
             {asset?.symbol || "Asset"} Price Chart
           </span>
           {currentPrice && (
-            <span className="text-xs font-mono font-bold ml-2" style={{ color: darkMode ? "#cbd5e1" : "#334155" }}>
+            <span className="text-xs font-mono font-bold ml-2" style={{ color: pick(TEXT, darkMode) }}>
               ${currentPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
           )}
           {dataSource !== "loading" && (
             <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ml-1 ${
-              dataSource === "Binance" ? "text-green-500 bg-green-500/10" :
-              dataSource === "CoinGecko" ? "text-amber-500 bg-amber-500/10" :
-              "text-red-500 bg-red-500/10"
+              dataSource === "Binance" ? "text-positive bg-success-soft" :
+              dataSource === "CoinGecko" ? "text-warning bg-warning-soft" :
+              "text-negative bg-danger-soft"
             }`}>
               {dataSource}
             </span>
           )}
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex gap-1 bg-slate-500/5 p-1 rounded-lg">
+          <div className="flex gap-1 bg-surface-sunken p-1 rounded-lg">
             {["1H", "4H", "1D", "1W"].map((tf) => (
               <button
                 key={tf}
                 onClick={() => setTimeframe(tf)}
                 className="px-2.5 py-1 rounded-md text-[10px] font-bold transition-all cursor-pointer"
                 style={{
-                  background: timeframe === tf ? "#E88F2B" : "transparent",
-                  color: timeframe === tf ? "#000" : darkMode ? "#94a3b8" : "#475569",
+                  background: timeframe === tf ? pick(PRIMARY, darkMode) : "transparent",
+                  color: timeframe === tf ? "#000" : pick(TEXT_MUTED, darkMode),
                 }}
               >
                 {tf}
               </button>
             ))}
           </div>
-          <div className="flex gap-1 bg-slate-500/5 p-1 rounded-lg">
+          <div className="flex gap-1 bg-surface-sunken p-1 rounded-lg">
             {["ema", "bb", "macd", "none"].map((ind) => (
               <button
                 key={ind}
                 onClick={() => setIndicator(ind)}
                 className="px-2.5 py-1 rounded-md text-[10px] font-bold transition-all cursor-pointer uppercase"
                 style={{
-                  background: indicator === ind ? "#E88F2B" : "transparent",
-                  color: indicator === ind ? "#000" : darkMode ? "#94a3b8" : "#475569",
+                  background: indicator === ind ? pick(PRIMARY, darkMode) : "transparent",
+                  color: indicator === ind ? "#000" : pick(TEXT_MUTED, darkMode),
                 }}
               >
                 {ind === "ema" ? "EMA" : ind === "bb" ? "BB" : ind === "macd" ? "MACD" : "Off"}
@@ -518,7 +519,7 @@ export default function TradingChart({ asset, darkMode, currentPrice, pricesRead
         </div>
       </div>
 
-      <div className="relative w-full flex-1 min-h-0" style={{ background: darkMode ? "#000000" : "#ffffff" }}>
+      <div className="relative w-full flex-1 min-h-0" style={{ background: pick(SURFACE, darkMode) }}>
         <div
           ref={chartContainerRef}
           className="w-full h-full"

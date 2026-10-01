@@ -1,4 +1,5 @@
-﻿import { useMemo, useState } from "react";
+﻿import { VIVID } from "../../styles/colors";
+import { useMemo, useState } from "react";
 import { ChevronsRight, Info } from "lucide-react";
 import { formatRate } from "../../utils/formatRate";
 
@@ -31,11 +32,11 @@ const SPREAD_SCENARIOS = {
 
 const SCENARIO_COLORS = {
   bank: "#f59e0b",
-  broker: "#E88F2B",
+  broker: VIVID[600],
   exchange: "#34d399",
   p2p: "#818cf8",
   remit: "#f43f5e",
-  fintech: "#E88F2B",
+  fintech: VIVID[400],
 };
 
 function formatMoney(value, currency) {
@@ -95,26 +96,25 @@ export default function SpreadEstimator({ rate, to, amount }) {
   }, [amount, rate, scenario.spread]);
 
   return (
-    <div className="bg-slate-50/80 dark:bg-black/20 border border-slate-200 dark:border-white/10 rounded-2xl p-4">
+    <div className="bg-surface-muted border border-border rounded-2xl p-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-1.5">
-          <ChevronsRight size={13} className="text-[#E88F2B]" />
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 font-sans">
+          <ChevronsRight size={13} className="text-accent" />
+          <span className="text-[10px] font-bold uppercase tracking-wider text-text-secondary font-sans">
             Spread Scenarios
           </span>
         </div>
         <button
           type="button"
           onClick={() => setShowTip((value) => !value)}
-          className="text-slate-400 hover:text-[#E88F2B] transition cursor-pointer"
-          title="What is this?"
-        >
+          className="text-text-muted hover:text-accent transition cursor-pointer"
+          title="What is this?">
           <Info size={12} />
         </button>
       </div>
 
       {showTip && (
-        <p className="text-[10px] text-slate-500 dark:text-slate-500 bg-slate-100 dark:bg-white/5 rounded-xl px-3 py-2 mb-3 font-sans leading-relaxed border border-slate-200 dark:border-white/5">
+        <p className="text-[10px] text-text-secondary bg-surface-muted rounded-xl px-3 py-2 mb-3 font-sans leading-relaxed border border-border">
           Scenario values estimate how a selected spread changes the live mid-market result.
           They are not live bank, broker, remittance, P2P, exchange, or fintech quotes.
         </p>
@@ -128,8 +128,8 @@ export default function SpreadEstimator({ rate, to, amount }) {
             onClick={() => setSelectedScenario(key)}
             className={`px-2.5 py-1 text-[10px] font-bold rounded-lg border transition cursor-pointer font-sans ${
               selectedScenario === key
-                ? "border-[#E88F2B]/40 text-[#E88F2B] dark:text-[#E88F2B]"
-                : "border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-white/20"
+                ? "border-accent/40 text-accent"
+                : "border-border text-text-secondary hover:border-border-strong dark:hover:border-white/20"
             }`}
             style={selectedScenario === key ? { background: `${SCENARIO_COLORS[key]}18` } : {}}
           >
@@ -138,22 +138,22 @@ export default function SpreadEstimator({ rate, to, amount }) {
         ))}
       </div>
 
-      <div className="mb-3 inline-flex items-center rounded-full bg-slate-100 dark:bg-white/5 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 font-sans">
+      <div className="mb-3 inline-flex items-center rounded-full bg-surface-muted px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-text-secondary font-sans">
         Selected spread: {scenario.spread}%
       </div>
 
       <div className="space-y-1.5">
         <div className="flex justify-between items-center">
-          <span className="text-[10px] text-slate-500 dark:text-slate-500 font-sans">
+          <span className="text-[10px] text-text-secondary font-sans">
             Mid-market rate
           </span>
-          <span className="font-mono text-[11px] font-bold text-slate-700 dark:text-slate-300 tabular-nums">
+          <span className="font-mono text-[11px] font-bold text-text tabular-nums">
             {Number.isFinite(Number(rate)) ? formatRate(Number(rate)) : "--"}
           </span>
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="text-[10px] text-slate-500 dark:text-slate-500 font-sans">
+          <span className="text-[10px] text-text-secondary font-sans">
             Scenario rate after {scenario.spread}% spread
           </span>
           <span
@@ -164,29 +164,29 @@ export default function SpreadEstimator({ rate, to, amount }) {
           </span>
         </div>
 
-        <div className="border-t border-slate-200 dark:border-white/5 pt-1.5 flex justify-between items-center">
-          <span className="text-[10px] text-slate-500 dark:text-slate-500 font-sans">
+        <div className="border-t border-border pt-1.5 flex justify-between items-center">
+          <span className="text-[10px] text-text-secondary font-sans">
             Mid-market total
           </span>
-          <span className="font-mono text-[11px] font-bold text-slate-700 dark:text-slate-300 tabular-nums">
+          <span className="font-mono text-[11px] font-bold text-text tabular-nums">
             {formatMoney(values.midMarketTotal, to)}
           </span>
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="text-[10px] text-slate-500 dark:text-slate-500 font-sans">
+          <span className="text-[10px] text-text-secondary font-sans">
             Estimated receive
           </span>
-          <span className="font-mono text-xs font-black text-emerald-600 dark:text-emerald-400 tabular-nums">
+          <span className="font-mono text-xs font-black text-positive tabular-nums">
             {formatMoney(values.estimatedReceive, to)}
           </span>
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="text-[10px] text-slate-500 dark:text-slate-500 font-sans">
+          <span className="text-[10px] text-text-secondary font-sans">
             Estimated spread cost
           </span>
-          <span className="font-mono text-[11px] font-semibold text-rose-600 dark:text-rose-400 tabular-nums">
+          <span className="font-mono text-[11px] font-semibold text-negative tabular-nums">
             {formatCost(values.estimatedSpreadCost, to)}
           </span>
         </div>

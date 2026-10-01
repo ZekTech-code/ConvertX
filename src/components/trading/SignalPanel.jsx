@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+﻿import { useMemo } from 'react';
 import { TrendingUp, TrendingDown, Minus, Shield, AlertTriangle, Target, Clock } from 'lucide-react';
 import { generateSignals, aggregateSignal, calculateATR } from '../../services/technicalAnalysis';
 
@@ -112,7 +112,7 @@ export default function SignalPanel({ currentPrice, priceHistory, priceHistoryMe
       }}
     >
       <div className="flex items-center gap-2 mb-1">
-        <Shield size={18} className="text-[#E88F2B]" />
+        <Shield size={18} className="text-accent" />
         <span className="text-lg font-black uppercase tracking-wider" style={tc('#94a3b8', '#475569')}>Trading Signals</span>
       </div>
 
@@ -155,7 +155,7 @@ export default function SignalPanel({ currentPrice, priceHistory, priceHistoryMe
             style={{ borderTop: darkMode ? '1px solid rgba(255,255,255,0.04)' : '1px solid rgba(148,163,184,0.08)' }}
           >
             <span className="font-bold" style={tc('#94a3b8', '#475569')}>Risk/Reward</span>
-            <span className={`font-mono font-bold ${analysis.riskReward >= 2 ? 'text-green-400' : 'text-amber-400'}`}>
+            <span className={`font-mono font-bold ${analysis.riskReward >= 2 ? 'text-positive' : 'text-warning'}`}>
               1:{Math.abs(analysis.riskReward).toFixed(1)}
             </span>
           </div>
@@ -210,8 +210,8 @@ export default function SignalPanel({ currentPrice, priceHistory, priceHistoryMe
         })}
       </div>
 
-      <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-[#E88F2B]/5 border border-[#E88F2B]/10">
-        <AlertTriangle size={9} className="text-[#E88F2B] shrink-0" />
+      <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-accent/5 border border-accent/10">
+        <AlertTriangle size={9} className="text-accent shrink-0" />
         <span className="text-[10px]" style={tc('#64748b', '#475569')}>Signals use market data only and are not financial advice.</span>
       </div>
     </div>

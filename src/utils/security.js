@@ -1,4 +1,4 @@
-import { db as firebaseDb, isFirebaseEnabled } from "../services/firebase";
+﻿import { db as firebaseDb, isFirebaseEnabled } from "../services/firebase";
 import {
   collection, addDoc, query, orderBy, limit as firestoreLimit,
   getDocs, deleteDoc, doc
@@ -22,7 +22,7 @@ export async function hashPassword(password, salt) {
 
 export function validatePasswordStrength(password) {
   if (!password) {
-    return { score: 0, label: "None", color: "bg-slate-300 dark:bg-white/10", feedback: "" };
+    return { score: 0, label: "None", color: "bg-surface-sunken /10", feedback: "" };
   }
 
   let score = 0;
@@ -59,13 +59,13 @@ export function validatePasswordStrength(password) {
   }
 
   let label = "Weak";
-  let color = "bg-rose-500";
+  let color = "bg-danger";
   if (score === 3) {
     label = "Medium";
-    color = "bg-amber-500";
+    color = "bg-warning";
   } else if (score >= 4) {
     label = "Strong";
-    color = "bg-emerald-500";
+    color = "bg-positive";
   }
 
   return {
@@ -123,7 +123,7 @@ export async function addSecurityLog(email, eventType, details = "", status = "S
 export async function getSecurityLogs(email) {
   if (!email || !isFirebaseEnabled || !firebaseDb) return [];
   try {
-    const logsRef = collection(firebaseDb, "users", email.toLowerCase(), "securityLogs");
+    const logsRef = collection(firebaseDb,"users", email.toLowerCase(), "securityLogs");
     const q = query(logsRef, orderBy("timestamp", "desc"), firestoreLimit(30));
     const snapshot = await getDocs(q);
     return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
@@ -146,7 +146,7 @@ export async function clearSecurityLogs(email) {
 }
 
 export function generateApiKey() {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const chars ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const randomValues = new Uint32Array(32);
   window.crypto.getRandomValues(randomValues);
   let token = "cc_live_";

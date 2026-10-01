@@ -14,6 +14,7 @@ import { useTheme } from "../../context/useTheme";
 import { formatRate } from "../../utils/formatRate";
 import { exportConversionHistoryAsCsv } from "../../utils/exportCsv";
 import ConvertXIcon from "./ConvertXIcon";
+import { ACCENT, accentAlpha, BORDER, CANVAS, NEGATIVE, POSITIVE, SURFACE, SURFACE_MUTED, TEXT, TEXT_MUTED, VIVID, WARNING, pick } from "../../styles/colors";
 
 const TABS = [
   { id: "flow",       label: "Flow Volume",   Icon: BarChart2 },
@@ -49,14 +50,14 @@ function getTransactionDateKey(timestamp) {
 
 
 const PALETTE = [
-  "#E88F2B",
-  "#f59e0b",
-  "#f97316",
-  "#eab308",
+  VIVID[600],
+  VIVID[400],
   "#94a3b8",
   "#d4d4d4",
-  "#10b981",
+  POSITIVE.light,
   "#8b5cf6",
+  VIVID[300],
+  "#0ea5e9",
 ];
 
 
@@ -215,7 +216,7 @@ function yFmt(v) {
 
 function EmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 py-16 text-slate-500">
+    <div className="flex flex-col items-center justify-center gap-3 py-16 text-text-secondary">
       <InboxIcon size={36} strokeWidth={1.2} />
       <p className="text-sm font-semibold text-center max-w-xs">
         No exchange data yet. Confirm a conversion above to start tracking your analytics.
@@ -229,18 +230,27 @@ export default function ExchangeFlowChart({ recentConversions = [], chartData = 
   const { darkMode } = useTheme();
 
   const themeColors = {
-    bg: darkMode ? "#000000" : "#f8fafc",
-    bgSecondary: darkMode ? "#000000" : "#f1f5f9",
-    bgCard: darkMode ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.03)",
-    border: darkMode ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.1)",
+    bg: CANVAS[darkMode ? "dark" : "light"],
+    bgSecondary: SURFACE_MUTED[darkMode ? "dark" : "light"],
+    bgCard: pick(SURFACE_MUTED, darkMode),
+    border: pick(BORDER, darkMode),
     borderLight: darkMode ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.06)",
-    text: darkMode ? "#e2e8f0" : "#1e293b",
-    textMuted: darkMode ? "#94a3b8" : "#64748b",
-    textDimmer: darkMode ? "#475569" : "#94a3b8",
-    gridStroke: darkMode ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)",
-    buttonBg: darkMode ? "#1e293b" : "#f1f5f9",
+    text: TEXT[darkMode ? "dark" : "light"],
+    textMuted: TEXT_MUTED[darkMode ? "dark" : "light"],
+    textDimmer: darkMode ? "#4a5875" : "#78879e",
+    gridStroke: darkMode ? "rgba(255,255,255,0.06)" : "rgba(15,23,42,0.08)",
+    buttonBg: pick(TEXT, darkMode),
     buttonBgHover: darkMode ? "#334155" : "#e2e8f0",
-    tooltip: darkMode ? "#000000" : "#ffffff",
+    tooltip: SURFACE[darkMode ? "dark" : "light"],
+    accent: ACCENT[darkMode ? "dark" : "light"],
+    accentSoft: accentAlpha(darkMode, 0.12),
+    accentBorder: accentAlpha(darkMode, 0.22),
+    accentFaint: accentAlpha(darkMode, 0.07),
+    onAccent: "#ffffff",
+    accentGlow: accentAlpha(darkMode, 0.1),
+    positive: POSITIVE[darkMode ? "dark" : "light"],
+    negative: NEGATIVE[darkMode ? "dark" : "light"],
+    warning: WARNING[darkMode ? "dark" : "light"],
   };
 
   const [activeTab, setActiveTab] = useState("flow");
@@ -462,7 +472,7 @@ useEffect(() => {
 
   return (
     <div style={{
-      background: darkMode ? "rgba(0,0,0,0.95)" : "rgba(248,250,252,0.95)",
+      background: pick(SURFACE, darkMode),
       border: `1px solid ${themeColors.border}`,
       borderRadius: "24px",
       boxShadow: darkMode ? "0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06)" : "0 20px 40px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.1)",
@@ -487,7 +497,7 @@ useEffect(() => {
                   height: "100%",
                   width: "100%",
                   borderRadius: "9999px",
-                  background: "#E88F2B",
+                  background: themeColors.accent,
                   opacity: 0.6,
                 }} />
                 <span style={{
@@ -496,7 +506,7 @@ useEffect(() => {
                   height: "8px",
                   width: "8px",
                   borderRadius: "9999px",
-                  background: "#E88F2B",
+                  background: themeColors.accent,
                 }} />
               </span>
               <h3 style={{ fontSize: "16px", fontWeight: "900", color: themeColors.text }}>
@@ -530,7 +540,7 @@ useEffect(() => {
                     cursor: "pointer",
                     transition: "all 0.2s ease",
                     background: period === p ? (darkMode ? "rgba(255,255,255,0.1)" : "#ffffff") : "transparent",
-                    color: period === p ? (darkMode ? "#ffffff" : "#1e293b") : themeColors.textMuted,
+                    color: period === p ? themeColors.onAccent : themeColors.textMuted,
                     boxShadow: period === p && !darkMode ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
                   }}
                 >
@@ -559,8 +569,8 @@ useEffect(() => {
               }}
               onMouseEnter={(e) => {
                 if (recentConversions.length > 0) {
-                  e.target.style.borderColor = "#E88F2B";
-                  e.target.style.color = "#E88F2B";
+                  e.target.style.borderColor = themeColors.accent;
+                  e.target.style.color = themeColors.accent;
                 }
               }}
               onMouseLeave={(e) => {
@@ -643,7 +653,7 @@ useEffect(() => {
               cursor: "pointer",
               border: "none",
               background: "transparent",
-              color: activeTab === id ? "#E88F2B" : themeColors.textMuted,
+              color: activeTab === id ? themeColors.accent : themeColors.textMuted,
               transition: "color 0.2s ease",
             }}
             onMouseEnter={(e) => {
@@ -664,7 +674,7 @@ useEffect(() => {
                   left: 0,
                   right: 0,
                   height: "2px",
-                  background: "#E88F2B",
+                  background: themeColors.accent,
                 }}
               />
             )}
@@ -701,7 +711,7 @@ useEffect(() => {
                   const isUp       = pctChange !== null && parseFloat(pctChange) >= 0;
 
                   return (
-                    <div key={pair} className={`w-full border shadow-xl ${darkMode ? 'bg-black/95 border-white/10 shadow-black/30' : 'bg-white border-slate-200 shadow-slate-200/40'}`} style={{
+                    <div key={pair} className={`w-full border shadow-xl ${darkMode ? 'bg-black/95 border-white/10 shadow-black/30' : 'bg-surface border-border shadow-card'}`} style={{
                       borderRadius: 10,
                       padding: "18px 18px 14px",
                       position: "relative",
@@ -740,19 +750,19 @@ useEffect(() => {
                             <div style={{
                               display: "flex", alignItems: "center", gap: 4,
                               background: isUp ? "rgba(16,185,129,0.12)" : "rgba(244,63,94,0.12)",
-                              border: `1px solid ${isUp ? "#10b981" : "#f43f5e"}30`,
+                              border: `1px solid ${isUp ? pick(POSITIVE, darkMode) : "#f43f5e"}30`,
                               borderRadius: 8, padding: "4px 9px",
                             }}>
-                              <span style={{ fontSize: 11, fontWeight: 800, fontFamily: "monospace", color: isUp ? "#10b981" : "#f43f5e" }}>
+                              <span style={{ fontSize: 11, fontWeight: 800, fontFamily: "monospace", color: isUp ? pick(POSITIVE, darkMode) : "#f43f5e" }}>
                                 {isUp ? "▲" : "▼"} {Math.abs(pctChange)}%
                               </span>
-                              <span style={{ fontSize: 8, color: darkMode ? "#475569" : "#94a3b8", fontWeight: 600 }}>vs prev day</span>
+                              <span style={{ fontSize: 8, color: pick(TEXT_MUTED, darkMode), fontWeight: 600 }}>vs prev day</span>
                             </div>
                           )}
                         </div>
 
                         <div style={{ textAlign: "right" }}>
-                          <p style={{ fontSize: 8, color: darkMode ? "#94a3b8" : "#64748b", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 2 }}>
+                          <p style={{ fontSize: 8, color: pick(TEXT_MUTED, darkMode), fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 2 }}>
                             Total Volume
                           </p>
                           <p style={{ fontSize: 22, fontWeight: 900, fontFamily: "monospace", color, lineHeight: 1, letterSpacing: "-0.01em" }}>
@@ -768,7 +778,7 @@ useEffect(() => {
                         background: darkMode
                           ? "#000000"
                           : "#ffffff",
-                        border: `1px solid ${darkMode ? "rgba(232,143,43,0.12)" : "rgba(232,143,43,0.16)"}`,
+                        border: `1px solid ${themeColors.accentBorder}`,
                         boxShadow: darkMode
                           ? "inset 0 1px 0 rgba(255,255,255,0.04), 0 18px 40px rgba(2,6,23,0.18)"
                           : "inset 0 1px 0 rgba(255,255,255,0.75), 0 18px 36px rgba(0,0,0,0.08)",
@@ -812,7 +822,7 @@ useEffect(() => {
                               tickFormatter={yFmt}
                             />
                             <Tooltip
-                              cursor={{ fill: darkMode ? "rgba(232,143,43,0.06)" : "rgba(14,165,233,0.08)" }}
+                              cursor={{ fill: themeColors.accentFaint }}
                               content={({ active, payload }) => {
                                 if (!active || !payload?.length) return null;
                                 const d = payload[0];
@@ -821,16 +831,16 @@ useEffect(() => {
                                     border: `1px solid rgba(56,189,248,0.18)`,
                                     borderRadius: 18,
                                     padding: "14px 18px",
-                                    background: darkMode ? "rgba(0,0,0,0.94)" : "rgba(255,255,255,0.96)",
+                                    background: pick(SURFACE, darkMode),
                                     backdropFilter: "blur(12px)",
                                   }}>
-                                    <p style={{ fontSize: 10, color: darkMode ? "#94a3b8" : "#64748b", marginBottom: 8, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" }}>
+                                    <p style={{ fontSize: 10, color: pick(TEXT_MUTED, darkMode), marginBottom: 8, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" }}>
                                       {d.payload.date}
                                     </p>
                                     <p style={{ fontSize: 22, fontWeight: 900, fontFamily: "monospace", color, lineHeight: 1.05, marginBottom: 4 }}>
                                       {yFmt(d.value)}
                                     </p>
-                                    <p style={{ fontSize: 10, color: darkMode ? "#94a3b8" : "#64748b", marginTop: 0, fontWeight: 600 }}>
+                                    <p style={{ fontSize: 10, color: pick(TEXT_MUTED, darkMode), marginTop: 0, fontWeight: 600 }}>
                                       units exchanged
                                     </p>
                                   </div>
@@ -859,13 +869,13 @@ useEffect(() => {
                           { label: "Avg / Day",   value: `${avgVol.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })} ${pair.split("/")[0]}` },
                           { label: "Days Active", value: String(daysActive) },
                         ].map(({ label, value }) => (
-                          <div key={label} className={`backdrop-blur-md transition ${darkMode ? 'bg-white/5 hover:bg-white/8' : 'bg-slate-50/80 hover:bg-slate-100'}`} style={{
+                          <div key={label} className={`backdrop-blur-md transition ${darkMode ? 'bg-white/5 hover:bg-white/8' : 'bg-surface-muted hover:bg-surface-sunken'}`} style={{
                             border: `1px solid ${color}30`,
                             borderRadius: 12,
                             padding: "10px 8px",
                             textAlign: "center",
                           }}>
-                            <p style={{ fontSize: "9px", color: darkMode ? "#94a3b8" : "#64748b", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>
+                            <p style={{ fontSize: "9px", color: pick(TEXT_MUTED, darkMode), fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>
                               {label}
                             </p>
                             <p style={{ fontSize: "13px", fontWeight: 800, fontFamily: "monospace", color, lineHeight: 1.2 }}>
@@ -917,7 +927,7 @@ useEffect(() => {
                           tick={({ x, y, payload }) => (
                             <g transform={`translate(${x},${y})`}>
                               <rect x={-40} y={-11} width={36} height={22} rx={6} ry={6}
-                                fill="rgba(148,163,184,0.1)" stroke="rgba(148,163,184,0.15)" strokeWidth={1}
+                                fill={accentAlpha(darkMode, 0.1)} stroke={accentAlpha(darkMode, 0.3)} strokeWidth={1}
                               />
                               <text x={-22} y={4} textAnchor="middle"
                                 fill="#94a3b8" fontSize={9} fontWeight={800} fontFamily="monospace">
@@ -926,29 +936,29 @@ useEffect(() => {
                             </g>
                           )}
                         />
-                        <ReferenceLine x={0} stroke="rgba(148,163,184,0.25)" strokeWidth={1} />
+                        <ReferenceLine x={0} stroke={themeColors.accentBorder} strokeWidth={1} />
                         <Tooltip
                           cursor={{ fill: "rgba(148,163,184,0.06)" }}
                           content={({ active, payload }) => {
                             if (!active || !payload?.length) return null;
                             const d       = payload[0];
                             const pos     = d.value >= 0;
-                            const color   = pos ? "#10b981" : "#f43f5e";
+                            const color   = pos ? pick(POSITIVE, darkMode) : "#f43f5e";
                             return (
                               <div style={{
-                                background: darkMode ? "#000000" : "#ffffff",
+                                background: pick(SURFACE, darkMode),
                                 border: `1px solid ${color}44`,
                                 borderRadius: 10,
                                 padding: "9px 13px",
                                 boxShadow: `0 4px 20px ${color}22`,
                               }}>
-                                <p style={{ fontSize: 12, fontWeight: 800, color: darkMode ? "#f8fafc" : "#000000", fontFamily: "monospace" }}>
+                                <p style={{ fontSize: 12, fontWeight: 800, color: pick(TEXT, darkMode), fontFamily: "monospace" }}>
                                   {d.payload.currency}
                                 </p>
                                 <p style={{ fontSize: 14, fontWeight: 900, color, fontFamily: "monospace", marginTop: 3 }}>
                                   {pos ? "+" : ""}{fmtVal(d.value)}
                                 </p>
-                                <p style={{ fontSize: 9, color: darkMode ? "#475569" : "#94a3b8", marginTop: 2, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                                <p style={{ fontSize: 9, color: pick(TEXT_MUTED, darkMode), marginTop: 2, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>
                                   {pos ? "Net Inflow" : "Net Outflow"}
                                 </p>
                               </div>
@@ -964,11 +974,11 @@ useEffect(() => {
                           label={{
                             position: "right",
                             formatter: v => (v >= 0 ? "+" : "") + fmtVal(v),
-                            style: { fontSize: 10, fontWeight: 800, fontFamily: "monospace", fill: darkMode ? "#64748b" : "#94a3b8" },
+                            style: { fontSize: 10, fontWeight: 800, fontFamily: "monospace", fill: pick(TEXT_MUTED, darkMode) },
                           }}
                         >
                           {netPositionData.map(({ currency, net }) => (
-                            <Cell key={currency} fill={net >= 0 ? "#E88F2B" : "#f43f5e"} />
+                            <Cell key={currency} fill={net >= 0 ? themeColors.accent : themeColors.negative} />
                           ))}
                         </Bar>
                       </BarChart>
@@ -976,7 +986,7 @@ useEffect(() => {
 
                     <div style={{ display: "flex", gap: 20, marginTop: 10 }}>
                       {[
-                        { label: "Net Inflow",  color: "#E88F2B" },
+                        { label: "Net Inflow",  color: themeColors.accent },
                         { label: "Net Outflow", color: "#f43f5e" },
                       ].map(({ label, color }) => (
                         <div key={label} style={{ display: "flex", alignItems: "center", gap: 7 }}>
@@ -1012,13 +1022,13 @@ useEffect(() => {
                   />
                   <div style={{ display: "flex", gap: 12 }}>
                     {[
-                      { key: "count",   label: "Conversions", color: "#E88F2B" },
+                      { key: "count",   label: "Conversions", color: themeColors.accent },
                       { key: "volume",  label: "Volume",      color: "#8b5cf6" },
-                      { key: "avgRate", label: "Avg Rate",    color: "#10b981" },
+                      { key: "avgRate", label: "Avg Rate",    color: pick(POSITIVE, darkMode) },
                     ].map(({ label, color }) => (
                       <div key={label} style={{ display: "flex", alignItems: "center", gap: 5 }}>
                         <span style={{ width: 8, height: 8, borderRadius: 2, background: color, flexShrink: 0 }} />
-                        <span style={{ fontSize: 10, fontWeight: 700, color: darkMode ? "#64748b" : "#94a3b8" }}>{label}</span>
+                        <span style={{ fontSize: 10, fontWeight: 700, color: pick(TEXT_MUTED, darkMode) }}>{label}</span>
                       </div>
                     ))}
                   </div>
@@ -1039,22 +1049,22 @@ useEffect(() => {
                       cursor={{ fill: "rgba(148,163,184,0.05)" }}
                       content={({ active, payload, label }) => {
                         if (!active || !payload?.length) return null;
-                        const colors = { count: "#E88F2B", volume: "#8b5cf6", avgRate: "#10b981" };
+                        const colors = { count: themeColors.accent, volume: "#8b5cf6", avgRate: themeColors.positive };
                         const labels = { count: "Conversions", volume: "Volume", avgRate: "Avg Rate" };
                         return (
                           <div style={{
-                            background: darkMode ? "#000000" : "#ffffff",
-                            border: darkMode ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(0,0,0,0.1)",
+                            background: pick(SURFACE, darkMode),
+                            border: "1px solid " + pick(BORDER, darkMode),
                             borderRadius: 10,
                             padding: "10px 14px",
                             minWidth: 160,
                           }}>
-                            <p style={{ fontSize: 11, fontWeight: 800, color: darkMode ? "#94a3b8" : "#64748b", marginBottom: 8, fontFamily: "monospace" }}>{label}</p>
+                            <p style={{ fontSize: 11, fontWeight: 800, color: pick(TEXT_MUTED, darkMode), marginBottom: 8, fontFamily: "monospace" }}>{label}</p>
                             {payload.map(e => (
                               <div key={e.dataKey} style={{ display: "flex", justifyContent: "space-between", gap: 16, marginBottom: 4 }}>
                                 <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
                                   <span style={{ width: 7, height: 7, borderRadius: 2, background: colors[e.dataKey] }} />
-                                  <span style={{ fontSize: 10, color: darkMode ? "#cbd5e1" : "#334155" }}>{labels[e.dataKey]}</span>
+                                  <span style={{ fontSize: 10, color: pick(TEXT, darkMode) }}>{labels[e.dataKey]}</span>
                                 </span>
                                 <span style={{ fontSize: 10, fontWeight: 800, fontFamily: "monospace", color: colors[e.dataKey] }}>
                                   {fmtVal(e.value)}
@@ -1065,14 +1075,14 @@ useEffect(() => {
                         );
                       }}
                     />
-                    <Area dataKey="count" name="Conversions" type="monotone" stroke="#E88F2B" strokeWidth={2.5} fill="#E88F2B" isAnimationActive animationDuration={600}
-                      dot={{ r: 3, fill: "#E88F2B", strokeWidth: 0 }}
+                    <Area dataKey="count" name="Conversions" type="monotone" stroke={themeColors.accent} strokeWidth={2.5} fill={themeColors.accent} isAnimationActive animationDuration={600}
+                      dot={{ r: 3, fill: themeColors.accent, strokeWidth: 0 }}
                     />
                     <Area dataKey="volume" name="Volume" type="monotone" stroke="#8b5cf6" strokeWidth={2.5} fill="#8b5cf6" fillOpacity={0.25} isAnimationActive animationDuration={700}
                       dot={{ r: 3, fill: "#8b5cf6", strokeWidth: 0 }}
                     />
-                    <Area dataKey="avgRate" name="Avg Rate" type="monotone" stroke="#10b981" strokeWidth={2.5} fill="#10b981" fillOpacity={0.18} isAnimationActive animationDuration={800}
-                      dot={{ r: 3, fill: "#10b981", strokeWidth: 0 }}
+                    <Area dataKey="avgRate" name="Avg Rate" type="monotone" stroke={themeColors.positive} strokeWidth={2.5} fill={themeColors.positive} fillOpacity={0.18} isAnimationActive animationDuration={800}
+                      dot={{ r: 3, fill: themeColors.positive, strokeWidth: 0 }}
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -1106,11 +1116,11 @@ useEffect(() => {
                           content={({ active, payload, label }) => {
                             if (!active || !payload?.length) return null;
                             return (
-                              <div style={{ background: darkMode ? "#000000" : "#ffffff", border: darkMode ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(0,0,0,0.1)", borderRadius: 10, padding: "10px 14px" }}>
-                                <p style={{ fontSize: 11, fontWeight: 800, color: darkMode ? "#94a3b8" : "#64748b", marginBottom: 8, fontFamily: "monospace" }}>{label}</p>
+                              <div style={{ background: pick(SURFACE, darkMode), border: "1px solid " + pick(BORDER, darkMode), borderRadius: 10, padding: "10px 14px" }}>
+                                <p style={{ fontSize: 11, fontWeight: 800, color: pick(TEXT_MUTED, darkMode), marginBottom: 8, fontFamily: "monospace" }}>{label}</p>
                                 {payload.map((e) => (
                                   <div key={e.dataKey} style={{ display: "flex", justifyContent: "space-between", gap: 18, marginBottom: 4 }}>
-                                    <span style={{ fontSize: 10, color: darkMode ? "#cbd5e1" : "#334155" }}>{e.name}</span>
+                                    <span style={{ fontSize: 10, color: pick(TEXT, darkMode) }}>{e.name}</span>
                                     <span style={{ fontSize: 10, fontWeight: 800, fontFamily: "monospace", color: e.color }}>{fmtVal(e.value)}</span>
                                   </div>
                                 ))}
@@ -1124,11 +1134,11 @@ useEffect(() => {
                           align="left"
                           iconType="plain line"
                           iconSize={9}
-                          wrapperStyle={{ fontSize: 10, color: darkMode ? "#64748b" : "#94a3b8", paddingTop: 12 }}
+                          wrapperStyle={{ fontSize: 10, color: pick(TEXT_MUTED, darkMode), paddingTop: 12 }}
                         />
-                        <Area dataKey="sent" name="Cumulative Sent" type="monotone" stroke="#E88F2B" strokeWidth={2.5} fill="#E88F2B" fillOpacity={0.2} dot={{ r: 3 }} />
-                        <Area dataKey="received" name="Cumulative Received" type="monotone" stroke="#10b981" strokeWidth={2.5} fill="#10b981" fillOpacity={0.15} dot={{ r: 3 }} />
-                        <Line dataKey="trades" name="Trades" type="monotone" stroke="#f59e0b" strokeWidth={2} dot={{ r: 3 }} />
+                        <Area dataKey="sent" name="Cumulative Sent" type="monotone" stroke={themeColors.accent} strokeWidth={2.5} fill={themeColors.accent} fillOpacity={0.2} dot={{ r: 3 }} />
+                        <Area dataKey="received" name="Cumulative Received" type="monotone" stroke={themeColors.positive} strokeWidth={2.5} fill={themeColors.positive} fillOpacity={0.15} dot={{ r: 3 }} />
+                        <Line dataKey="trades" name="Trades" type="monotone" stroke={themeColors.warning} strokeWidth={2} dot={{ r: 3 }} />
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>
@@ -1155,14 +1165,14 @@ useEffect(() => {
                     <p style={{ fontSize: 12, fontWeight: 800, color: themeColors.text, letterSpacing: "0.01em" }}>
                       Live {from}/{to} Rate Trend
                     </p>
-                    <p style={{ fontSize: 10, color: darkMode ? "#475569" : "#94a3b8", marginTop: 2 }}>
+                    <p style={{ fontSize: 10, color: pick(TEXT_MUTED, darkMode), marginTop: 2 }}>
                       30-day historical rate — sourced from open.er-api.com
                     </p>
                   </div>
                   <span style={{
                     fontSize: 9, fontWeight: 800, fontFamily: "monospace",
-                    color: "#E88F2B", background: "rgba(232,143,43,0.1)",
-                    border: "1px solid rgba(232,143,43,0.2)",
+                    color: themeColors.accent, background: themeColors.accentGlow,
+                    border: `1px solid ${themeColors.accentBorder}`,
                     padding: "3px 10px", borderRadius: 99, letterSpacing: "0.08em", textTransform: "uppercase",
                   }}>
                     {from}/{to} · Month View
@@ -1170,7 +1180,7 @@ useEffect(() => {
                 </div>
 
                 {loading || chartData.length === 0 ? (
-                  <div style={{ height: 280, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8, color: darkMode ? "#475569" : "#94a3b8" }}>
+                  <div style={{ height: 280, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8, color: pick(TEXT_MUTED, darkMode) }}>
                     <Waves size={28} style={{ opacity: 0.4 }} />
                     <p style={{ fontSize: 12, fontWeight: 600 }}>Loading market trend data…</p>
                   </div>
@@ -1180,19 +1190,19 @@ useEffect(() => {
                       <defs>
                         {/* Gradient defs removed - using solid colors */}
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={darkMode ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.06)"} />
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={themeColors.gridStroke} />
                       <XAxis
                         dataKey="date"
                         tickLine={false}
                         axisLine={false}
-                        tick={{ fill: darkMode ? "#475569" : "#94a3b8", fontSize: 9, fontWeight: 600 }}
+                        tick={{ fill: themeColors.textDimmer, fontSize: 9, fontWeight: 600 }}
                         tickFormatter={(d) => `Day ${d.split("-")[2]}`}
                       />
                       <YAxis
                         domain={["auto", "auto"]}
                         tickLine={false}
                         axisLine={false}
-                        tick={{ fill: darkMode ? "#475569" : "#94a3b8", fontSize: 9, fontWeight: 600 }}
+                        tick={{ fill: themeColors.textDimmer, fontSize: 9, fontWeight: 600 }}
                         tickFormatter={(v) => v.toFixed(2)}
                       />
                       <Tooltip
@@ -1201,16 +1211,16 @@ useEffect(() => {
                           const d = payload[0].payload;
                           return (
                             <div style={{
-                              background: darkMode ? "#000000" : "#ffffff",
-                              border: darkMode ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(0,0,0,0.1)",
+                              background: pick(SURFACE, darkMode),
+                              border: "1px solid " + pick(BORDER, darkMode),
                               borderRadius: 10,
                               padding: "10px 14px",
                               boxShadow: darkMode ? "0 8px 32px rgba(0,0,0,0.4)" : "0 8px 32px rgba(0,0,0,0.08)",
                             }}>
-                              <p style={{ fontSize: 10, fontWeight: 700, color: darkMode ? "#64748b" : "#94a3b8", marginBottom: 4, letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                              <p style={{ fontSize: 10, fontWeight: 700, color: pick(TEXT_MUTED, darkMode), marginBottom: 4, letterSpacing: "0.05em", textTransform: "uppercase" }}>
                                 Date: {d.date}
                               </p>
-                              <p style={{ fontSize: 13, fontWeight: 900, fontFamily: "monospace", color: "#E88F2B" }}>
+                              <p style={{ fontSize: 13, fontWeight: 900, fontFamily: "monospace", color: themeColors.accent }}>
                                 {d.rate?.toFixed ? d.rate.toFixed(6) : d.rate}
                               </p>
                             </div>
@@ -1220,9 +1230,9 @@ useEffect(() => {
                       <Area
                         type="monotone"
                         dataKey="rate"
-                        stroke="#E88F2B"
+                        stroke={themeColors.accent}
                         strokeWidth={2.5}
-                        fill="#E88F2B"
+                        fill={themeColors.accent}
                         fillOpacity={0.15}
                         isAnimationActive={false}
                       />

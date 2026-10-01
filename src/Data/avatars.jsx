@@ -1,20 +1,20 @@
 ﻿export const AVATARS = {
   avatar1: {
     label: "Developer",
-    color: "bg-[#E88F2B]/10 border-[#E88F2B]/30 text-[#E88F2B]",
+    color: "bg-accent/10 border-accent/30 text-accent",
     svg: (className) => (
       <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="100" height="100" rx="50" fill="#d97706" />
+        <rect width="100" height="100" rx="50" fill="#1b53e6" />
         <circle cx="50" cy="40" r="16" fill="white" fillOpacity="0.85" />
         <path d="M22 80C22 66.7 32.7 56 46 56H54C67.3 56 78 66.7 78 80V84H22V80Z" fill="white" fillOpacity="0.85" />
-        <path d="M34 46L27 53L34 60" stroke="#E88F2B" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M66 46L73 53L66 60" stroke="#E88F2B" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M34 46L27 53L34 60" stroke="#ffffff" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M66 46L73 53L66 60" stroke="#ffffff" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     )
   },
   avatar2: {
     label: "Standard",
-    color: "bg-slate-500/10 border-slate-500/30 text-slate-500",
+    color: "bg-surface-sunken border border-border text-text-secondary",
     svg: (className) => (
       <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="100" height="100" rx="50" fill="#64748B" />
@@ -38,7 +38,7 @@
   },
   avatar4: {
     label: "Financier",
-    color: "bg-emerald-500/10 border-emerald-500/30 text-emerald-500",
+    color: "bg-success-soft border-success-border text-positive",
     svg: (className) => (
       <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="100" height="100" rx="50" fill="#10B981" />
@@ -50,7 +50,7 @@
   },
   avatar5: {
     label: "Arbitrageur",
-    color: "bg-amber-500/10 border-amber-500/30 text-amber-500",
+    color: "bg-warning-soft border-warning-border text-warning",
     svg: (className) => (
       <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="100" height="100" rx="50" fill="#F59E0B" />
@@ -63,7 +63,7 @@
   },
   avatar6: {
     label: "Executive",
-    color: "bg-indigo-500/10 border-indigo-500/30 text-indigo-500",
+    color: "bg-accent-soft border-accent-border text-accent",
     svg: (className) => (
       <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="100" height="100" rx="50" fill="#6366F1" />

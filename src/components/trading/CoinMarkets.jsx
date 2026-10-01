@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+﻿import { useState, useEffect, useCallback, useMemo } from "react";
 import { getMarketPairs } from "../../services/ExchangeApi";
 import { getCoinIcon } from "../../utils/coinIcons";
+import { ACCENT, accentAlpha, BORDER, NEGATIVE, pick, POSITIVE, SURFACE_MUTED, TEXT, TEXT_MUTED, TEXT_SECONDARY } from "../../styles/colors";
 import { Loader2 } from "lucide-react";
 
 function formatNum(n) {
@@ -18,12 +19,12 @@ function formatPrice(p) {
   return p.toFixed(6);
 }
 
-const STATUS_COLORS = {
-  high: { bg: "rgba(34,197,94,0.1)", text: "#22c55e", label: "High" },
-  low: { bg: "rgba(239,68,68,0.1)", text: "#ef4444", label: "Low" },
-  medium: { bg: "rgba(232,143,43,0.12)", text: "#E88F2B", label: "Medium" },
-  na: { bg: "rgba(148,163,184,0.08)", text: "#64748b", label: "N/A" },
-};
+const STATUS_COLORS = (darkMode) => ({
+  high: { bg: "rgba(34,197,94,0.1)", text: pick(POSITIVE, darkMode), label: "High" },
+  low: { bg: "rgba(239,68,68,0.1)", text: pick(NEGATIVE, darkMode), label: "Low" },
+  medium: { bg: accentAlpha(darkMode, 0.14), text: pick(ACCENT, darkMode), label: "Medium" },
+  na: { bg: "rgba(148,163,184,0.08)", text: pick(TEXT_MUTED, darkMode), label: "N/A" },
+});
 
 function getComparablePrice(market, currentPrice) {
   const value = market?.priceUsd ?? market?.price ?? currentPrice;
@@ -31,12 +32,13 @@ function getComparablePrice(market, currentPrice) {
   return Number.isFinite(number) && number > 0 ? number : null;
 }
 
-function getMarketPriceBand(price, bands) {
-  if (price == null || !bands) return STATUS_COLORS.na;
-  if (bands.lowCut === bands.highCut) return STATUS_COLORS.medium;
-  if (price <= bands.lowCut) return STATUS_COLORS.low;
-  if (price >= bands.highCut) return STATUS_COLORS.high;
-  return STATUS_COLORS.medium;
+function getMarketPriceBand(price, bands, darkMode) {
+  const colors = STATUS_COLORS(darkMode);
+  if (price == null || !bands) return colors.na;
+  if (bands.lowCut === bands.highCut) return colors.medium;
+  if (price <= bands.lowCut) return colors.low;
+  if (price >= bands.highCut) return colors.high;
+  return colors.medium;
 }
 
 const CDN = "https://cdn.jsdelivr.net/gh/GMWalletApp/crypto-icons@latest/assets/exchanges/branded";
@@ -153,11 +155,11 @@ export default function CoinMarkets({ asset, darkMode, currentPrice, pricesReady
     return () => clearTimeout(timer);
   }, [fetchMarkets]);
 
-  const cardBg = darkMode ? "rgba(255,255,255,0.02)" : "rgba(15,23,42,0.02)";
-  const borderColor = darkMode ? "rgba(255,255,255,0.05)" : "rgba(148,163,184,0.12)";
+  const cardBg = pick(SURFACE_MUTED, darkMode);
+  const borderColor = pick(BORDER, darkMode);
 
   const headerStyle = {
-    color: darkMode ? "#64748b" : "#475569",
+    color: pick(TEXT_SECONDARY, darkMode),
     borderBottom: `1px solid ${borderColor}`,
     fontFamily: "Inter, sans-serif",
   };
@@ -190,9 +192,9 @@ export default function CoinMarkets({ asset, darkMode, currentPrice, pricesReady
           disabled={loading}
           className="text-[9px] font-bold px-2 py-1 rounded-lg cursor-pointer transition-all disabled:opacity-40"
           style={{
-            background: "rgba(232,143,43,0.08)",
-            border: "1px solid rgba(232,143,43,0.2)",
-            color: "#E88F2B",
+            background: accentAlpha(darkMode, 0.1),
+            border: `1px solid ${accentAlpha(darkMode, 0.28)}`,
+            color: pick(ACCENT, darkMode),
           }}
         >
           {loading ? "Loading..." : "Refresh"}
@@ -209,7 +211,7 @@ export default function CoinMarkets({ asset, darkMode, currentPrice, pricesReady
 
       {pricesReady && loading && markets.length === 0 && (
         <div className="flex items-center justify-center py-8 gap-2">
-          <Loader2 size={14} className="animate-spin text-[#E88F2B]" />
+          <Loader2 size={14} className="animate-spin text-accent" />
           <span className="text-xs" style={tc("#64748b", "#475569")}>Fetching {asset?.symbol || ""} market data...</span>
         </div>
       )}
@@ -235,12 +237,12 @@ export default function CoinMarkets({ asset, darkMode, currentPrice, pricesReady
               placeholder="Search by exchange or pair..."
               className="w-full text-[11px] font-sans pl-8 pr-3 py-2 rounded-lg outline-none transition-all"
               style={{
-                background: darkMode ? "rgba(255,255,255,0.04)" : "rgba(15,23,42,0.04)",
+                background: pick(SURFACE_MUTED, darkMode),
                 border: `1px solid ${borderColor}`,
-                color: darkMode ? "#e2e8f0" : "#1e293b",
+                color: pick(TEXT, darkMode),
               }}
             />
-            <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: darkMode ? "#64748b" : "#94a3b8" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: pick(TEXT_MUTED, darkMode) }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <circle cx="11" cy="11" r="8" />
               <path d="m21 21-4.35-4.35" strokeLinecap="round" />
             </svg>
@@ -248,7 +250,7 @@ export default function CoinMarkets({ asset, darkMode, currentPrice, pricesReady
               <button
                 onClick={() => setSearch("")}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-bold px-1.5 py-0.5 rounded transition cursor-pointer"
-                style={{ color: darkMode ? "#64748b" : "#94a3b8" }}
+                style={{ color: pick(TEXT_MUTED, darkMode) }}
               >
                 Clear
               </button>
@@ -277,7 +279,7 @@ export default function CoinMarkets({ asset, darkMode, currentPrice, pricesReady
               )}
               {filteredMarkets.map((m, i) => {
               const comparablePrice = getComparablePrice(m, currentPrice);
-              const status = getMarketPriceBand(comparablePrice, priceBands);
+              const status = getMarketPriceBand(comparablePrice, priceBands, darkMode);
               return (
                 <div
                   key={`${m.exchange}-${m.pair}-${i}`}
@@ -306,7 +308,7 @@ export default function CoinMarkets({ asset, darkMode, currentPrice, pricesReady
                   </div>
 
                   <div className="py-2.5 text-right pr-1">
-                    <span className="text-[11px] font-mono font-black whitespace-nowrap" style={{ color: darkMode ? "#ffffff" : "#0f172a", fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"' }}>
+                    <span className="text-[11px] font-mono font-black whitespace-nowrap" style={{ color: TEXT[darkMode], fontVariantNumeric: "tabular-nums", fontFeatureSettings: '"tnum"' }}>
                       ${formatPrice(m.price || currentPrice || 0)}
                     </span>
                   </div>
@@ -320,10 +322,10 @@ export default function CoinMarkets({ asset, darkMode, currentPrice, pricesReady
                   <div className="py-2.5 text-right hidden sm:flex items-center justify-end gap-1.5">
                     <div
                       className="h-1 rounded-full overflow-hidden"
-                      style={{ width: 40, background: darkMode ? "rgba(232,143,43,0.3)" : "rgba(232,143,43,0.2)" }}
+                      style={{ width: 40, background: accentAlpha(darkMode, darkMode ? 0.35 : 0.25) }}
                     >
                       <div
-                        className="h-full bg-[#E88F2B] rounded-full"
+                        className="h-full bg-primary rounded-full"
                         style={{ width: `${Math.min(m.marketShare || 0, 100)}%` }}
                       />
                     </div>

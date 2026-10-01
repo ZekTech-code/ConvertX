@@ -1,6 +1,7 @@
 ﻿import { useState, useEffect, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "../context/useTheme";
+import { ACCENT, accentAlpha, BORDER, NEGATIVE, pick, POSITIVE, SURFACE, SURFACE_MUTED, SURFACE_SUNKEN, TEXT, TEXT_MUTED, TEXT_SECONDARY } from "../styles/colors";
 import { useAuth } from "../context/useAuth";
 import { useMarketData } from "../hooks/useMarketData";
 import { useTrading } from "../hooks/useTrading";
@@ -122,13 +123,13 @@ export default function Trade() {
 
   if (!user) {
     return (
-      <div className={`min-h-screen flex items-center justify-center ${darkMode ? "bg-[#000000]" : "bg-white"}`}>
+      <div className={`min-h-screen flex items-center justify-center ${darkMode ? "bg-canvas" : "bg-white"}`}>
         <div className="text-center p-8">
-          <BarChart3 size={48} className="mx-auto mb-4 text-[#E88F2B]" />
-          <h2 className={`text-xl font-black mb-2 ${darkMode ? "text-white" : "text-slate-900"}`}>
+          <BarChart3 size={48} className="mx-auto mb-4 text-accent" />
+          <h2 className={`text-xl font-black mb-2 ${darkMode ? "text-white" : "text-text"}`}>
             Sign In to Trade
           </h2>
-          <p className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
+          <p className={`text-sm ${darkMode ? "text-text-muted" : "text-text-secondary"}`}>
             You need an account to access the trading dashboard.
           </p>
         </div>
@@ -140,13 +141,15 @@ export default function Trade() {
     return <PageLoader title="Loading Trading Dashboard" subtitle="Fetching live market data..." />;
   }
 
+  const mode = darkMode ? "dark" : "light";
   const cardStyle = {
-    background: darkMode ? "rgba(255,255,255,0.02)" : "rgba(15,23,42,0.02)",
-    border: darkMode ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(148,163,184,0.12)",
+    background: SURFACE_MUTED[mode],
+    border: "1px solid " + BORDER[mode],
+    borderRadius: "16px",
   };
 
   return (
-    <div className={`h-screen flex flex-col overflow-hidden transition-colors duration-300 ${darkMode ? "bg-[#000000]" : "bg-slate-50"}`}>
+    <div className="h-screen flex flex-col overflow-hidden transition-colors duration-300 bg-canvas text-text">
       <div className="max-w-400 mx-auto px-2 pt-3 w-full shrink-0">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -158,20 +161,20 @@ export default function Trade() {
               <button
                 onClick={() => navigate("/")}
                 className="flex items-center gap-1.5 text-[13px] font-bold transition-all cursor-pointer"
-                style={{ color: darkMode ? "#64748b" : "#475569" }}
+                style={{ color: TEXT_SECONDARY[mode] }}
               >
                 <ArrowLeft size={14} />
                 Back
               </button>
             </div>
             <div className="min-w-0 text-center px-12 sm:px-16">
-              <h1 className={`text-lg sm:text-3xl lg:text-4xl font-black tracking-tight whitespace-nowrap ${darkMode ? "text-white" : "text-slate-900"}`}>
+              <h1 className="text-lg sm:text-3xl lg:text-4xl font-black tracking-tight whitespace-nowrap text-text">
                 Trading Dashboard
               </h1>
-              <p className={`text-xs sm:text-sm mt-1 ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
+              <p className="text-xs sm:text-sm mt-1 text-text-secondary">
                 {marketData.loading ? "Loading market data..." : "Live data"}
                 {!marketData.loading && marketData.lastUpdated && (
-                  <span className="ml-2 text-slate-600">
+                  <span className="ml-2 text-text-secondary">
                     Updated {new Date(marketData.lastUpdated).toLocaleTimeString()}
                   </span>
                 )}
@@ -183,9 +186,11 @@ export default function Trade() {
                 disabled={marketData.loading}
                 className="hidden lg:flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer disabled:opacity-40"
                 style={{
-                  background: darkMode ? "rgba(255,255,255,0.04)" : "rgba(15,23,42,0.04)",
-                  border: darkMode ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(148,163,184,0.15)",
-                  color: darkMode ? "#94a3b8" : "#475569",
+                  background: SURFACE_MUTED[mode],
+                  border: "1px solid " + BORDER[mode],
+                  color: TEXT_SECONDARY[mode],
+                  cursor: "pointer",
+                  transition: "background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease",
                 }}
               >
                 <RefreshCw size={12} className={marketData.loading ? "animate-spin" : ""} />
@@ -195,9 +200,11 @@ export default function Trade() {
                 onClick={handleReset}
                 className="hidden lg:flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer"
                 style={{
-                  background: "rgba(239,68,68,0.08)",
-                  border: "1px solid rgba(239,68,68,0.2)",
-                  color: "#ef4444",
+                  background: "var(--cx-danger-soft)",
+                  border: "1px solid " + BORDER[mode],
+                  color: "var(--cx-danger)",
+                  cursor: "pointer",
+                  transition: "background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease",
                 }}
               >
                 <RotateCcw size={12} />
@@ -208,9 +215,9 @@ export default function Trade() {
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                   className="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl transition-all cursor-pointer"
                   style={{
-                    background: mobileMenuOpen ? "rgba(232,143,43,0.15)" : darkMode ? "rgba(255,255,255,0.04)" : "rgba(15,23,42,0.04)",
-                    border: mobileMenuOpen ? "1px solid rgba(232,143,43,0.3)" : darkMode ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(148,163,184,0.15)",
-                    color: "#E88F2B",
+                    background: mobileMenuOpen ? accentAlpha(darkMode, 0.14) : SURFACE_MUTED[mode],
+                    border: mobileMenuOpen ? `1px solid ${accentAlpha(darkMode, 0.32)}` : "1px solid " + BORDER[mode],
+                    color: mobileMenuOpen ? pick(ACCENT, darkMode) : TEXT_SECONDARY[mode],
                   }}
                 >
                   {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -219,9 +226,9 @@ export default function Trade() {
                   <div
                     className="absolute top-full right-0 mt-2 rounded-xl py-2 min-w-55 z-50"
                     style={{
-                      background: darkMode ? "#0a0a0a" : "#fff",
-                      border: darkMode ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(148,163,184,0.2)",
-                      boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+                      background: SURFACE[mode],
+                      border: "1px solid " + BORDER[mode],
+                      boxShadow: "var(--cx-shadow-pop)",
                     }}
                   >
                     {[
@@ -241,35 +248,35 @@ export default function Trade() {
                         }}
                         className="w-full flex items-center gap-3 px-4 py-3 transition-all cursor-pointer text-left"
                         style={{
-                          color: darkMode ? "#e2e8f0" : "#1e293b",
+                          color: TEXT[mode],
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.background = "rgba(232,143,43,0.08)";
+                          e.currentTarget.style.background = accentAlpha(darkMode, 0.1);
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.background = "transparent";
                         }}
                       >
-                        <item.icon size={16} style={{ color: "#E88F2B" }} />
+                        <item.icon size={16} style={{ color: pick(ACCENT, darkMode) }} />
                         <span className="text-sm font-bold">{item.label}</span>
                       </button>
                     ))}
-                    <div className="mx-3 my-1" style={{ borderTop: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(148,163,184,0.1)" }} />
+                    <div className="mx-3 my-1" style={{ borderTop: "1px solid " + BORDER[mode] }} />
                     <button
                       onClick={() => {
                         marketData.refresh();
                         setMobileMenuOpen(false);
                       }}
                       className="w-full flex items-center gap-3 px-4 py-3 transition-all cursor-pointer text-left"
-                      style={{ color: darkMode ? "#94a3b8" : "#64748b" }}
+                      style={{ color: TEXT_MUTED[mode] }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "rgba(232,143,43,0.08)";
+                        e.currentTarget.style.background = accentAlpha(darkMode, 0.1);
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = "transparent";
                       }}
                     >
-                      <RefreshCw size={16} style={{ color: "#E88F2B" }} />
+                      <RefreshCw size={16} style={{ color: pick(ACCENT, darkMode) }} />
                       <span className="text-sm font-bold">Refresh Data</span>
                     </button>
                     <button
@@ -278,9 +285,9 @@ export default function Trade() {
                         setMobileMenuOpen(false);
                       }}
                       className="w-full flex items-center gap-3 px-4 py-3 transition-all cursor-pointer text-left"
-                      style={{ color: "#ef4444" }}
+                      style={{ color: "var(--cx-danger)" }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "rgba(239,68,68,0.08)";
+                        e.currentTarget.style.background = "var(--cx-danger-soft)";
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.background = "transparent";
@@ -303,11 +310,11 @@ export default function Trade() {
           <div className="hidden lg:block min-h-0 overflow-y-auto space-y-2">
             <div className="rounded-2xl p-4 flex flex-col gap-3" style={cardStyle}>
               <div className="flex items-center gap-2 mb-1">
-                <BarChart3 size={18} className="text-[#E88F2B]" />
-                <span className="text-lg font-black uppercase tracking-wider" style={{ color: darkMode ? "#94a3b8" : "#475569" }}>
+                <BarChart3 size={18} className="text-accent" />
+                <span className="text-lg font-black uppercase tracking-wider text-text-secondary">
                   Market Watch
                 </span>
-                <span className="text-[13px] font-bold ml-auto" style={{ color: darkMode ? "#475569" : "#334155" }}>
+                <span className="text-[13px] font-bold ml-auto text-text-muted">
                   {allPrices.length} assets
                 </span>
               </div>
@@ -318,33 +325,33 @@ export default function Trade() {
                     onClick={() => setShowAssetPicker(!showAssetPicker)}
                     className="w-full flex items-center gap-2 p-2 rounded-xl transition-all cursor-pointer"
                     style={{
-                      background: darkMode ? "rgba(255,255,255,0.03)" : "rgba(15,23,42,0.03)",
-                      border: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(148,163,184,0.1)",
+                      background: SURFACE[mode],
+                      border: "1px solid " + BORDER[mode],
                     }}
                   >
                     <img src={getCoinIcon(selectedAsset.id)} alt="" width={36} height={36} className="rounded-full object-cover" style={{width: 36, height: 36}} />
                     <div className="flex-1 text-left">
-                      <span className={`text-base font-black ${darkMode ? "text-white" : "text-slate-900"}`}>
+                      <span className="text-base font-black text-text">
                         {selectedAsset.name}
                       </span>
-                      <span className={`text-sm ml-2 ${darkMode ? "text-slate-500" : "text-slate-400"}`}>
+                      <span className="text-sm ml-2 text-text-muted">
                         {selectedAsset.symbol}
                       </span>
                     </div>
                     <div className="text-right">
-                      <span className={`text-2xl font-mono font-black ${darkMode ? "text-white" : "text-slate-900"}`}>
+                      <span className="text-2xl font-mono font-black text-text">
                         ${formatPrice(currentPrice)}
                       </span>
                       {Number.isFinite(selectedAsset.change) && (
                         <span
                           className="text-sm font-bold ml-2"
-                          style={{ color: selectedAsset.change >= 0 ? "#22c55e" : "#ef4444" }}
+                          style={{ color: selectedAsset.change >= 0 ? POSITIVE[mode] : NEGATIVE[mode] }}
                         >
                           {selectedAsset.change >= 0 ? "+" : ""}{selectedAsset.change.toFixed(2)}%
                         </span>
                       )}
                     </div>
-                    <ChevronDown size={16} className={`${darkMode ? "text-slate-400" : "text-slate-500"} transition-transform ${showAssetPicker ? "rotate-180" : ""}`} />
+                    <ChevronDown size={16} className="text-text-secondary transition-transform duration-200" />
                   </button>
                 )}
 
@@ -352,20 +359,20 @@ export default function Trade() {
                   <div
                     className="absolute top-full left-0 right-0 mt-1 rounded-xl max-h-100 overflow-y-auto z-50"
                     style={{
-                      background: darkMode ? "#0a0a0a" : "#fff",
-                      border: darkMode ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(148,163,184,0.2)",
-                      boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+                      background: SURFACE[mode],
+                      border: "1px solid " + BORDER[mode],
+                      boxShadow: "var(--cx-shadow-pop)",
                     }}
                   >
                     <div className="sticky top-0 z-10 p-2" style={{
-                      background: darkMode ? "#0a0a0a" : "#fff",
-                      borderBottom: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(148,163,184,0.1)",
+                      background: SURFACE[mode],
+                      borderBottom: "1px solid " + BORDER[mode],
                     }}>
                       <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg" style={{
-                        background: darkMode ? "rgba(255,255,255,0.04)" : "rgba(15,23,42,0.04)",
-                        border: darkMode ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(148,163,184,0.15)",
+                        background: SURFACE_MUTED[mode],
+                        border: "1px solid " + BORDER[mode],
                       }}>
-                        <Search size={14} style={{ color: darkMode ? "#64748b" : "#475569" }} />
+                        <Search size={14} style={{ color: TEXT_SECONDARY[mode] }} />
                         <input
                           id="trade-market-search"
                           name="trade-market-search"
@@ -375,18 +382,18 @@ export default function Trade() {
                           placeholder="Search coins & currencies..."
                           autoFocus
                           className="flex-1 bg-transparent outline-none text-sm font-bold"
-                          style={{ color: darkMode ? "#e2e8f0" : "#0f172a" }}
+                          style={{ color: TEXT[mode] }}
                         />
                         {marketSearch && (
                           <button onClick={() => setMarketSearch("")} className="cursor-pointer">
-                            <X size={12} style={{ color: darkMode ? "#64748b" : "#475569" }} />
+                            <X size={12} style={{ color: TEXT_SECONDARY[mode] }} />
                           </button>
                         )}
                       </div>
                     </div>
                     {filteredPrices.length === 0 && (
                       <div className="px-4 py-6 text-center">
-                        <span className="text-[13px]" style={{ color: darkMode ? "#64748b" : "#475569" }}>
+                        <span className="text-[13px] text-text-secondary">
                           No results for "{marketSearch}"
                         </span>
                       </div>
@@ -395,29 +402,29 @@ export default function Trade() {
                       <button
                         key={item.id}
                         onClick={() => handleSelectAsset(item)}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 transition-all cursor-pointer text-left hover:bg-white/3"
+                        className="w-full flex items-center gap-3 px-3 py-2.5 transition-colors duration-150 cursor-pointer text-left hover:bg-accent-soft"
                         style={{
-                          borderBottom: darkMode ? "1px solid rgba(255,255,255,0.03)" : "1px solid rgba(148,163,184,0.06)",
+                          borderBottom: "1px solid " + BORDER[mode],
                         }}
                       >
                         <img src={getCoinIcon(item.id)} alt="" width={28} height={28} className="rounded-full object-cover" style={{width: 28, height: 28}} />
                         <div className="flex-1">
-                          <span className="text-sm font-black" style={{ color: darkMode ? "#e2e8f0" : "#1e293b" }}>{item.symbol}</span>
-                          <span className="text-[13px] ml-1.5" style={{ color: darkMode ? "#64748b" : "#475569" }}>{item.name}</span>
+                          <span className="text-sm font-black text-text">{item.symbol}</span>
+                          <span className="text-[13px] ml-1.5 text-text-muted">{item.name}</span>
                         </div>
                         <div className="text-right">
-                          <span className="text-sm font-mono font-bold" style={{ color: darkMode ? "#e2e8f0" : "#1e293b" }}>
+                          <span className="text-sm font-mono font-bold text-text">
                             {item.price != null && item.price > 0 ? `$${formatPrice(item.price)}` : "—"}
                           </span>
                           {item.price != null && item.price > 0 && Number.isFinite(item.change) ? (
                             <span
                               className="text-[14px] font-bold ml-1.5"
-                              style={{ color: item.change >= 0 ? "#22c55e" : "#ef4444" }}
+                              style={{ color: item.change >= 0 ? POSITIVE[mode] : NEGATIVE[mode] }}
                             >
                               {item.change >= 0 ? "+" : ""}{item.change.toFixed(2)}%
                             </span>
                           ) : (
-                            <span className="text-[14px] font-bold ml-1.5" style={{ color: darkMode ? "#64748b" : "#94a3b8" }}>
+                            <span className="text-[14px] font-bold ml-1.5 text-text-muted">
                               —
                             </span>
                           )}
@@ -456,7 +463,7 @@ export default function Trade() {
             </div>
           </div>
 
-          <div className={`${darkMode ? "bg-white/6" : "bg-slate-200"} hidden lg:block`} />
+          <div className={`${"bg-border"} hidden lg:block`} />
 
           <div style={{ touchAction: "pan-y" }}>
                 <TradingChart
@@ -468,7 +475,7 @@ export default function Trade() {
                 />
           </div>
 
-          <div className={`${darkMode ? "bg-white/6" : "bg-slate-200"} hidden lg:block`} />
+          <div className={`${"bg-border"} hidden lg:block`} />
 
           <div className="hidden lg:block min-h-0 overflow-y-auto space-y-2">
             <div className="rounded-2xl overflow-hidden" style={cardStyle}>
@@ -557,25 +564,25 @@ export default function Trade() {
               }
             }}
             style={{
-              background: darkMode ? "#050505" : "#f8fafc",
-              borderLeft: darkMode ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(148,163,184,0.15)",
+              background: pick(SURFACE_MUTED, darkMode),
+              borderLeft: "1px solid " + pick(BORDER, darkMode),
             }}
           >
             <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-3" style={{
-              background: darkMode ? "rgba(5,5,5,0.95)" : "rgba(248,250,252,0.95)",
+              background: pick(SURFACE, darkMode),
               backdropFilter: "blur(12px)",
               borderBottom: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(148,163,184,0.1)",
             }}>
-              <span className="text-lg font-black uppercase tracking-wider" style={{ color: "#E88F2B" }}>
+              <span className="text-lg font-black uppercase tracking-wider" style={{ color: pick(ACCENT, darkMode) }}>
                 Trade Menu
               </span>
               <button
                 onClick={() => { setMobileMenuOpen(false); setMobileNavTarget(null); }}
                 className="w-10 h-10 rounded-xl flex items-center justify-center transition-all cursor-pointer"
                 style={{
-                  background: darkMode ? "rgba(255,255,255,0.06)" : "rgba(15,23,42,0.06)",
+                  background: pick(SURFACE_SUNKEN, darkMode),
                   border: darkMode ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(148,163,184,0.15)",
-                  color: darkMode ? "#94a3b8" : "#475569",
+                  color: pick(TEXT_MUTED, darkMode),
                 }}
               >
                 <X size={20} />

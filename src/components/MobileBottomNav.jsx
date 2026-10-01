@@ -1,6 +1,7 @@
 ﻿import { useNavigate, useLocation } from "react-router-dom";
 import { Home, BarChart2, ArrowRightLeft, TrendingUp, User } from "lucide-react";
 import { useTheme } from "../context/useTheme";
+import { ACCENT, accentAlpha, BORDER, pick, SURFACE, TEXT_MUTED } from "../styles/colors";
 
 export default function MobileBottomNav({ hideProfile = false }) {
   const navigate = useNavigate();
@@ -53,10 +54,10 @@ export default function MobileBottomNav({ hideProfile = false }) {
     <nav
       className="md:hidden fixed bottom-0 left-0 right-0 z-999"
       style={{
-        background: darkMode ? "#000000" : "rgba(255, 255, 255, 0.92)",
+        background: pick(SURFACE, darkMode),
         backdropFilter: "blur(24px)",
         WebkitBackdropFilter: "blur(24px)",
-        borderTop: darkMode ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(148,163,184,0.15)",
+        borderTop: "1px solid " + pick(BORDER, darkMode),
         boxShadow: darkMode ? "0 -8px 32px rgba(0,0,0,0.4)" : "0 -8px 32px rgba(0,0,0,0.08)",
         paddingBottom: "env(safe-area-inset-bottom, 0px)",
       }}
@@ -100,8 +101,8 @@ export default function MobileBottomNav({ hideProfile = false }) {
                     width: 28,
                     height: 3,
                     borderRadius: "0 0 4px 4px",
-                    background: "#E88F2B",
-                    boxShadow: "0 0 10px rgba(232,143,43,0.6)",
+                    background: pick(ACCENT, darkMode),
+                    boxShadow: `0 0 12px ${accentAlpha(darkMode, 0.55)}`,
                   }}
                 />
               )}
@@ -115,19 +116,19 @@ export default function MobileBottomNav({ hideProfile = false }) {
                   height: 36,
                   borderRadius: 12,
                   background: active
-                    ? "rgba(232,143,43,0.18)"
+                    ? accentAlpha(darkMode, 0.16)
                     : "transparent",
                   border: active
-                    ? "1px solid rgba(232,143,43,0.25)"
+                    ? `1px solid ${accentAlpha(darkMode, 0.32)}`
                     : "1px solid transparent",
                   transition: "all 0.2s ease",
-                  boxShadow: active ? "0 0 12px rgba(232,143,43,0.15)" : "none",
+                  boxShadow: active ? `0 0 14px ${accentAlpha(darkMode, 0.22)}` : "none",
                 }}
               >
                 <Icon
                   size={18}
                   style={{
-                    color: active ? "#E88F2B" : darkMode ? "#64748b" : "#94a3b8",
+                    color: active ? pick(ACCENT, darkMode) : pick(TEXT_MUTED, darkMode),
                     transition: "color 0.2s ease",
                   }}
                 />
@@ -138,7 +139,7 @@ export default function MobileBottomNav({ hideProfile = false }) {
                   fontSize: 10,
                   fontWeight: active ? 700 : 500,
                   letterSpacing: "0.02em",
-                  color: active ? "#E88F2B" : darkMode ? "#64748b" : "#94a3b8",
+                  color: active ? pick(ACCENT, darkMode) : pick(TEXT_MUTED, darkMode),
                   transition: "color 0.2s ease",
                   whiteSpace: "nowrap",
                 }}

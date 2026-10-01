@@ -11,7 +11,7 @@
     >
       <path
         d="M 436,416 L 236,96 A 160,160 0 0,0 236,416 L 436,96"
-        stroke={stroke || "#E88F2B"}
+        stroke={stroke || "currentColor"}
         strokeWidth="72"
         strokeLinecap="round"
         strokeLinejoin="round"

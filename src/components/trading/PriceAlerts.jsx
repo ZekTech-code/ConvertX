@@ -1,6 +1,7 @@
-import { useState, useCallback } from "react";
+﻿import { useState, useCallback } from "react";
 import { Bell, BellOff, Plus, Trash2, TrendingUp, TrendingDown, CheckCircle } from "lucide-react";
 import { getCoinIcon } from "../../utils/coinIcons";
+import { ACCENT, accentAlpha, BORDER, pick, SURFACE_MUTED, TEXT, TEXT_SECONDARY } from "../../styles/colors";
 
 export default function PriceAlerts({ alerts, selectedAsset, currentPrice, darkMode, onAddAlert, onRemoveAlert }) {
   const [showForm, setShowForm] = useState(false);
@@ -47,18 +48,18 @@ export default function PriceAlerts({ alerts, selectedAsset, currentPrice, darkM
     <div
       className="rounded-2xl p-4 flex flex-col gap-3"
       style={{
-        background: darkMode ? "rgba(255,255,255,0.02)" : "rgba(15,23,42,0.02)",
+        background: pick(SURFACE_MUTED, darkMode),
         border: darkMode ? "1px solid rgba(255,255,255,0.05)" : "1px solid rgba(148,163,184,0.12)",
       }}
     >
       <div className="flex items-center justify-between mb-1">
         <div className="flex items-center gap-2">
-          <Bell size={18} className="text-[#E88F2B]" />
+          <Bell size={18} className="text-accent" />
           <span className="text-lg font-black uppercase tracking-wider" style={tc("#94a3b8", "#475569")}>
             Price Alerts
           </span>
           {activeAlerts.length > 0 && (
-            <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-md bg-[#E88F2B]/10 text-[#E88F2B]">
+            <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-md bg-accent/10 text-accent">
               {activeAlerts.length}
             </span>
           )}
@@ -67,9 +68,9 @@ export default function PriceAlerts({ alerts, selectedAsset, currentPrice, darkM
           onClick={() => setShowForm(!showForm)}
           className="p-1.5 rounded-lg transition-all cursor-pointer"
           style={{
-            background: showForm ? "rgba(232,143,43,0.15)" : darkMode ? "rgba(255,255,255,0.04)" : "rgba(15,23,42,0.04)",
-            border: showForm ? "1px solid rgba(232,143,43,0.3)" : darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(148,163,184,0.1)",
-            color: "#E88F2B",
+            background: showForm ? accentAlpha(darkMode, 0.14) : pick(SURFACE_MUTED, darkMode),
+            border: showForm ? `1px solid ${accentAlpha(darkMode, 0.32)}` : darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(148,163,184,0.1)",
+            color: pick(ACCENT, darkMode),
           }}
         >
           <Plus size={14} />
@@ -80,7 +81,7 @@ export default function PriceAlerts({ alerts, selectedAsset, currentPrice, darkM
         <div
           className="rounded-xl p-3 space-y-2"
           style={{
-            background: darkMode ? "rgba(255,255,255,0.03)" : "rgba(15,23,42,0.03)",
+            background: pick(SURFACE_MUTED, darkMode),
             border: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(148,163,184,0.1)",
           }}
         >
@@ -95,9 +96,9 @@ export default function PriceAlerts({ alerts, selectedAsset, currentPrice, darkM
                   onClick={() => setCondition(c)}
                   className="flex-1 py-2 rounded-lg text-[13px] font-bold uppercase transition-all cursor-pointer flex items-center justify-center gap-1"
                   style={{
-                    background: condition === c ? "rgba(232,143,43,0.12)" : "transparent",
-                    border: condition === c ? "1px solid rgba(232,143,43,0.25)" : darkMode ? "1px solid rgba(255,255,255,0.03)" : "1px solid rgba(148,163,184,0.08)",
-                    color: condition === c ? "#E88F2B" : darkMode ? "#64748b" : "#475569",
+                    background: condition === c ? accentAlpha(darkMode, 0.14) : "transparent",
+                    border: condition === c ? `1px solid ${accentAlpha(darkMode, 0.3)}` : "1px solid " + pick(BORDER, darkMode),
+                    color: condition === c ? pick(ACCENT, darkMode) : pick(TEXT_SECONDARY, darkMode),
                   }}
                 >
                   {c === "above" ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
@@ -121,9 +122,9 @@ export default function PriceAlerts({ alerts, selectedAsset, currentPrice, darkM
               step="0.01"
               className="w-full px-3 py-2 rounded-xl text-sm font-mono font-bold outline-none"
               style={{
-                background: darkMode ? "rgba(255,255,255,0.04)" : "rgba(15,23,42,0.04)",
-                border: darkMode ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(148,163,184,0.15)",
-                color: darkMode ? "#f1f5f9" : "#0f172a",
+                background: pick(SURFACE_MUTED, darkMode),
+                border: "1px solid " + pick(BORDER, darkMode),
+                color: pick(TEXT, darkMode),
               }}
             />
           </div>
@@ -132,8 +133,8 @@ export default function PriceAlerts({ alerts, selectedAsset, currentPrice, darkM
             disabled={!targetPrice}
             className="w-full py-2 rounded-xl text-[13px] font-black uppercase tracking-wider transition-all cursor-pointer disabled:opacity-40"
             style={{
-              background: "#E88F2B",
-              color: "#000",
+              background: pick(ACCENT, darkMode),
+              color: "#ffffff",
             }}
           >
             Set Alert
@@ -154,8 +155,8 @@ export default function PriceAlerts({ alerts, selectedAsset, currentPrice, darkM
           key={alert.id}
           className="flex items-center justify-between px-3 py-2 rounded-lg"
           style={{
-            background: darkMode ? "rgba(255,255,255,0.02)" : "rgba(15,23,42,0.02)",
-            border: darkMode ? "1px solid rgba(255,255,255,0.04)" : "1px solid rgba(148,163,184,0.08)",
+            background: pick(SURFACE_MUTED, darkMode),
+            border: "1px solid " + pick(BORDER, darkMode),
           }}
         >
           <div className="flex items-center gap-2">
@@ -163,16 +164,16 @@ export default function PriceAlerts({ alerts, selectedAsset, currentPrice, darkM
             <div>
               <span className="text-[14px] font-bold" style={tc("#e2e8f0", "#1e293b")}>{alert.assetSymbol}</span>
               <div className="text-[13px]" style={tc("#64748b", "#475569")}>
-                {alert.condition === "above" ? <TrendingUp size={10} className="inline mr-1 text-green-400" /> : <TrendingDown size={10} className="inline mr-1 text-red-400" />}
+                {alert.condition === "above" ? <TrendingUp size={10} className="inline mr-1 text-positive" /> : <TrendingDown size={10} className="inline mr-1 text-negative" />}
                 {alert.condition} ${formatPrice(alert.targetPrice)}
               </div>
             </div>
           </div>
           <button
             onClick={() => handleRemove(alert.id)}
-            className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 transition-all cursor-pointer"
+            className="p-1.5 rounded-lg bg-danger-soft hover:bg-danger/20 transition-all cursor-pointer"
           >
-            <Trash2 size={12} className="text-red-400" />
+            <Trash2 size={12} className="text-negative" />
           </button>
         </div>
       ))}
@@ -194,7 +195,7 @@ export default function PriceAlerts({ alerts, selectedAsset, currentPrice, darkM
               <div className="flex items-center gap-2">
                 <img src={getCoinIcon(alert.assetId)} alt="" width={20} height={20} className="rounded-full" style={{width: 20, height: 20}} />
                 <div>
-                  <span className="text-[13px] font-bold text-green-400">
+                  <span className="text-[13px] font-bold text-positive">
                     {alert.assetSymbol} {alert.condition} ${formatPrice(alert.targetPrice)}
                   </span>
                   {alert.triggeredAt && (
@@ -208,7 +209,7 @@ export default function PriceAlerts({ alerts, selectedAsset, currentPrice, darkM
                 onClick={() => handleRemove(alert.id)}
                 className="p-1 rounded cursor-pointer"
               >
-                <Trash2 size={10} className="text-red-400/50" />
+                <Trash2 size={10} className="text-negative/50" />
               </button>
             </div>
           ))}
@@ -216,9 +217,9 @@ export default function PriceAlerts({ alerts, selectedAsset, currentPrice, darkM
       )}
 
       {deleteToast && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-2 px-4 py-2.5 rounded-xl bg-green-500/10 border border-green-500/20 shadow-lg shadow-green-500/10 backdrop-blur-xl animate-[fadeIn_0.2s_ease]">
-          <CheckCircle size={14} className="text-green-500" />
-          <span className="text-xs font-bold text-green-500">{deleteToast}</span>
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[9999] flex items-center gap-2 px-4 py-2.5 rounded-xl bg-success-soft border border-success-border shadow-pop backdrop-blur-xl animate-[fadeIn_0.2s_ease]">
+          <CheckCircle size={14} className="text-positive" />
+          <span className="text-xs font-bold text-positive">{deleteToast}</span>
         </div>
       )}
     </div>

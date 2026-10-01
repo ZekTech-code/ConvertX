@@ -87,12 +87,12 @@ export default function WatchlistWidget({ baseCurrency = "USD" }) {
   );
 
   return (
-    <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-3xl p-5 shadow-xl backdrop-blur-xl">
+    <div className="bg-surface border border-border rounded-3xl p-5 shadow-xl backdrop-blur-xl">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Eye size={15} className="text-[#E88F2B]" />
+          <Eye size={15} className="text-accent" />
           <h3 className="text-sm font-bold font-sans">Watchlist</h3>
-          <span className="text-[10px] text-slate-400 dark:text-slate-500 font-sans">
+          <span className="text-[10px] text-text-muted font-sans">
             vs {baseCurrency}
           </span>
         </div>
@@ -101,7 +101,7 @@ export default function WatchlistWidget({ baseCurrency = "USD" }) {
           <button
             onClick={fetchRates}
             title="Refresh watchlist"
-            className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-[#E88F2B] hover:bg-slate-100 dark:hover:bg-white/5 transition cursor-pointer"
+            className="w-7 h-7 rounded-lg flex items-center justify-center text-text-muted hover:text-accent hover:bg-surface-muted dark:hover:bg-white/5 transition cursor-pointer"
           >
             <RefreshCw size={13} className={loading ? "animate-spin" : ""} />
           </button>
@@ -109,7 +109,7 @@ export default function WatchlistWidget({ baseCurrency = "USD" }) {
           <button
             onClick={() => setShowAdd((v) => !v)}
             title="Add currency"
-            className="w-7 h-7 rounded-lg flex items-center justify-center bg-[#E88F2B]/10 text-[#E88F2B] hover:bg-[#E88F2B]/20 transition cursor-pointer border border-[#E88F2B]/20"
+            className="w-7 h-7 rounded-lg flex items-center justify-center bg-accent/10 text-accent hover:bg-accent/20 transition cursor-pointer border border-accent/20"
           >
             <Plus size={13} />
           </button>
@@ -117,7 +117,7 @@ export default function WatchlistWidget({ baseCurrency = "USD" }) {
       </div>
 
       {showAdd && (
-        <div className="mb-3 bg-slate-50 dark:bg-black/30 border border-slate-200 dark:border-white/10 rounded-2xl p-3 space-y-2">
+        <div className="mb-3 bg-surface-muted border border-border rounded-2xl p-3 space-y-2">
           <input
             id="watchlist-search"
             name="watchlist-search"
@@ -125,7 +125,7 @@ export default function WatchlistWidget({ baseCurrency = "USD" }) {
             placeholder="Search currency..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full px-3 py-2 rounded-xl bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 text-xs font-sans text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-[#E88F2B] transition"
+            className="w-full px-3 py-2 rounded-xl bg-surface/40 border border-border text-xs font-sans text-text placeholder:text-text-muted focus:outline-none focus:border-accent transition"
             autoFocus
           />
           <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto">
@@ -133,27 +133,27 @@ export default function WatchlistWidget({ baseCurrency = "USD" }) {
               <button
                 key={code}
                 onClick={() => addCurrency(code)}
-                className="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-[#E88F2B] hover:text-[#E88F2B] transition cursor-pointer font-mono"
+                className="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-surface border border-border hover:border-accent hover:text-accent transition cursor-pointer font-mono"
               >
                 {code}
               </button>
             ))}
             {filteredAvailable.length === 0 && (
-              <p className="text-[10px] text-slate-400 px-1">No results</p>
+              <p className="text-[10px] text-text-muted px-1">No results</p>
             )}
           </div>
         </div>
       )}
 
       {error && (
-        <div className="flex items-center gap-1.5 text-[10px] text-rose-400 mb-3">
+        <div className="flex items-center gap-1.5 text-[10px] text-negative mb-3">
           <AlertCircle size={11} />
           <span>Failed to fetch live rates</span>
         </div>
       )}
 
       {watchlist.length === 0 ? (
-        <p className="text-center text-xs text-slate-400 dark:text-slate-500 py-4 font-sans">
+        <p className="text-center text-xs text-text-muted py-4 font-sans">
           No currencies in watchlist. Add one above.
         </p>
       ) : (
@@ -167,19 +167,19 @@ export default function WatchlistWidget({ baseCurrency = "USD" }) {
             return (
               <div
                 key={code}
-                className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition group"
+                className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-surface-muted dark:hover:bg-white/5 transition group"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-white/10 flex items-center justify-center shrink-0">
-                    <span className="text-[10px] font-black text-slate-600 dark:text-slate-300">
+                  <div className="w-7 h-7 rounded-lg bg-surface-muted flex items-center justify-center shrink-0">
+                    <span className="text-[10px] font-black text-text-secondary">
                       {code.slice(0, 2)}
                     </span>
                   </div>
                   <div className="min-w-0">
-                    <p className="text-xs font-black font-mono text-slate-800 dark:text-slate-100">
+                    <p className="text-xs font-black font-mono text-text">
                       {code}
                     </p>
-                    <p className="text-[9px] text-slate-400 dark:text-slate-500 font-sans truncate">
+                    <p className="text-[9px] text-text-muted font-sans truncate">
                       {CURRENCY_INFO[code]?.name ?? code}
                     </p>
                   </div>
@@ -187,15 +187,15 @@ export default function WatchlistWidget({ baseCurrency = "USD" }) {
 
                 <div className="flex items-center gap-2">
                   {loading && rate == null ? (
-                    <span className="w-14 h-3 bg-slate-200 dark:bg-white/10 rounded animate-pulse" />
+                    <span className="w-14 h-3 bg-surface-sunken /10 rounded animate-pulse" />
                   ) : (
                     <span
                       className={`text-xs font-mono font-bold tabular-nums transition-colors duration-500 ${
                         changed
                           ? up
-                            ? "text-emerald-600 dark:text-emerald-400"
-                            : "text-rose-600 dark:text-rose-400"
-                          : "text-slate-700 dark:text-slate-200"
+                            ? "text-positive"
+                            : "text-negative"
+                          : "text-text"
                       }`}
                     >
                       {formatWatchRate(rate)}
@@ -203,14 +203,14 @@ export default function WatchlistWidget({ baseCurrency = "USD" }) {
                   )}
 
                   {changed && (
-                    <span className={up ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}>
+                    <span className={up ? "text-positive" : "text-negative"}>
                       {up ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
                     </span>
                   )}
 
                   <button
                     onClick={() => removeCurrency(code)}
-                    className="w-5 h-5 rounded-md flex items-center justify-center text-slate-300 dark:text-slate-600 hover:text-rose-400 hover:bg-rose-500/10 transition opacity-0 group-hover:opacity-100 cursor-pointer"
+                    className="w-5 h-5 rounded-md flex items-center justify-center text-text-muted hover:text-negative hover:bg-danger-soft transition opacity-0 group-hover:opacity-100 cursor-pointer"
                     title="Remove"
                   >
                     <X size={10} />
@@ -222,7 +222,7 @@ export default function WatchlistWidget({ baseCurrency = "USD" }) {
         </div>
       )}
 
-      <p className="text-[9px] text-slate-400 dark:text-slate-600 mt-3 font-sans text-right">
+      <p className="text-[9px] text-text-muted mt-3 font-sans text-right">
         Auto-refreshes every 30s
       </p>
     </div>
