@@ -290,7 +290,7 @@ export default function CurrencyConverterHomePage() {
                   name="hero-amount"
                   type="number"
                   defaultValue="1000"
-                  className="w-full min-w-0 bg-surface-muted text-text rounded-xl px-4 py-2.5 text-sm sm:text-base font-bold font-mono outline-none focus:ring-2 focus:ring-accent/40 transition"
+                  className="w-full min-w-0 bg-surface-sunken text-text rounded-xl px-4 py-2.5 text-sm sm:text-base font-bold font-mono outline-none focus:bg-surface-muted transition"
                 />
               </div>
 
@@ -299,9 +299,9 @@ export default function CurrencyConverterHomePage() {
                   <label htmlFor="hero-from" className="block text-[10px] font-semibold uppercase tracking-wider text-text-secondary mb-1.5">
                     From
                   </label>
-                  <select id="hero-from" name="hero-from" className="w-full min-w-0 bg-surface text-text rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-accent/40 transition text-xs sm:text-sm font-bold cursor-pointer">
+                  <select id="hero-from" name="hero-from" className="w-full min-w-0 bg-surface-sunken text-text rounded-xl px-4 py-2.5 outline-none focus:bg-surface-muted transition text-xs sm:text-sm font-bold cursor-pointer">
                     {currencies.map((currency) => (
-                      <option key={currency} className="bg-surface text-text">{currency}</option>
+                      <option key={currency} className="bg-surface-raised text-text">{currency}</option>
                     ))}
                   </select>
                 </div>
@@ -310,9 +310,9 @@ export default function CurrencyConverterHomePage() {
                   <label htmlFor="hero-to" className="block text-[10px] font-semibold uppercase tracking-wider text-text-secondary mb-1.5">
                     To
                   </label>
-                  <select id="hero-to" name="hero-to" className="w-full min-w-0 bg-surface text-text rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-accent/40 transition text-xs sm:text-sm font-bold cursor-pointer">
+                  <select id="hero-to" name="hero-to" className="w-full min-w-0 bg-surface-sunken text-text rounded-xl px-4 py-2.5 outline-none focus:bg-surface-muted transition text-xs sm:text-sm font-bold cursor-pointer">
                     {currencies.map((currency) => (
-                      <option key={currency} className="bg-surface text-text">{currency}</option>
+                      <option key={currency} className="bg-surface-raised text-text">{currency}</option>
                     ))}
                   </select>
                 </div>

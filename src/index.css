@@ -62,9 +62,22 @@ input[type="range"]:focus-visible {
 }
 
 /* --------------------------------------------------------------------------
-   Native select dropdown list — the OS-rendered menu must stay readable
-   in both themes, so it uses the raised surface rather than the page canvas.
+   Native select dropdown list — the OS-rendered popup must match the theme,
+   otherwise Windows/Chrome paints it grey on top of our dark UI.
+
+   color-scheme has to be declared on the root element, not only on the
+   select: Chrome resolves the popup scheme from the root, so a rule scoped to
+   `select` alone leaves the menu grey. Declaring it in both places is what
+   actually colours the popup.
    -------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+}
+
 select {
   color-scheme: light;
 }

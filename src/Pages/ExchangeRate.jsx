@@ -276,11 +276,11 @@ function PairSelector({ activePair, setActivePair, rates, darkMode }) {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.97 }}
+            initial={{ opacity: 0, y: -8, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.97 }}
+            exit={{ opacity: 0, y: -8, scale: 0.97 }}
             transition={{ duration: 0.18 }}
-            className="absolute bottom-full left-0 mb-2 rounded-2xl overflow-y-auto overflow-x-hidden max-h-58 z-50 min-w-47.5 origin-bottom"
+            className="absolute top-full mt-2 left-0 rounded-2xl overflow-y-auto overflow-x-hidden max-h-56 z-50 min-w-47.5 origin-top"
             style={{
               background: pick(SURFACE_RAISED, darkMode),
               border: "1px solid " + pick(BORDER, darkMode),

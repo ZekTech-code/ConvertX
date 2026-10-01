@@ -140,22 +140,22 @@
   --cx-accent-ring: rgb(var(--cx-accent-rgb) / 0.45);
   --cx-accent-glow: rgb(var(--cx-accent-rgb) / 0.22);
 
-  /* Neutrals — solid, untinted.
-     Solid values (not translucent white/black) so every card reads as a
-     distinct, clearly-elevated surface on the page in both modes. */
-  --cx-canvas: #0a0a0b;
-  --cx-canvas-alt: #131316;
-  --cx-surface: #17171b;
-  --cx-surface-raised: #1f1f24;
+  /* Neutrals — solid, untinted, and uniform.
+     The page is solid black and every card shares one solid dark value, so
+     all cards read identically across every page in dark mode. */
+  --cx-canvas: #000000;
+  --cx-canvas-alt: #08080a;
+  --cx-surface: #121216;
+  --cx-surface-raised: #1a1a1f;
   --cx-surface-muted: #121216;
-  --cx-surface-sunken: #070708;
-  --cx-border: #2a2a31;
-  --cx-border-strong: #3a3a44;
+  --cx-surface-sunken: #08080a;
+  --cx-border: #26262c;
+  --cx-border-strong: #33333b;
 
   --cx-text: #ffffff;
   --cx-text-secondary: #a1a1aa;
   --cx-text-muted: #71717a;
-  --cx-text-inverse: #0a0a0b;
+  --cx-text-inverse: #000000;
 
   --cx-success: #34d399;
   --cx-success-soft: rgb(52 211 153 / 0.12);

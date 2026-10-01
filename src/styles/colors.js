@@ -46,15 +46,16 @@ export const WARNING = { light: "#b45309", dark: "#fbbf24" };
 export const DANGER = { light: "#cf1b3c", dark: "#fb7185" };
 
 /** Neutrals */
-/* Neutrals — untinted and solid. Solid values (not translucent overlays)
-   so cards read as distinct elevated surfaces on the page in both modes. */
-export const CANVAS = { light: "#f8fafc", dark: "#0a0a0b" };
-export const SURFACE = { light: "#ffffff", dark: "#17171b" };
-export const SURFACE_RAISED = { light: "#ffffff", dark: "#1f1f24" };
+/* Neutrals — solid, untinted and uniform in dark mode: the page is solid
+   black and every card shares one solid dark value, matching the Total
+   Volume tile in the flow volume panel. */
+export const CANVAS = { light: "#f8fafc", dark: "#000000" };
+export const SURFACE = { light: "#ffffff", dark: "#121216" };
+export const SURFACE_RAISED = { light: "#ffffff", dark: "#1a1a1f" };
 export const SURFACE_MUTED = { light: "#f8fafc", dark: "#121216" };
-export const SURFACE_SUNKEN = { light: "#f1f5f9", dark: "#070708" };
-export const BORDER = { light: "#e2e8f0", dark: "#2a2a31" };
-export const BORDER_STRONG = { light: "#cbd5e1", dark: "#3a3a44" };
+export const SURFACE_SUNKEN = { light: "#f1f5f9", dark: "#08080a" };
+export const BORDER = { light: "#e2e8f0", dark: "#26262c" };
+export const BORDER_STRONG = { light: "#cbd5e1", dark: "#33333b" };
 export const TEXT = { light: "#1e293b", dark: "#ffffff" };
 export const TEXT_SECONDARY = { light: "#64748b", dark: "#a1a1aa" };
 export const TEXT_MUTED = { light: "#94a3b8", dark: "#71717a" };
