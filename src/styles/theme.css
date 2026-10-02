@@ -188,25 +188,22 @@
 }
 
 /* --------------------------------------------------------------------------
-   3b. TRADE PAGE — TIGHTER CORNERS
-   The trading view is a dense data grid, so its panels get a smaller radius
-   than the rest of the app.
+   3b. TRADE PAGE — NO RADIUS OVERRIDE
+   The trade dashboard uses the same radius scale as every other page; its
+   cards are plain rounded-2xl like the rest of the app.
 
-   This overrides the radius *tokens* rather than writing a border-radius on
-   every descendant. A blanket descendant rule that zeroes the radius also
-   flattens genuinely circular things (the coin icons use rounded-full),
-   whereas remapping the tokens keeps rounded-full intact while shrinking
-   rounded-lg/xl/2xl. It also needs no !important, so a card can still opt
-   into a different radius locally.
+   Nothing is needed here. Two earlier attempts are worth recording so they
+   are not reintroduced:
+
+   - A blanket descendant rule that zeroes the radius also flattens genuinely
+     circular things. The coin icons use rounded-full, which compiles to a hard
+     3.40282e38px rather than a radius token, so forcing border-radius on
+     descendants squared them off.
+   - Remapping the radius tokens in a trade-scoped class shrinks the cards but
+     is a second source of truth for the scale. If the trade page ever does
+     need a different radius, override the token on a named scope rather than
+     reaching for border-radius on every descendant.
    -------------------------------------------------------------------------- */
-.tight-corners,
-.tight-corners * {
-  --cx-radius-md: 0.25rem;
-  --cx-radius-lg: 0.25rem;
-  --cx-radius-xl: 0.25rem;
-  --cx-radius-2xl: 0.3125rem;
-  --cx-radius-3xl: 0.375rem;
-}
 
 /* --------------------------------------------------------------------------
    4. TAILWIND TOKEN BRIDGE
