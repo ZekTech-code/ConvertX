@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 import {
@@ -865,7 +865,7 @@ export default function Profile() {
                         aria-label="Real-time price alerts"
                         checked={pushNotifications}
                         onChange={(e) => setPushNotifications(e.target.checked)}
-                        className="w-10 h-6 shrink-0 rounded-full border-border bg-surface-sunken/15 text-accent focus:ring-accent cursor-pointer"
+                        className="w-10 h-6 shrink-0 rounded-full border-border bg-surface-raised/60 text-accent focus:ring-accent cursor-pointer"
                       />
                     </div>
 
@@ -883,7 +883,7 @@ export default function Profile() {
                         aria-label="Weekly reserve market reports"
                         checked={emailReports}
                         onChange={(e) => setEmailReports(e.target.checked)}
-                        className="w-10 h-6 shrink-0 rounded-full border-border bg-surface-sunken/15 text-accent focus:ring-accent cursor-pointer"
+                        className="w-10 h-6 shrink-0 rounded-full border-border bg-surface-raised/60 text-accent focus:ring-accent cursor-pointer"
                       />
                     </div>
                   </div>
@@ -986,7 +986,7 @@ export default function Profile() {
                                   className={`h-full rounded-full transition-all duration-300 ${
                                     idx <= validatePasswordStrength(newPassword).score
                                       ? validatePasswordStrength(newPassword).color
-                                      : "bg-surface-sunken/15"
+                                      : "bg-surface-raised/60"
                                   }`}
                                 />
                               ))}
@@ -1083,7 +1083,7 @@ export default function Profile() {
                     </div>
 
                     {securityLogs.length === 0 ? (
-                      <div className="p-8 text-center border border-dashed border-border rounded-2xl bg-surface-muted/60 text-text-muted text-xs font-semibold font-sans">
+                      <div className="p-8 text-center border border-dashed border-border rounded-2xl bg-surface-hover text-text-muted text-xs font-semibold font-sans">
                         No security activity recorded yet.
                       </div>
                     ) : (
@@ -1100,7 +1100,7 @@ export default function Profile() {
                           </thead>
                           <tbody className="divide-y divide-border font-medium">
                             {securityLogs.map((log) => (
-                              <tr key={log.id} className="hover:bg-surface-muted/60 dark:hover:bg-white/5 transition">
+                              <tr key={log.id} className="hover:bg-surface-hover dark:hover:bg-white/5 transition">
                                 <td className="px-4 py-3.5">
                                   <div className="font-bold text-text">{log.eventType}</div>
                                   {log.details && (

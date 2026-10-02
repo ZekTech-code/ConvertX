@@ -14,7 +14,7 @@ import { useTheme } from "../../context/useTheme";
 import { formatRate } from "../../utils/formatRate";
 import { exportConversionHistoryAsCsv } from "../../utils/exportCsv";
 import ConvertXIcon from "./ConvertXIcon";
-import { ACCENT, accentAlpha, BORDER, NEGATIVE, pick, POSITIVE, SURFACE, SURFACE_MUTED, SURFACE_SUNKEN, TEXT, TEXT_MUTED, VIVID, WARNING } from "../../styles/colors";
+import { ACCENT, accentAlpha, BORDER, NEGATIVE, pick, POSITIVE, SURFACE, SURFACE_MUTED, SURFACE_RAISED, SURFACE_SUNKEN, TEXT, TEXT_MUTED, VIVID, WARNING } from "../../styles/colors";
 
 const TABS = [
   { id: "flow",       label: "Flow Volume",   Icon: BarChart2 },
@@ -241,7 +241,7 @@ export default function ExchangeFlowChart({ recentConversions = [], chartData = 
     gridStroke: darkMode ? "rgba(255,255,255,0.06)" : "rgba(15,23,42,0.08)",
     buttonBg: pick(SURFACE_MUTED, darkMode),
     buttonBgHover: pick(SURFACE_SUNKEN, darkMode),
-    tooltip: pick(SURFACE, darkMode),
+    tooltip: pick(SURFACE_RAISED, darkMode),
     accent: ACCENT[darkMode ? "dark" : "light"],
     accentSoft: accentAlpha(darkMode, 0.12),
     accentBorder: accentAlpha(darkMode, 0.22),
@@ -827,7 +827,7 @@ useEffect(() => {
                                     border: `1px solid rgba(56,189,248,0.18)`,
                                     borderRadius: 18,
                                     padding: "14px 18px",
-                                    background: pick(SURFACE, darkMode),
+                                    background: pick(SURFACE_RAISED, darkMode),
                                     backdropFilter: "blur(12px)",
                                   }}>
                                     <p style={{ fontSize: 10, color: pick(TEXT_MUTED, darkMode), marginBottom: 8, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" }}>
@@ -941,9 +941,9 @@ useEffect(() => {
                             const pos     = d.value >= 0;
                             const color   = pos ? pick(POSITIVE, darkMode) : "#f43f5e";
                             return (
-                              <div style={{
-                                background: pick(SURFACE, darkMode),
-                                border: `1px solid ${color}44`,
+<div style={{
+    background: pick(SURFACE_RAISED, darkMode),
+    border: `1px solid ${color}44`,
                                 borderRadius: 10,
                                 padding: "9px 13px",
                                 boxShadow: `0 4px 20px ${color}22`,
@@ -1049,9 +1049,9 @@ useEffect(() => {
                         const labels = { count: "Conversions", volume: "Volume", avgRate: "Avg Rate" };
                         return (
                           <div style={{
-                            background: pick(SURFACE, darkMode),
-                            border: "1px solid " + pick(BORDER, darkMode),
-                            borderRadius: 10,
+background: pick(SURFACE_RAISED, darkMode),
+    border: "1px solid " + pick(BORDER, darkMode),
+    borderRadius: 10,
                             padding: "10px 14px",
                             minWidth: 160,
                           }}>
@@ -1112,7 +1112,7 @@ useEffect(() => {
                           content={({ active, payload, label }) => {
                             if (!active || !payload?.length) return null;
                             return (
-                              <div style={{ background: pick(SURFACE, darkMode), border: "1px solid " + pick(BORDER, darkMode), borderRadius: 10, padding: "10px 14px" }}>
+                              <div style={{ background: pick(SURFACE_RAISED, darkMode), border: "1px solid " + pick(BORDER, darkMode), borderRadius: 10, padding: "10px 14px" }}>
                                 <p style={{ fontSize: 11, fontWeight: 800, color: pick(TEXT_MUTED, darkMode), marginBottom: 8, fontFamily: "monospace" }}>{label}</p>
                                 {payload.map((e) => (
                                   <div key={e.dataKey} style={{ display: "flex", justifyContent: "space-between", gap: 18, marginBottom: 4 }}>
@@ -1207,7 +1207,7 @@ useEffect(() => {
                           const d = payload[0].payload;
                           return (
                             <div style={{
-                              background: pick(SURFACE, darkMode),
+                              background: pick(SURFACE_RAISED, darkMode),
                               border: "1px solid " + pick(BORDER, darkMode),
                               borderRadius: 10,
                               padding: "10px 14px",

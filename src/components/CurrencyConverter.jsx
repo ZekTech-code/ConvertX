@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useMemo, useRef, lazy, Suspense } from "react";
+import { useState, useEffect, useMemo, useRef, lazy, Suspense } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRightLeft,
@@ -200,7 +200,7 @@ function CurrencyDropdown({ id, value, options, isOpen, onToggle, onChange }) {
           id={`${id}-menu`}
           role="listbox"
           aria-labelledby={`${id}-button`}
-          className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-full max-h-72 overflow-y-auto rounded-xl border border-border bg-surface shadow-pop py-1"
+          className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-full max-h-72 overflow-y-auto rounded-xl border border-border bg-surface-raised shadow-pop py-1"
         >
           {options.map((code) => {
             const selected = code === value;
@@ -234,7 +234,7 @@ function CustomTooltip({ active, payload, darkMode = false }) {
     const data = payload[0].payload;
 
     return (
-      <div className={`bg-surface border border-border backdrop-blur-md rounded-2xl p-4 shadow-pop font-sans text-xs ${darkMode ? "text-text" : "text-text"}`}>
+      <div className={`bg-surface-raised border border-border backdrop-blur-md rounded-2xl p-4 shadow-pop font-sans text-xs ${darkMode ? "text-text" : "text-text"}`}>
         <p className="text-[10px] text-text-muted font-bold uppercase tracking-wider">
           Date: {data.date}
         </p>
@@ -723,7 +723,7 @@ export default function CurrencyConverter() {
                   <span className="text-[10px] font-bold text-text-muted block mb-1 font-sans uppercase tracking-wider">Converted Result</span>
                   
                   <div className="py-2 animate-pulse" style={{ display: loading ? 'block' : 'none' }}>
-                    <div className="h-8 w-44 bg-surface-sunken/10 rounded-lg" />
+                    <div className="h-8 w-44 bg-surface-hover rounded-lg" />
                   </div>
                   
                   <div className="space-y-1" style={{ display: loading ? 'none' : 'block' }}>
@@ -796,7 +796,7 @@ export default function CurrencyConverter() {
                       className={`p-3 rounded-2xl border text-center transition-all duration-200 cursor-pointer flex flex-col items-center justify-center gap-1.5 ${
                         isActive
                           ? "border-accent bg-accent/10 text-accent font-bold"
-                          : "border-border hover:border-accent/40 text-text bg-surface-muted/60 "
+                          : "border-border hover:border-accent/40 text-text bg-surface-hover "
                       }`}
                     >
                       <span className="text-[10px] font-black font-mono text-text-secondary">
@@ -957,7 +957,7 @@ export default function CurrencyConverter() {
           </div>
 
           {recentConversions.length === 0 ? (
-            <div className="py-8 text-center border border-dashed border-border rounded-2xl bg-surface-muted/60 text-text-secondary text-xs font-semibold font-sans">
+            <div className="py-8 text-center border border-dashed border-border rounded-2xl bg-surface-hover text-text-secondary text-xs font-semibold font-sans">
               No conversions logged. Enter values in the converter and click "Confirm Conversion &amp; Save" above to save your first trade.
             </div>
           ) : (
@@ -973,7 +973,7 @@ export default function CurrencyConverter() {
                 </thead>
                 <tbody className="divide-y divide-border font-semibold">
                   {recentConversions.map((tx) => (
-                    <tr key={tx.id} className="hover:bg-surface-muted/60 dark:hover:bg-white/5 transition">
+                    <tr key={tx.id} className="hover:bg-surface-hover dark:hover:bg-white/5 transition">
                       <td className="px-4 py-2.5 text-text-secondary text-[11px]">
                         {new Date(tx.timestamp).toLocaleString()}
                       </td>

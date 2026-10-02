@@ -44,7 +44,7 @@ export default function Toast({
         className="fixed inset-0 z-9999 flex items-center justify-center p-4"
       >
         <div className="absolute inset-0 bg-black/65 backdrop-blur-md" />
-        <div className="relative w-full max-w-sm overflow-hidden bg-surface border border-border rounded-3xl shadow-pop p-6">
+        <div className="relative w-full max-w-sm overflow-hidden bg-surface-raised border border-border rounded-3xl shadow-pop p-6">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-44 h-44 rounded-full bg-success/20 blur-[60px] pointer-events-none" />
 
           <div className="flex flex-col items-center text-center relative z-10">
@@ -83,7 +83,7 @@ export default function Toast({
         exit={{ opacity: 0, x: 60 }}
         className="fixed top-6 right-6 z-9999 w-full max-w-90 select-none"
       >
-        <div className="w-full overflow-hidden bg-surface/95 border border-success-border rounded-2xl shadow-pop backdrop-blur-md p-4 flex gap-3.5 relative">
+        <div className="w-full overflow-hidden bg-surface-raised/95 border border-success-border rounded-2xl shadow-pop backdrop-blur-md p-4 flex gap-3.5 relative">
           <div className="absolute top-0 left-0 w-24 h-24 rounded-full bg-success/10 blur-2xl pointer-events-none" />
 
           <button
@@ -118,7 +118,7 @@ export default function Toast({
       animate={{ opacity: 1, x: 0, y: 0 }}
       className="fixed top-6 right-6 z-9999 w-full max-w-90 p-2 select-none"
     >
-      <div className="w-full overflow-hidden bg-surface/95 border border-danger-border rounded-2xl shadow-pop backdrop-blur-md p-4 flex gap-3.5 relative">
+      <div className="w-full overflow-hidden bg-surface-raised/95 border border-danger-border rounded-2xl shadow-pop backdrop-blur-md p-4 flex gap-3.5 relative">
         <button
           onClick={onClose}
           className="absolute top-2.5 right-2.5 p-1 rounded-lg text-text-muted hover:text-text transition duration-200 cursor-pointer"

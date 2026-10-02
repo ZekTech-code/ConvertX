@@ -1,7 +1,7 @@
 ﻿import { useEffect, useState } from "react";
 import { CheckCircle, X, TrendingUp, TrendingDown } from "lucide-react";
 import { getCoinIcon } from "../../utils/coinIcons";
-import { BORDER, pick, POSITIVE, SURFACE, SURFACE_MUTED, SURFACE_SUNKEN, TEXT, TEXT_MUTED } from "../../styles/colors";
+import { BORDER, pick, POSITIVE, SURFACE_MUTED, SURFACE_RAISED, SURFACE_SUNKEN, TEXT, TEXT_MUTED } from "../../styles/colors";
 
 export default function AlertToast({ alert, onDismiss, darkMode }) {
   const [progress, setProgress] = useState(100);
@@ -56,7 +56,7 @@ export default function AlertToast({ alert, onDismiss, darkMode }) {
       <div
         className="rounded-2xl overflow-hidden pointer-events-auto"
         style={{
-          background: pick(SURFACE, darkMode),
+          background: pick(SURFACE_RAISED, darkMode),
           border: "1px solid rgba(34,197,94,0.25)",
           boxShadow: "0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(34,197,94,0.1)",
           backdropFilter: "blur(20px)",

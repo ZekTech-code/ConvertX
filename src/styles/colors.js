@@ -50,10 +50,14 @@ export const DANGER = { light: "#cf1b3c", dark: "#fb7185" };
    black and every card shares one solid dark value, matching the Total
    Volume tile in the flow volume panel. */
 export const CANVAS = { light: "#f8fafc", dark: "#000000" };
-export const SURFACE = { light: "#ffffff", dark: "#121216" };
+/* Cards carry no fill: surface, muted and sunken all match the canvas in dark
+   mode, so a card is delineated by its border alone. Floating elements
+   (menus, tooltips, toasts, nav bars) use SURFACE_RAISED to stay visible. */
+export const SURFACE = { light: "#ffffff", dark: "#000000" };
 export const SURFACE_RAISED = { light: "#ffffff", dark: "#1a1a1f" };
-export const SURFACE_MUTED = { light: "#f8fafc", dark: "#121216" };
-export const SURFACE_SUNKEN = { light: "#f1f5f9", dark: "#08080a" };
+export const SURFACE_MUTED = { light: "#f8fafc", dark: "#000000" };
+export const SURFACE_SUNKEN = { light: "#f1f5f9", dark: "#000000" };
+export const SURFACE_HOVER = { light: "#f1f5f9", dark: "#141418" };
 export const BORDER = { light: "#e2e8f0", dark: "#26262c" };
 export const BORDER_STRONG = { light: "#cbd5e1", dark: "#33333b" };
 export const TEXT = { light: "#1e293b", dark: "#ffffff" };

@@ -86,6 +86,7 @@
   --cx-surface-raised: #ffffff;
   --cx-surface-muted: #f8fafc;
   --cx-surface-sunken: #f1f5f9;
+  --cx-surface-hover: #f1f5f9;
   --cx-border: #e2e8f0;
   --cx-border-strong: #cbd5e1;
 
@@ -148,10 +149,15 @@
      all cards read identically across every page in dark mode. */
   --cx-canvas: #000000;
   --cx-canvas-alt: #08080a;
-  --cx-surface: #121216;
+  /* Cards have no fill of their own: surface, muted and sunken all resolve
+     to the same solid black as the canvas, so a card is defined purely by
+     its border. Anything that must read as floating above content
+     (menus, tooltips, toasts, nav bars) uses surface-raised instead. */
+  --cx-surface: #000000;
   --cx-surface-raised: #1a1a1f;
-  --cx-surface-muted: #121216;
-  --cx-surface-sunken: #08080a;
+  --cx-surface-muted: #000000;
+  --cx-surface-sunken: #000000;
+  --cx-surface-hover: #141418;
   --cx-border: #26262c;
   --cx-border-strong: #33333b;
 
@@ -226,6 +232,7 @@
   --color-surface-raised: var(--cx-surface-raised);
   --color-surface-muted: var(--cx-surface-muted);
   --color-surface-sunken: var(--cx-surface-sunken);
+  --color-surface-hover: var(--cx-surface-hover);
 
   /* Borders */
   --color-border: var(--cx-border);

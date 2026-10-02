@@ -1,7 +1,7 @@
 ﻿import { useNavigate, useLocation } from "react-router-dom";
 import { Home, BarChart2, ArrowRightLeft, TrendingUp, User } from "lucide-react";
 import { useTheme } from "../context/useTheme";
-import { ACCENT, accentAlpha, BORDER, pick, SURFACE, TEXT_MUTED } from "../styles/colors";
+import { ACCENT, accentAlpha, BORDER, pick, SURFACE_RAISED, TEXT_MUTED } from "../styles/colors";
 
 export default function MobileBottomNav({ hideProfile = false }) {
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ export default function MobileBottomNav({ hideProfile = false }) {
     <nav
       className="md:hidden fixed bottom-0 left-0 right-0 z-999"
       style={{
-        background: pick(SURFACE, darkMode),
+        background: pick(SURFACE_RAISED, darkMode),
         backdropFilter: "blur(24px)",
         WebkitBackdropFilter: "blur(24px)",
         borderTop: "1px solid " + pick(BORDER, darkMode),

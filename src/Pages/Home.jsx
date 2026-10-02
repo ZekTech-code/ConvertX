@@ -1,4 +1,4 @@
-﻿import {
+import {
   ArrowRightLeft,
   ShieldCheck,
   Landmark,
@@ -475,7 +475,7 @@ export default function CurrencyConverterHomePage() {
                   <p className="text-text-secondary">API Protection</p>
                   <span className="text-accent">98%</span>
                 </div>
-                <div className="w-full h-2 bg-surface-sunken/10 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-surface-hover rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     whileInView={{ width: "98%" }}
@@ -491,7 +491,7 @@ export default function CurrencyConverterHomePage() {
                   <p className="text-text-secondary">Server Stability</p>
                   <span className="text-accent">99.9%</span>
                 </div>
-                <div className="w-full h-2 bg-surface-sunken/10 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-surface-hover rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     whileInView={{ width: "99.9%" }}
@@ -507,7 +507,7 @@ export default function CurrencyConverterHomePage() {
                   <p className="text-text-secondary">Data Encryption</p>
                   <span className="text-accent">256-bit</span>
                 </div>
-                <div className="w-full h-2 bg-surface-sunken/10 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-surface-hover rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     whileInView={{ width: "100%" }}
@@ -536,7 +536,7 @@ export default function CurrencyConverterHomePage() {
         </div>
 
         <div className="bg-surface border border-border rounded-3xl shadow-xl overflow-hidden backdrop-blur-2xl grid grid-cols-1 md:grid-cols-5">
-          <div className="md:col-span-2 bg-surface-muted/60 p-8 sm:p-10 border-b md:border-b-0 md:border-r border-border flex flex-col justify-between gap-8">
+          <div className="md:col-span-2 bg-surface p-8 sm:p-10 border-b md:border-b-0 md:border-r border-border flex flex-col justify-between gap-8">
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 text-accent px-3 py-1.5 rounded-full text-xs font-semibold">
                 <Mail className="w-3.5 h-3.5" /> Support Channel

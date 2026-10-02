@@ -48,7 +48,7 @@ export default function Navbar() {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-surface/80 dark:bg-canvas/80 backdrop-blur-xl"
+      className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-surface-raised/80 dark:bg-surface-raised/85 backdrop-blur-xl"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
         <button onClick={() => go("/")} className="flex items-center gap-3 bg-transparent border-none cursor-pointer p-0">
@@ -132,7 +132,7 @@ export default function Navbar() {
           initial={{ opacity: 0, y: -14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.22, ease: "easeOut" }}
-          className="md:hidden border-t border-border bg-surface px-6 py-6 space-y-5 shadow-pop"
+          className="md:hidden border-t border-border bg-surface-raised px-6 py-6 space-y-5 shadow-pop"
         >
           {navLinks.map((link) => (
             <motion.button

@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   TrendingUp,
   TrendingDown,
@@ -125,7 +125,7 @@ export default function WatchlistWidget({ baseCurrency = "USD" }) {
             placeholder="Search currency..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full px-3 py-2 rounded-xl bg-surface/40 border border-border text-xs font-sans text-text placeholder:text-text-muted focus:outline-none focus:border-accent transition"
+            className="w-full px-3 py-2 rounded-xl bg-surface-raised/40 border border-border text-xs font-sans text-text placeholder:text-text-muted focus:outline-none focus:border-accent transition"
             autoFocus
           />
           <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto">
@@ -187,7 +187,7 @@ export default function WatchlistWidget({ baseCurrency = "USD" }) {
 
                 <div className="flex items-center gap-2">
                   {loading && rate == null ? (
-                    <span className="w-14 h-3 bg-surface-sunken/10 rounded animate-pulse" />
+                    <span className="w-14 h-3 bg-surface-hover rounded animate-pulse" />
                   ) : (
                     <span
                       className={`text-xs font-mono font-bold tabular-nums transition-colors duration-500 ${

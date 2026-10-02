@@ -90,7 +90,7 @@ export function CountryDropdown({ value, onChange, error, disabled, id = "countr
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.98 }}
             transition={{ duration: 0.15 }}
-            className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-50 rounded-2xl border border-border bg-surface shadow-pop p-2 overflow-hidden flex flex-col"
+            className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-50 rounded-2xl border border-border bg-surface-raised shadow-pop p-2 overflow-hidden flex flex-col"
           >
             <div className="relative mb-2">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted" />
@@ -215,7 +215,7 @@ export function DialCodeDropdown({ value, onChange, disabled, id = "dial-code-dr
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.98 }}
             transition={{ duration: 0.15 }}
-            className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-56 rounded-2xl border border-border bg-surface shadow-pop p-2 overflow-hidden flex flex-col"
+            className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-56 rounded-2xl border border-border bg-surface-raised shadow-pop p-2 overflow-hidden flex flex-col"
           >
             <div className="relative mb-2">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 text-text-muted" />
