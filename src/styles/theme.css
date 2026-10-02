@@ -188,20 +188,24 @@
 }
 
 /* --------------------------------------------------------------------------
-   3b. TRADE PAGE — FLAT CORNERS
-   The trading view is a dense data grid, so its panels are square-cornered.
-   Scoping this to one class keeps every rounded-* utility working normally
-   everywhere else while letting the trade subtree override it.
+   3b. TRADE PAGE — TIGHTER CORNERS
+   The trading view is a dense data grid, so its panels get a smaller radius
+   than the rest of the app.
 
-   Specificity note: a bare `.flat-corners *` loses to `.rounded-2xl`
-   (0,1,0 vs 0,1,0 with later source order deciding). Doubling the class
-   raises it to 0,2,0 so the override always wins.
+   This overrides the radius *tokens* rather than writing a border-radius on
+   every descendant. A blanket descendant rule that zeroes the radius also
+   flattens genuinely circular things (the coin icons use rounded-full),
+   whereas remapping the tokens keeps rounded-full intact while shrinking
+   rounded-lg/xl/2xl. It also needs no !important, so a card can still opt
+   into a different radius locally.
    -------------------------------------------------------------------------- */
-.flat-corners,
-.flat-corners *,
-.flat-corners *::before,
-.flat-corners *::after {
-  border-radius: 0 !important;
+.tight-corners,
+.tight-corners * {
+  --cx-radius-md: 0.25rem;
+  --cx-radius-lg: 0.25rem;
+  --cx-radius-xl: 0.25rem;
+  --cx-radius-2xl: 0.3125rem;
+  --cx-radius-3xl: 0.375rem;
 }
 
 /* --------------------------------------------------------------------------
