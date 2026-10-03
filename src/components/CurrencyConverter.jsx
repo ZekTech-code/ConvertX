@@ -7,6 +7,10 @@ import {
   ShieldCheck,
   History,
   ChevronDown,
+  ListOrdered,
+  X,
+  Download,
+  Trash2,
 } from "lucide-react";
 import MobileBottomNav from "./MobileBottomNav";
 import Navbar from "./Navbar";
@@ -286,7 +290,21 @@ export default function CurrencyConverter() {
 
   const [dashError, setDashError] = useState("");
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
-  const [conversionToast, setConversionToast] = useState({ show: false, message: "" });
+  const [conversionToast, setConversionToast] = useState({ show: false, message: "", detail: null });
+
+  // Transaction lifecycle for the confirm button. Stages advance as real work
+  // completes rather than on a fixed timer, so the label never claims progress
+  // that has not happened yet.
+  const [txStage, setTxStage] = useState("idle");
+  const PROCESSING_STAGES = useMemo(
+    () => [
+      { id: "verify", label: "Verifying live rate" },
+      { id: "execute", label: "Executing conversion" },
+      { id: "settle", label: "Settling to ledger" },
+    ],
+    []
+  );
+  const [showAllHistory, setShowAllHistory] = useState(false);
 
   const rateLimitTimestampsRef = useRef([]);
   const [chartData, setChartData] = useState([]);
@@ -498,37 +516,63 @@ export default function CurrencyConverter() {
 
     rateLimitTimestampsRef.current = [...activeTimestamps, now];
 
-    const latest = await fetchRates(from, to);
-    if (!latest?.rate) {
-      setDashError("Could not verify the current live exchange rate. Please try again.");
-      return;
-    }
-
-    const currentRateVal = getDisplayRateValue(latest.rate);
-    const result = amt * currentRateVal;
-
-    const logItem = {
-      id: `tx_${Date.now()}`,
-      timestamp: new Date().toISOString(),
-      from,
-      to,
-      fromAmount: amt,
-      toAmount: result,
-      rate: currentRateVal,
-    };
     setSaving(true);
-    await addConversion(logItem);
-    setSaving(false);
+    setTxStage("verify");
 
+    // Guard so a rejected fetch or a thrown ledger write can never leave the
+    // button stuck in its processing state.
+    try {
+      const latest = await fetchRates(from, to);
+      if (!latest?.rate) {
+        setDashError("Could not verify the current live exchange rate. Please try again.");
+        return;
+      }
 
-    addSecurityLog(
-      user?.email,
-      "CONVERSION_EXECUTED",
-      `Exchanged ${amt} ${from} to ${result.toFixed(decimalPlaces)} ${to} securely`,
-      "SUCCESS"
-    );
+      setTxStage("execute");
+      const currentRateVal = getDisplayRateValue(latest.rate);
+      const result = amt * currentRateVal;
 
-    setConversionToast({ show: true, message: `Converted ${amt} ${from} to ${result.toFixed(decimalPlaces)} ${to}` });
+      const logItem = {
+        id: `tx_${Date.now()}`,
+        timestamp: new Date().toISOString(),
+        from,
+        to,
+        fromAmount: amt,
+        toAmount: result,
+        rate: currentRateVal,
+      };
+
+      setTxStage("settle");
+      await addConversion(logItem);
+
+      addSecurityLog(
+        user?.email,
+        "CONVERSION_EXECUTED",
+        `Exchanged ${amt} ${from} to ${result.toFixed(decimalPlaces)} ${to} securely`,
+        "SUCCESS"
+      );
+
+      // Hold the processing state for one frame minimum so a fast local write
+      // does not flash the spinner for a single frame, then release. This is a
+      // floor, not a delay: slow networks still take as long as they need.
+      await new Promise((resolve) => requestAnimationFrame(() => resolve()));
+
+      setConversionToast({
+        show: true,
+        message: `${amt.toLocaleString(undefined, { minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces })} ${from} → ${result.toLocaleString(undefined, { minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces })} ${to}`,
+        detail: {
+          reference: logItem.id.replace("tx_", "").toUpperCase(),
+          rate: currentRateVal,
+          from,
+          to,
+          fromAmount: amt,
+          toAmount: result,
+        },
+      });
+    } finally {
+      setSaving(false);
+      setTxStage("idle");
+    }
   };
 
   const handlePopularPairClick = (pairStr) => {
@@ -545,6 +589,29 @@ export default function CurrencyConverter() {
   };
 
   const recentConversions = conversions;
+  // The inline ledger shows the five most recent entries; anything beyond that
+  // is reachable through "View All" so the table cannot grow unbounded.
+  const HISTORY_PREVIEW_COUNT = 5;
+  const visibleConversions = useMemo(
+    () => recentConversions.slice(0, HISTORY_PREVIEW_COUNT),
+    [recentConversions]
+  );
+  const hiddenConversionCount = Math.max(0, recentConversions.length - HISTORY_PREVIEW_COUNT);
+  const showViewAll = hiddenConversionCount > 0;
+
+  useEffect(() => {
+    if (!showAllHistory) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") setShowAllHistory(false);
+    };
+    document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [showAllHistory]);
 
 
   const displayRate = getDisplayRateValue(rate);
@@ -764,7 +831,10 @@ export default function CurrencyConverter() {
                 {saving ? (
                   <>
                     <Loader2 size={14} className="animate-spin" />
-                    <span>Processing...</span>
+                    <span>
+                      {PROCESSING_STAGES.find((s) => s.id === txStage)?.label ?? "Processing"}
+                      {" ···"}
+                    </span>
                   </>
                 ) : (
                   <>
@@ -773,6 +843,32 @@ export default function CurrencyConverter() {
                   </>
                 )}
               </button>
+
+              {saving && (
+                <ol className="flex items-center justify-between gap-1 px-1" aria-live="polite">
+                  {PROCESSING_STAGES.map((stage, i) => {
+                    const order = PROCESSING_STAGES.map((s) => s.id);
+                    const current = order.indexOf(txStage);
+                    const state = i < current ? "done" : i === current ? "active" : "pending";
+                    return (
+                      <li key={stage.id} className="flex-1 flex items-center gap-1">
+                        <span
+                          className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
+                            state === "pending" ? "bg-border" : "bg-accent"
+                          }`}
+                        />
+                        <span
+                          className={`text-[9px] font-bold uppercase tracking-wider whitespace-nowrap transition-colors ${
+                            state === "active" ? "text-accent" : "text-text-muted"
+                          }`}
+                        >
+                          {stage.label}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ol>
+              )}
             </motion.div>
           </div>
  
@@ -972,7 +1068,7 @@ export default function CurrencyConverter() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border font-semibold">
-                  {recentConversions.map((tx) => (
+                  {visibleConversions.map((tx) => (
                     <tr key={tx.id} className="hover:bg-surface-hover dark:hover:bg-white/5 transition">
                       <td className="px-4 py-2.5 text-text-secondary text-[11px]">
                         {new Date(tx.timestamp).toLocaleString()}
@@ -990,6 +1086,137 @@ export default function CurrencyConverter() {
                   ))}
                 </tbody>
               </table>
+            </div>
+          )}
+
+          {showViewAll && (
+            <div className="flex items-center justify-center mt-4">
+              <button
+                onClick={() => setShowAllHistory(true)}
+                className="group inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-surface-muted text-[11px] font-bold text-text-secondary hover:border-accent hover:text-accent transition cursor-pointer font-sans"
+              >
+                <ListOrdered className="w-3.5 h-3.5" />
+                View All
+                <span className="px-1.5 py-0.5 rounded-full bg-accent/10 text-accent text-[10px] font-black tabular-nums">
+                  {recentConversions.length}
+                </span>
+              </button>
+            </div>
+          )}
+
+          {showAllHistory && (
+            <div
+              className="fixed inset-0 z-9999 flex items-end sm:items-center justify-center p-0 sm:p-6"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Full conversion history"
+            >
+              <div
+                className="absolute inset-0 bg-black/65 backdrop-blur-sm"
+                onClick={() => setShowAllHistory(false)}
+              />
+              <motion.div
+                initial={{ opacity: 0, y: 24, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+                className="relative w-full sm:max-w-3xl max-h-[90vh] sm:max-h-[85vh] flex flex-col bg-surface-raised border border-border rounded-t-3xl sm:rounded-2xl shadow-pop overflow-hidden"
+              >
+                <div className="flex items-start justify-between gap-4 px-5 sm:px-6 py-4 border-b border-border shrink-0">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
+                      <History className="w-4.5 h-4.5 text-accent" />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="font-sans text-sm font-black text-text leading-tight">
+                        Full Conversion History
+                      </h3>
+                      <p className="text-[11px] text-text-muted font-semibold font-sans mt-0.5">
+                        {recentConversions.length} recorded transaction{recentConversions.length === 1 ? "" : "s"}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      onClick={() => {
+                        const accountName =
+                          user?.name?.trim() ||
+                          user?.firstName?.trim() ||
+                          getUserDisplayName(user) ||
+                          "Valued Customer";
+                        exportConversionHistoryAsCsv(recentConversions, accountName);
+                      }}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-surface-muted text-[11px] font-bold text-text-secondary hover:border-accent hover:text-accent transition cursor-pointer font-sans"
+                      title="Export printable statement"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span className="hidden sm:inline">Export</span>
+                    </button>
+                    <button
+                      onClick={() => setShowAllHistory(false)}
+                      className="w-8 h-8 rounded-lg border border-border bg-surface-muted flex items-center justify-center text-text-secondary hover:text-negative hover:border-negative transition cursor-pointer"
+                      aria-label="Close history"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex-1 overflow-y-auto overscroll-contain">
+                  <table className="w-full text-left text-xs font-sans">
+                    <thead className="sticky top-0 z-10">
+                      <tr className="bg-surface-muted text-text-secondary uppercase tracking-wider font-bold text-[10px]">
+                        <th className="px-5 sm:px-6 py-3">Reference</th>
+                        <th className="px-4 py-3">Date &amp; Time</th>
+                        <th className="px-4 py-3">Exchanged Amount</th>
+                        <th className="px-4 py-3">Received Amount</th>
+                        <th className="px-5 sm:px-6 py-3 text-right">Execution Rate</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border font-semibold">
+                      {recentConversions.map((tx) => (
+                        <tr
+                          key={tx.id}
+                          className="hover:bg-surface-hover transition-colors"
+                        >
+                          <td className="px-5 sm:px-6 py-3 text-text-muted font-mono text-[10px] whitespace-nowrap">
+                            {String(tx.id ?? "").replace("tx_", "").toUpperCase()}
+                          </td>
+                          <td className="px-4 py-3 text-text-secondary text-[11px] whitespace-nowrap">
+                            {new Date(tx.timestamp).toLocaleString()}
+                          </td>
+                          <td className="px-4 py-3 text-text font-mono whitespace-nowrap">
+                            {tx.fromAmount.toLocaleString(undefined, { minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces })}{" "}
+                            {tx.from}
+                          </td>
+                          <td className="px-4 py-3 text-positive font-mono whitespace-nowrap">
+                            +{tx.toAmount.toLocaleString(undefined, { minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces })}{" "}
+                            {tx.to}
+                          </td>
+                          <td className="px-5 sm:px-6 py-3 text-right text-text-secondary font-mono text-[11px] whitespace-nowrap">
+                            1 {tx.from} = {formatRate(tx.rate)} {tx.to}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="px-5 sm:px-6 py-3 border-t border-border flex items-center justify-between gap-3 shrink-0 bg-surface-muted">
+                  <p className="text-[10px] text-text-muted font-semibold font-sans">
+                    Showing all {recentConversions.length} entries
+                  </p>
+                  <button
+                    onClick={() => {
+                      handleClearHistory();
+                      setShowAllHistory(false);
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-danger-border bg-danger/10 text-negative text-[11px] font-bold hover:bg-danger/20 transition cursor-pointer font-sans"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    Clear All
+                  </button>
+                </div>
+              </motion.div>
             </div>
           )}
         </motion.div>
@@ -1024,8 +1251,9 @@ export default function CurrencyConverter() {
         variant="toast"
         title="Conversion Successful"
         message={conversionToast.message}
-        duration={3000}
-        onClose={() => setConversionToast({ show: false, message: "" })}
+        detail={conversionToast.detail}
+        duration={4500}
+        onClose={() => setConversionToast({ show: false, message: "", detail: null })}
       />
     </div>
   );

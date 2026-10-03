@@ -9,6 +9,7 @@ export default function Toast({
   variant = "modal",
   title, 
   message, 
+  detail,
   onClose, 
   onConfirm, 
   confirmText = "Okay",
@@ -104,6 +105,14 @@ export default function Toast({
             <p className="mt-1 text-[11px] text-text-muted leading-normal">
               {message}
             </p>
+            {detail?.rate !== undefined && (
+              <p className="mt-1.5 text-[10px] text-text-muted font-mono">
+                Rate 1 {detail.from} = {Number(detail.rate).toLocaleString()} {detail.to}
+                {detail.reference && (
+                  <span className="ml-2 text-text-muted/70">Ref {detail.reference}</span>
+                )}
+              </p>
+            )}
           </div>
         </div>
       </motion.div>,
